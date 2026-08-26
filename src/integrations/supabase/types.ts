@@ -376,7 +376,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      owns_patient: { Args: { _patient_id: string }; Returns: boolean }
+      [_ in never]: never
     }
     Enums: {
       [_ in never]: never
