@@ -6,15 +6,21 @@
  * without touching any game or screen.
  */
 
-export const DOMAINS = ["memory", "attention", "pattern", "recall", "emotion"] as const;
+export const DOMAINS = ["memory", "attention", "pattern", "recall", "emotion", "speech"] as const;
 export type Domain = (typeof DOMAINS)[number];
 
 export const GAME_DOMAIN: Record<string, Domain> = {
   "memory-match": "memory",
   "pattern-recognition": "pattern",
+  "pattern": "pattern",
   "routine-recall": "recall",
   "object-recognition": "attention",
   "emotion-recognition": "emotion",
+  "face-match": "memory",
+  "tricky-colors": "attention",
+  "word-fluency": "speech",
+  "speech-echo": "speech",
+  "find-it": "attention",
 };
 
 export const MIN_LEVEL = 1;
@@ -96,6 +102,7 @@ export const DOMAIN_LABELS: Record<Domain, string> = {
   pattern: "Pattern recognition",
   recall: "Daily recall",
   emotion: "Emotion recognition",
+  speech: "Speech & language",
 };
 
 /** Engagement label from attempts in the last 7 days. */

@@ -10,6 +10,13 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as BehavioralRouteImport } from './routes/behavioral'
+
+const BehavioralRoute = BehavioralRouteImport.update({
+  id: '/behavioral',
+  path: '/behavioral',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -19,24 +26,28 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/behavioral': typeof BehavioralRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/behavioral': typeof BehavioralRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/behavioral': typeof BehavioralRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/behavioral'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/behavioral'
+  id: '__root__' | '/' | '/behavioral'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  BehavioralRoute: typeof BehavioralRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +59,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/behavioral': {
+      id: '/behavioral'
+      path: '/behavioral'
+      fullPath: '/behavioral'
+      preLoaderRoute: typeof BehavioralRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  BehavioralRoute: BehavioralRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

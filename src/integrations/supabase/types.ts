@@ -61,6 +61,53 @@ export type Database = {
           },
         ]
       }
+      assessments: {
+        Row: {
+          behavioral_score: number | null
+          cognitive_score: number | null
+          combined_score: number
+          created_at: string
+          details: Json
+          id: string
+          parts_completed: string[]
+          patient_id: string
+          speech_score: number | null
+          tier: string
+        }
+        Insert: {
+          behavioral_score?: number | null
+          cognitive_score?: number | null
+          combined_score?: number
+          created_at?: string
+          details?: Json
+          id?: string
+          parts_completed?: string[]
+          patient_id: string
+          speech_score?: number | null
+          tier?: string
+        }
+        Update: {
+          behavioral_score?: number | null
+          cognitive_score?: number | null
+          combined_score?: number
+          created_at?: string
+          details?: Json
+          id?: string
+          parts_completed?: string[]
+          patient_id?: string
+          speech_score?: number | null
+          tier?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "assessments_patient_id_fkey"
+            columns: ["patient_id"]
+            isOneToOne: false
+            referencedRelation: "patients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       cognitive_profiles: {
         Row: {
           domain: string
@@ -238,6 +285,41 @@ export type Database = {
         }
         Relationships: []
       }
+      game_progress: {
+        Row: {
+          last_play_day: string | null
+          patient_id: string
+          stats: Json
+          streak: number
+          updated_at: string
+          xp: number
+        }
+        Insert: {
+          last_play_day?: string | null
+          patient_id: string
+          stats?: Json
+          streak?: number
+          updated_at?: string
+          xp?: number
+        }
+        Update: {
+          last_play_day?: string | null
+          patient_id?: string
+          stats?: Json
+          streak?: number
+          updated_at?: string
+          xp?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "game_progress_patient_id_fkey"
+            columns: ["patient_id"]
+            isOneToOne: true
+            referencedRelation: "patients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       mood_logs: {
         Row: {
           created_at: string
@@ -273,36 +355,60 @@ export type Database = {
           avatar_emoji: string
           base_difficulty: number
           caregiver_id: string
+          caregiver_name: string
+          caregiver_phone: string
+          clinical_notes: string
           created_at: string
+          district: string
           elder_mode: boolean
           id: string
           language: string
+          last_screening: Json | null
           name: string
+          phone: string
           region: string
+          role: string
+          sex: string
         }
         Insert: {
           age?: number
           avatar_emoji?: string
           base_difficulty?: number
           caregiver_id: string
+          caregiver_name?: string
+          caregiver_phone?: string
+          clinical_notes?: string
           created_at?: string
+          district?: string
           elder_mode?: boolean
           id?: string
           language?: string
+          last_screening?: Json | null
           name: string
+          phone?: string
           region?: string
+          role?: string
+          sex?: string
         }
         Update: {
           age?: number
           avatar_emoji?: string
           base_difficulty?: number
           caregiver_id?: string
+          caregiver_name?: string
+          caregiver_phone?: string
+          clinical_notes?: string
           created_at?: string
+          district?: string
           elder_mode?: boolean
           id?: string
           language?: string
+          last_screening?: Json | null
           name?: string
+          phone?: string
           region?: string
+          role?: string
+          sex?: string
         }
         Relationships: []
       }
@@ -364,6 +470,41 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "reminders_patient_id_fkey"
+            columns: ["patient_id"]
+            isOneToOne: false
+            referencedRelation: "patients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tournament_scores: {
+        Row: {
+          id: string
+          patient_id: string
+          points: number
+          theme: string
+          updated_at: string
+          week_key: string
+        }
+        Insert: {
+          id?: string
+          patient_id: string
+          points?: number
+          theme?: string
+          updated_at?: string
+          week_key: string
+        }
+        Update: {
+          id?: string
+          patient_id?: string
+          points?: number
+          theme?: string
+          updated_at?: string
+          week_key?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tournament_scores_patient_id_fkey"
             columns: ["patient_id"]
             isOneToOne: false
             referencedRelation: "patients"

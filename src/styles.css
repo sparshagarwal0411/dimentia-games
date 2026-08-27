@@ -190,6 +190,36 @@
   --input: oklch(0.8 0 0);
 }
 
+.extra-high-contrast {
+  --background: #000000;
+  --foreground: #ffffff;
+  --card: #000000;
+  --card-foreground: #ffffff;
+  --primary: #ffff00;
+  --primary-foreground: #000000;
+  --secondary: #1a1a1a;
+  --secondary-foreground: #ffffff;
+  --border: #ffffff;
+  --input: #ffffff;
+}
+
+.reduced-motion *,
+.reduced-motion *::before,
+.reduced-motion *::after {
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
+}
+
+.enhanced-focus :focus-visible {
+  outline: 4px solid var(--primary) !important;
+  outline-offset: 3px !important;
+}
+
+.colorblind-friendly {
+  filter: contrast(115%) saturate(110%);
+}
+
 .large-buttons {
   --tap-size: 4.5rem;
 }

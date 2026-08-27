@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ArrowLeft, Trophy } from "lucide-react";
-import { Link } from "@tanstack/react-router";
 
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -8,6 +7,7 @@ import { useApp } from "@/lib/app-state";
 import { useI18n } from "@/lib/i18n";
 import { speak } from "@/lib/speech";
 import { insertRow } from "@/lib/offline";
+import { recordGamePlay } from "@/lib/game-progress";
 import {
   GAME_DOMAIN,
   recommendDifficulty,
@@ -31,10 +31,11 @@ type Props = {
   title: string;
   instruction: string;
   totalRounds?: number;
+  onExit?: (() => void) | undefined;
   children: (props: GameProps) => React.ReactNode;
 };
 
-export function GameShell({ gameId, title, instruction, totalRounds = 5, children }: Props) {
+export function GameShell({ gameId, title, instruction, totalRounds = 5, onExit, children }: Props) {
   const { activePatient, prefs } = useApp();
   const { locale } = useI18n();
   const [difficulty, setDifficulty] = useState(activePatient?.base_difficulty ?? 2);
@@ -125,8 +126,10 @@ export function GameShell({ gameId, title, instruction, totalRounds = 5, childre
         }
       }
 
-      const next = recommendDifficulty(difficulty, history);
+        const next = recommendDifficulty(difficulty, history);
       setRecommendation(next);
+
+      recordGamePlay(activePatient?.id ?? "guest", gameId, Math.round(accuracy * 100));
 
       if (activePatient) {
         await insertRow("game_attempts", {
@@ -169,10 +172,8 @@ export function GameShell({ gameId, title, instruction, totalRounds = 5, childre
   return (
     <div className="mx-auto w-full max-w-3xl px-4 py-6">
       <div className="mb-6 flex items-center gap-4">
-        <Button asChild variant="outline" size="lg" className="tap gap-2 text-lg">
-          <Link to="/elder/games">
-            <ArrowLeft className="h-6 w-6" /> Back
-          </Link>
+        <Button variant="outline" size="lg" className="tap gap-2 text-lg" onClick={onExit}>
+          <ArrowLeft className="h-6 w-6" /> Back
         </Button>
         <div className="flex-1">
           <h1 className="text-2xl font-semibold sm:text-3xl">{title}</h1>
@@ -221,8 +222,8 @@ export function GameShell({ gameId, title, instruction, totalRounds = 5, childre
             <Button size="lg" className="tap flex-1 text-xl" onClick={restart}>
               Play again
             </Button>
-            <Button asChild size="lg" variant="outline" className="tap flex-1 text-xl">
-              <Link to="/elder">Home</Link>
+            <Button size="lg" variant="outline" className="tap flex-1 text-xl" onClick={onExit}>
+              All games
             </Button>
           </div>
         </div>
