@@ -4,8 +4,11 @@ import {
   ShieldCheck,
   Stethoscope,
   Users,
+  Lock,
 } from "lucide-react";
 import { useApp } from "@/lib/app-state";
+import { useI18n } from "@/lib/i18n";
+import { SiteHeader, SiteFooter } from "@/components/layout/SiteChrome";
 
 interface AuthGateProps {
   onCancel?: () => void;
@@ -13,6 +16,7 @@ interface AuthGateProps {
 
 export function AuthGate({ onCancel }: AuthGateProps) {
   const { signInWithGoogle, authLoading } = useApp();
+  const { t } = useI18n();
   const [signing, setSigning] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -29,84 +33,64 @@ export function AuthGate({ onCancel }: AuthGateProps) {
 
   if (authLoading) {
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950">
-        <div className="flex flex-col items-center gap-4">
-          <div className="h-12 w-12 rounded-2xl bg-emerald-500/20 flex items-center justify-center">
-            <Brain className="h-6 w-6 text-emerald-400 animate-pulse" />
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm">
+        <div className="flex flex-col items-center gap-4 rounded-3xl border border-border bg-card p-8 shadow-lift">
+          <div className="h-12 w-12 rounded-2xl bg-primary/10 flex items-center justify-center">
+            <Brain className="h-6 w-6 text-primary animate-pulse" />
           </div>
-          <p className="text-slate-400 text-sm">Loading…</p>
+          <p className="text-muted-foreground text-sm font-medium">{t("common.loading")}</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-slate-950 text-slate-100">
-      {/* ─── Header ─── */}
-      <header className="sticky top-0 z-40 border-b border-slate-800 bg-slate-950/90 backdrop-blur-md">
-        <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
-          <button type="button" onClick={onCancel} className="flex items-center gap-3 text-left">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-500/20 border border-emerald-500/30">
-              <Brain className="h-5 w-5 text-emerald-400" />
-            </div>
-            <div>
-              <p className="font-semibold text-base leading-none text-white">NeuroTrack NE</p>
-              <p className="mt-0.5 text-[11px] font-medium tracking-wide text-slate-400">
-                Cognitive care for the North East
-              </p>
-            </div>
-          </button>
-          <nav className="hidden items-center gap-6 text-sm font-medium text-slate-400 md:flex">
-            <a href="/#how-it-works" className="hover:text-white transition-colors">How it works</a>
-            <a href="/#how-we-monitor" className="hover:text-white transition-colors">Privacy</a>
-          </nav>
-        </div>
-      </header>
+    <div className="flex min-h-screen flex-col bg-background text-foreground transition-colors duration-300">
+      {/* Unified Site Header */}
+      <SiteHeader simple onLogoClick={onCancel} onStart={onCancel} ctaLabel={t("common.back")} />
 
-      {/* ─── Hero / Sign-in card ─── */}
-      <section className="relative flex flex-1 flex-col items-center justify-center px-4 py-16">
-        {/* Ambient glow */}
+      {/* Hero / Sign-in Section */}
+      <main className="relative flex flex-1 flex-col items-center justify-center px-4 py-12 sm:py-16">
+        {/* Ambient Glow */}
         <div
-          className="pointer-events-none absolute inset-0"
-          style={{
-            background:
-              "radial-gradient(ellipse 70% 40% at 50% 10%, rgba(16,185,129,0.09) 0%, transparent 70%)",
-          }}
+          className="pointer-events-none absolute inset-0 surface-hero opacity-60"
         />
 
         <div className="relative w-full max-w-md">
-          <p className="mb-3 text-center text-xs font-semibold uppercase tracking-[0.18em] text-emerald-400">
-            Clinical Portal
-          </p>
-
-          <h1 className="mb-2 text-center text-3xl font-bold tracking-tight text-white sm:text-4xl">
-            Sign in to NeuroTrack NE
-          </h1>
-          <p className="mb-8 text-center text-sm text-slate-400">
-            Securely manage patient records and cognitive care data for North East India.
-          </p>
+          <div className="text-center mb-6">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 border border-primary/20 px-3 py-1 text-xs font-bold text-primary mb-3">
+              <Lock className="h-3.5 w-3.5" />
+              {t("auth.portalBadge")}
+            </span>
+            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
+              {t("auth.title")}
+            </h1>
+            <p className="mt-2 text-sm text-muted-foreground">
+              {t("auth.subtitle")}
+            </p>
+          </div>
 
           {/* Card */}
-          <div className="rounded-3xl border border-slate-700/80 bg-slate-900/80 p-8 shadow-2xl backdrop-blur-sm">
-            {/* Trust badges */}
-            <ul className="mb-6 space-y-2.5">
+          <div className="rounded-3xl border border-border bg-card/95 p-6 sm:p-8 shadow-lift backdrop-blur-sm transition-all">
+            {/* Trust points */}
+            <ul className="mb-6 space-y-3">
               {[
-                { icon: Stethoscope, label: "Clinical patient records synced securely" },
-                { icon: ShieldCheck, label: "End-to-end encrypted, HIPAA-aligned storage" },
-                { icon: Users, label: "Multi-caregiver access across NE India nodes" },
+                { icon: Stethoscope, label: t("auth.bullet1") },
+                { icon: ShieldCheck, label: t("auth.bullet2") },
+                { icon: Users, label: t("auth.bullet3") },
               ].map((f, i) => (
-                <li key={i} className="flex items-center gap-3">
-                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-emerald-500/10 border border-emerald-500/20">
-                    <f.icon className="h-4 w-4 text-emerald-400" />
+                <li key={i} className="flex items-start gap-3">
+                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-primary/10 border border-primary/20 mt-0.5">
+                    <f.icon className="h-4 w-4 text-primary" />
                   </div>
-                  <span className="text-sm text-slate-300">{f.label}</span>
+                  <span className="text-xs sm:text-sm text-foreground/90 leading-snug">{f.label}</span>
                 </li>
               ))}
             </ul>
 
-            {/* Error */}
+            {/* Error message */}
             {error && (
-              <p className="mb-4 rounded-xl bg-red-500/10 border border-red-500/30 p-3 text-sm text-red-400 text-center">
+              <p className="mb-4 rounded-xl bg-destructive/10 border border-destructive/30 p-3 text-xs sm:text-sm text-destructive text-center font-medium">
                 {error}
               </p>
             )}
@@ -116,10 +100,10 @@ export function AuthGate({ onCancel }: AuthGateProps) {
               type="button"
               onClick={handleSignIn}
               disabled={signing}
-              className="flex w-full items-center justify-center gap-3 rounded-2xl border border-slate-600 bg-white px-5 py-3.5 text-sm font-semibold text-slate-900 shadow-md transition-all hover:bg-slate-100 hover:shadow-lg active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed"
+              className="flex w-full items-center justify-center gap-3 rounded-2xl border border-border bg-foreground text-background px-5 py-3.5 text-sm font-bold shadow-md transition-all hover:opacity-90 hover:shadow-lg active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed"
             >
               {signing ? (
-                <div className="h-5 w-5 rounded-full border-2 border-slate-400 border-t-slate-900 animate-spin" />
+                <div className="h-5 w-5 rounded-full border-2 border-background/40 border-t-background animate-spin" />
               ) : (
                 <svg className="h-5 w-5 shrink-0" viewBox="0 0 24 24">
                   <path
@@ -140,7 +124,7 @@ export function AuthGate({ onCancel }: AuthGateProps) {
                   />
                 </svg>
               )}
-              {signing ? "Redirecting to Google…" : "Continue with Google"}
+              <span>{signing ? t("auth.buttonRedirecting") : t("auth.buttonGoogle")}</span>
             </button>
 
             {/* Back link */}
@@ -148,54 +132,23 @@ export function AuthGate({ onCancel }: AuthGateProps) {
               <button
                 type="button"
                 onClick={onCancel}
-                className="mt-4 w-full text-center text-xs text-slate-500 hover:text-slate-300 transition-colors"
+                className="mt-4 w-full text-center text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors"
               >
-                ← Back to home
+                {t("auth.backHome")}
               </button>
             )}
 
             {/* Privacy note */}
-            <p className="mt-5 text-center text-[11px] leading-relaxed text-slate-600">
-              Patient data is stored in Supabase under your account.
-              <br />
-              Data stays on-device when offline and syncs automatically on reconnect.
+            <p className="mt-5 text-center text-[11px] leading-relaxed text-muted-foreground/80">
+              {t("auth.privacyFooter")}
             </p>
           </div>
         </div>
-      </section>
+      </main>
 
-      {/* ─── Footer ─── */}
-      <footer className="border-t border-slate-800 bg-slate-900">
-        <div className="mx-auto grid max-w-6xl gap-8 px-4 py-12 sm:grid-cols-3 sm:px-6">
-          <div>
-            <p className="font-semibold text-base text-white">NeuroTrack NE</p>
-            <p className="mt-2 max-w-xs text-sm leading-relaxed text-slate-400">
-              Early cognitive screening, behavioural biomarkers and daily memory support designed for
-              families and clinics across North East India.
-            </p>
-          </div>
-          <div>
-            <p className="text-sm font-semibold text-white">Care</p>
-            <ul className="mt-3 space-y-2 text-sm text-slate-400">
-              <li>Profile onboarding</li>
-              <li>5-minute dementia screening</li>
-              <li>Memory games &amp; cognitive exercises</li>
-              <li>Doctor contacts for NE clinics</li>
-            </ul>
-          </div>
-          <div>
-            <p className="text-sm font-semibold text-white">Privacy &amp; Trust</p>
-            <p className="mt-3 text-sm leading-relaxed text-slate-400">
-              Records and behavioural telemetry stay on-device when offline. This tool supports
-              screening, monitoring and education — it is not a medical diagnosis.
-            </p>
-          </div>
-        </div>
-        <div className="border-t border-slate-800 py-4 text-center text-xs text-slate-600">
-          © {new Date().getFullYear()} NeuroTrack NE · Built for Assam, Meghalaya, Manipur,
-          Mizoram, Nagaland, Tripura, Arunachal Pradesh and Sikkim
-        </div>
-      </footer>
+      {/* Unified Site Footer */}
+      <SiteFooter onStart={onCancel} />
     </div>
   );
 }
+

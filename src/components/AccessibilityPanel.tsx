@@ -24,6 +24,13 @@ import { useI18n } from "@/lib/i18n";
 import { readScreen, speak, stopSpeaking } from "@/lib/speech";
 import { cn } from "@/lib/utils";
 
+const handleToggleRowKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+  if (event.key === "Enter" || event.key === " ") {
+    event.preventDefault();
+    event.currentTarget.click();
+  }
+};
+
 export function AccessibilityPanel() {
   const { prefs, setPref, resetPrefs, a11yPanelOpen, setA11yPanelOpen } = useApp();
   const { t, locale } = useI18n();
@@ -177,8 +184,10 @@ export function AccessibilityPanel() {
             {/* Toggles List */}
             <div className="space-y-2.5">
               {/* Dark mode */}
-              <button
-                type="button"
+              <div
+                role="button"
+                tabIndex={0}
+                onKeyDown={handleToggleRowKeyDown}
                 onClick={() => {
                   setPref("dark_mode", !prefs.dark_mode);
                   announce(prefs.dark_mode ? "Light mode enabled" : "Dark mode enabled");
@@ -202,11 +211,13 @@ export function AccessibilityPanel() {
                   </div>
                 </div>
                 <Switch checked={prefs.dark_mode} tabIndex={-1} className="pointer-events-none" />
-              </button>
+              </div>
 
               {/* Large Buttons */}
-              <button
-                type="button"
+              <div
+                role="button"
+                tabIndex={0}
+                onKeyDown={handleToggleRowKeyDown}
                 onClick={() => {
                   setPref("large_buttons", !prefs.large_buttons);
                   announce(
@@ -228,11 +239,13 @@ export function AccessibilityPanel() {
                   </div>
                 </div>
                 <Switch checked={prefs.large_buttons} tabIndex={-1} className="pointer-events-none" />
-              </button>
+              </div>
 
               {/* Voice Guidance */}
-              <button
-                type="button"
+              <div
+                role="button"
+                tabIndex={0}
+                onKeyDown={handleToggleRowKeyDown}
                 onClick={() => {
                   setPref("voice_guidance", !prefs.voice_guidance);
                   announce(
@@ -254,11 +267,13 @@ export function AccessibilityPanel() {
                   </div>
                 </div>
                 <Switch checked={prefs.voice_guidance} tabIndex={-1} className="pointer-events-none" />
-              </button>
+              </div>
 
               {/* Reduce Motion */}
-              <button
-                type="button"
+              <div
+                role="button"
+                tabIndex={0}
+                onKeyDown={handleToggleRowKeyDown}
                 onClick={() => {
                   setPref("reduce_motion", !prefs.reduce_motion);
                   announce(prefs.reduce_motion ? "Motion enabled" : "Motion reduced");
@@ -278,11 +293,13 @@ export function AccessibilityPanel() {
                   </div>
                 </div>
                 <Switch checked={prefs.reduce_motion} tabIndex={-1} className="pointer-events-none" />
-              </button>
+              </div>
 
               {/* Slow Pace Mode */}
-              <button
-                type="button"
+              <div
+                role="button"
+                tabIndex={0}
+                onKeyDown={handleToggleRowKeyDown}
                 onClick={() => {
                   setPref("slow_mode", !prefs.slow_mode);
                   announce(prefs.slow_mode ? "Normal pace enabled" : "Slow pace enabled");
@@ -302,11 +319,13 @@ export function AccessibilityPanel() {
                   </div>
                 </div>
                 <Switch checked={prefs.slow_mode} tabIndex={-1} className="pointer-events-none" />
-              </button>
+              </div>
 
               {/* Enhanced Focus Indicators */}
-              <button
-                type="button"
+              <div
+                role="button"
+                tabIndex={0}
+                onKeyDown={handleToggleRowKeyDown}
                 onClick={() => {
                   setPref("enhanced_focus", !prefs.enhanced_focus);
                   announce(
@@ -330,11 +349,13 @@ export function AccessibilityPanel() {
                   </div>
                 </div>
                 <Switch checked={prefs.enhanced_focus} tabIndex={-1} className="pointer-events-none" />
-              </button>
+              </div>
 
               {/* Sound Effects */}
-              <button
-                type="button"
+              <div
+                role="button"
+                tabIndex={0}
+                onKeyDown={handleToggleRowKeyDown}
                 onClick={() => {
                   setPref("reduce_sounds", !prefs.reduce_sounds);
                   announce(prefs.reduce_sounds ? "Sound effects enabled" : "Sounds muted");
@@ -358,11 +379,13 @@ export function AccessibilityPanel() {
                   </div>
                 </div>
                 <Switch checked={prefs.reduce_sounds} tabIndex={-1} className="pointer-events-none" />
-              </button>
+              </div>
 
               {/* Simplified UI */}
-              <button
-                type="button"
+              <div
+                role="button"
+                tabIndex={0}
+                onKeyDown={handleToggleRowKeyDown}
                 onClick={() => {
                   setPref("simplify", !prefs.simplify);
                   announce(prefs.simplify ? "Standard layout enabled" : "Simplified layout enabled");
@@ -382,7 +405,7 @@ export function AccessibilityPanel() {
                   </div>
                 </div>
                 <Switch checked={prefs.simplify} tabIndex={-1} className="pointer-events-none" />
-              </button>
+              </div>
             </div>
 
             {/* Reset Defaults */}

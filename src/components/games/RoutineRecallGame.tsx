@@ -91,13 +91,14 @@ function RoutineRound({ difficulty, onRound, roundKey, speakText }: GameProps) {
   );
 }
 
-export function RoutineRecallGame() {
+export function RoutineRecallGame({ onExit }: { onExit?: () => void }) {
   return (
     <GameShell
       gameId="routine-recall"
       title="Daily Routine & Spatial Recall"
       instruction="Order daily activities in the correct chronological sequence."
       totalRounds={3}
+      onExit={onExit}
     >
       {(props) => <RoutineRound key={props.roundKey} {...props} />}
     </GameShell>

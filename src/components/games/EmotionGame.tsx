@@ -57,13 +57,14 @@ function EmotionRound({ difficulty, onRound, roundKey, speakText }: GameProps) {
   );
 }
 
-export function EmotionGame() {
+export function EmotionGame({ onExit }: { onExit?: () => void }) {
   return (
     <GameShell
       gameId="emotion-recognition"
       title="Emotion & Cue Recognition"
       instruction="Read the situation and choose the emotion."
       totalRounds={3}
+      onExit={onExit}
     >
       {(props) => <EmotionRound key={props.roundKey} {...props} />}
     </GameShell>
