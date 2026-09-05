@@ -91,7 +91,7 @@ export function PatientRegistrationModal({
           <div>
             <h2 className="text-2xl font-bold text-white">Clinical Patient Registration</h2>
             <p className="text-xs text-slate-400 uppercase tracking-widest font-semibold">
-              NeuroTrack NE Patient Database
+              SmritiMitra Patient Database
             </p>
           </div>
         </div>

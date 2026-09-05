@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
-import { Activity, Brain, CheckCircle2, ShieldCheck, Sparkles } from "lucide-react";
+import { Activity, CheckCircle2, ShieldCheck } from "lucide-react";
 
 export function LoadingScreen({ onLoaded }: { onLoaded?: () => void }) {
   const [progress, setProgress] = useState(15);
   const [statusIdx, setStatusIdx] = useState(0);
 
   const statuses = [
-    "Initializing NeuroTrack™ Clinical Engine...",
+    "Initializing SmritiMitra Clinical Engine...",
     "Securing HIPAA / DISHA Encrypted Local Vault...",
     "Calibrating North Eastern Regional Telemetry...",
     "Syncing Offline Synapse Memory Queues...",
@@ -46,16 +46,16 @@ export function LoadingScreen({ onLoaded }: { onLoaded?: () => void }) {
         {/* Animated Brand Logo */}
         <div className="relative mb-6">
           <div className="absolute -inset-2 rounded-3xl bg-emerald-500/20 blur-xl animate-pulse" />
-          <div className="relative flex h-20 w-20 items-center justify-center rounded-3xl border border-emerald-500/30 bg-slate-900 text-emerald-400 shadow-2xl">
-            <Brain className="h-10 w-10 animate-bounce transition-transform duration-700" />
+          <div className="relative flex h-20 w-20 items-center justify-center overflow-hidden rounded-3xl border border-emerald-500/30 bg-slate-900 text-emerald-400 shadow-2xl">
+            <img src="/logo.png" alt="SmritiMitra logo" className="h-full w-full object-cover animate-bounce transition-transform duration-700" />
           </div>
         </div>
 
         <h1 className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl font-display">
-          NeuroTrack<span className="text-emerald-400">NE</span>
+          Smriti<span className="text-emerald-400">Mitra</span>
         </h1>
         <p className="mt-1 text-xs font-semibold uppercase tracking-[0.25em] text-slate-400">
-          Cognitive Assessment & Neuro-Intervention
+          A friend that helps preserve memories.
         </p>
 
         {/* Progress bar */}

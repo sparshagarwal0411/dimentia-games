@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Activity,
   ArrowRight,
@@ -10,7 +10,6 @@ import {
   Globe2,
   Heart,
   HeartHandshake,
-  Languages,
   Mic,
   Palette,
   Play,
@@ -28,66 +27,6 @@ import { soundEffects } from "@/lib/audio-effects";
 import { speak } from "@/lib/speech";
 import { useI18n } from "@/lib/i18n";
 import { GAMES, type GameMeta } from "@/lib/games-catalog";
-
-/* --------------------------- Carousel Slide Data -------------------------- */
-const CAROUSEL_SLIDES = [
-  {
-    tag: "Clinical Triad",
-    title: "Triple-Biomarker Guided Screening",
-    badge: "Cognitive · Speech · Behavioral",
-    description:
-      "A calm, conversational screening combining memory tasks, spoken language rhythm, and daily behavioral indicators. Scored directly on-device with zero diagnostic stigma.",
-    icon: Brain,
-    accent: "from-teal-500/20 via-primary/10 to-transparent",
-    bullets: [
-      "No intimidating hospital forms",
-      "Instant risk category & clinician next-steps",
-      "Automatic offline caching in remote districts",
-    ],
-  },
-  {
-    tag: "AI Cognitive Gym",
-    title: "9 AI-Adaptive Brain Games",
-    badge: "Real-time Difficulty Scaling (L1–L5)",
-    description:
-      "Engaging memory cards, routine recall, Stroop attention, face recognition, and speech echo games that dynamically adjust challenge level based on response speed and accuracy.",
-    icon: Sparkles,
-    accent: "from-indigo-500/20 via-primary/10 to-transparent",
-    bullets: [
-      "Memory, attention, logic & temporal recall",
-      "Weekly community tournaments & XP streaks",
-      "Designed specifically for elderly hand dexterity",
-    ],
-  },
-  {
-    tag: "Regional Dialects",
-    title: "Multilingual & Voice-Assisted",
-    badge: "Assamese · Hindi · English · Cues",
-    description:
-      "Elderly-friendly large tap buttons, full voice read-aloud, and speech-based answers tailored for North East Indian households with familiar tea garden and market cues.",
-    icon: Languages,
-    accent: "from-amber-500/20 via-primary/10 to-transparent",
-    bullets: [
-      "Assamese & Hindi voice guidance built-in",
-      "High contrast & slow interaction modes",
-      "Culturally familiar objects from all 8 states",
-    ],
-  },
-  {
-    tag: "Privacy Guarantee",
-    title: "Zero-Cloud Local Privacy",
-    badge: "DPDP Act 2023 Compliant",
-    description:
-      "All screening data and behavioral telemetry stay securely encrypted on your device. Works completely offline without requiring an active internet connection.",
-    icon: ShieldCheck,
-    accent: "from-emerald-500/20 via-primary/10 to-transparent",
-    bullets: [
-      "Works in zero-connectivity hills & tea estates",
-      "No keystrokes or private messages logged",
-      "1-click data deletion anytime",
-    ],
-  },
-];
 
 /* ------------------------- 8 NER States Cultural Data ------------------------- */
 const NER_STATES = [
@@ -165,6 +104,45 @@ const NER_STATES = [
   },
 ];
 
+const GOVERNMENT_SHOUTOUTS = [
+  {
+    image: "https://commons.wikimedia.org/wiki/Special:FilePath/Emblem_of_India.svg",
+    institution: "Ministry of Health & Family Welfare",
+    initiative: "Public health access",
+    wordmark: "HEALTH & FAMILY WELFARE",
+  },
+  {
+    image: "https://commons.wikimedia.org/wiki/Special:FilePath/Emblem_of_India.svg",
+    institution: "Ministry of Ayush",
+    initiative: "Whole-person wellbeing",
+    wordmark: "AYUSH",
+  },
+  {
+    image: "https://commons.wikimedia.org/wiki/Special:FilePath/Emblem_of_India.svg",
+    institution: "Ministry of Electronics & IT",
+    initiative: "Digital public infrastructure",
+    wordmark: "ELECTRONICS & IT",
+  },
+  {
+    image: "https://commons.wikimedia.org/wiki/Special:FilePath/Emblem_of_India.svg",
+    institution: "Ministry of Social Justice & Empowerment",
+    initiative: "Inclusive community support",
+    wordmark: "SOCIAL JUSTICE",
+  },
+  {
+    image: "https://commons.wikimedia.org/wiki/Special:FilePath/Emblem_of_India.svg",
+    institution: "Ministry of Women & Child Development",
+    initiative: "Family-centred care",
+    wordmark: "WOMEN & CHILD",
+  },
+  {
+    image: "https://commons.wikimedia.org/wiki/Special:FilePath/Emblem_of_India.svg",
+    institution: "Tele-MANAS 14416",
+    initiative: "Mental health support line",
+    wordmark: "TELE-MANAS",
+  },
+];
+
 /* ------------------------------- Testimonials ------------------------------ */
 const REVIEWS = [
   {
@@ -191,6 +169,38 @@ const REVIEWS = [
     rating: 5,
     tag: "Cultural Relevance",
   },
+  {
+    quote:
+      "The large buttons and Assamese voice prompts helped my mother complete the check-in independently. I could see where she needed support without hovering over her.",
+    name: "Ankita Bora",
+    role: "Daughter & Caregiver, Dibrugarh (Assam)",
+    rating: 5,
+    tag: "Family Care",
+  },
+  {
+    quote:
+      "Our outreach team can continue working when the signal drops. The local-first design makes this practical for villages beyond the main road.",
+    name: "Merenla Ao",
+    role: "Community Health Worker, Mokokchung (Nagaland)",
+    rating: 5,
+    tag: "Field Access",
+  },
+  {
+    quote:
+      "The routine recall activities feel familiar rather than abstract. Patients talk about their own mornings, which makes the conversation much more natural.",
+    name: "Dr. Tashi Lepcha",
+    role: "Geriatric Physician, Gangtok (Sikkim)",
+    rating: 5,
+    tag: "Clinical Practice",
+  },
+  {
+    quote:
+      "It gave our family a gentle starting point for discussing memory changes. The privacy controls also made everyone more comfortable trying it.",
+    name: "Lalhmingliani Zote",
+    role: "Family Caregiver, Aizawl (Mizoram)",
+    rating: 5,
+    tag: "Privacy First",
+  },
 ];
 
 export function LandingPage({
@@ -202,91 +212,146 @@ export function LandingPage({
 }) {
   const { t } = useI18n();
 
-  // Localized Carousel Slides
-  const carouselSlides = useMemo(
-    () => [
-      {
-        tag: t("carousel.slide1.tag"),
-        title: t("carousel.slide1.title"),
-        badge: t("carousel.slide1.badge"),
-        description: t("carousel.slide1.desc"),
-        icon: Brain,
-        accent: "from-teal-500/20 via-primary/10 to-transparent",
-        bullets: [t("carousel.slide1.b1"), t("carousel.slide1.b2"), t("carousel.slide1.b3")],
-      },
-      {
-        tag: t("carousel.slide2.tag"),
-        title: t("carousel.slide2.title"),
-        badge: t("carousel.slide2.badge"),
-        description: t("carousel.slide2.desc"),
-        icon: Sparkles,
-        accent: "from-indigo-500/20 via-primary/10 to-transparent",
-        bullets: [t("carousel.slide2.b1"), t("carousel.slide2.b2"), t("carousel.slide2.b3")],
-      },
-      {
-        tag: t("carousel.slide3.tag"),
-        title: t("carousel.slide3.title"),
-        badge: t("carousel.slide3.badge"),
-        description: t("carousel.slide3.desc"),
-        icon: Languages,
-        accent: "from-amber-500/20 via-primary/10 to-transparent",
-        bullets: [t("carousel.slide3.b1"), t("carousel.slide3.b2"), t("carousel.slide3.b3")],
-      },
-      {
-        tag: t("carousel.slide4.tag"),
-        title: t("carousel.slide4.title"),
-        badge: t("carousel.slide4.badge"),
-        description: t("carousel.slide4.desc"),
-        icon: ShieldCheck,
-        accent: "from-emerald-500/20 via-primary/10 to-transparent",
-        bullets: [t("carousel.slide4.b1"), t("carousel.slide4.b2"), t("carousel.slide4.b3")],
-      },
-    ],
-    [t],
-  );
-
   // Carousel State
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+  const [reviewIndex, setReviewIndex] = useState(0);
 
   // Regional State Selector
   const [selectedState, setSelectedState] = useState(0);
 
-  // Interactive Mini-Demo State (Memory flip card demo in hero)
+  // ── Demo tab state ──
   const [demoStep, setDemoStep] = useState<"memory" | "stroop" | "voice">("memory");
-  const [demoFlipped, setDemoFlipped] = useState(false);
-  const [demoMatched, setDemoMatched] = useState(false);
-  const [stroopSelected, setStroopSelected] = useState<string | null>(null);
-  const [voiceSpoken, setVoiceSpoken] = useState(false);
 
-  // Auto-advance Carousel
+  // ── Memory card game state ──
+  const MEMORY_PAIRS = ["🌿", "🦏", "🫖", "🎋"];
+  const makeMemoryDeck = () => {
+    const pairs = [...MEMORY_PAIRS, ...MEMORY_PAIRS];
+    for (let i = pairs.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [pairs[i], pairs[j]] = [pairs[j]!, pairs[i]!];
+    }
+    return pairs.map((emoji, idx) => ({ id: idx, emoji, flipped: false, matched: false }));
+  };
+  const [memCards, setMemCards] = useState(() => makeMemoryDeck());
+  const [memSelected, setMemSelected] = useState<number[]>([]);
+  const [memScore, setMemScore] = useState(0);
+  const [memLocked, setMemLocked] = useState(false);
+  const memPairs = memCards.filter(c => c.matched).length / 2;
+
+  const handleMemCard = (id: number) => {
+    if (memLocked) return;
+    const card = memCards.find(c => c.id === id);
+    if (!card || card.flipped || card.matched) return;
+    soundEffects.playClick();
+    const newSelected = [...memSelected, id];
+    setMemCards(prev => prev.map(c => c.id === id ? { ...c, flipped: true } : c));
+    if (newSelected.length === 2) {
+      setMemLocked(true);
+      const [a, b] = newSelected.map(sid => memCards.find(c => c.id === sid)!);
+      if (a!.emoji === b!.emoji) {
+        soundEffects.playSuccess();
+        setTimeout(() => {
+          setMemCards(prev => prev.map(c => newSelected.includes(c.id) ? { ...c, matched: true } : c));
+          setMemScore(s => s + 10);
+          setMemSelected([]);
+          setMemLocked(false);
+        }, 400);
+      } else {
+        setTimeout(() => {
+          setMemCards(prev => prev.map(c => newSelected.includes(c.id) ? { ...c, flipped: false } : c));
+          setMemSelected([]);
+          setMemLocked(false);
+        }, 900);
+      }
+    } else {
+      setMemSelected(newSelected);
+    }
+  };
+
+  // ── Stroop game state ──
+  const STROOP_WORDS = [
+    { word: "RED", inkColor: "text-blue-500", correct: "Blue" },
+    { word: "GREEN", inkColor: "text-rose-500", correct: "Red" },
+    { word: "BLUE", inkColor: "text-emerald-500", correct: "Green" },
+    { word: "YELLOW", inkColor: "text-purple-500", correct: "Purple" },
+    { word: "PURPLE", inkColor: "text-amber-500", correct: "Orange" },
+  ];
+  const [stroopIdx, setStroopIdx] = useState(0);
+  const [stroopScore, setStroopScore] = useState(0);
+  const [stroopFeedback, setStroopFeedback] = useState<"correct" | "wrong" | null>(null);
+  const [stroopDone, setStroopDone] = useState(false);
+  const stroopCurrent = STROOP_WORDS[stroopIdx % STROOP_WORDS.length]!;
+  const stroopChoices = ["Red", "Blue", "Green", "Purple", "Orange"].filter(() => true);
+
+  const handleStroopAnswer = (answer: string) => {
+    if (stroopFeedback !== null) return;
+    const isCorrect = answer === stroopCurrent.correct;
+    setStroopFeedback(isCorrect ? "correct" : "wrong");
+    if (isCorrect) { soundEffects.playSuccess(); setStroopScore(s => s + 20); }
+    else soundEffects.playClick();
+    setTimeout(() => {
+      setStroopFeedback(null);
+      if (stroopIdx + 1 >= STROOP_WORDS.length) {
+        setStroopDone(true);
+      } else {
+        setStroopIdx(i => i + 1);
+      }
+    }, 700);
+  };
+
+  // ── Voice quiz state ──
+  const VOICE_QUIZ = [
+    { question: "Which state is famous for Kaziranga National Park?", options: ["Assam", "Meghalaya", "Manipur", "Nagaland"], answer: "Assam", speak: "Kaziranga National Park is in Assam" },
+    { question: "One-horned rhino is a symbol of which NE state?", options: ["Tripura", "Assam", "Mizoram", "Sikkim"], answer: "Assam", speak: "The one-horned rhino is the symbol of Assam" },
+    { question: "Which state is known as the 'Land of Blue Mountains'?", options: ["Manipur", "Nagaland", "Mizoram", "Arunachal Pradesh"], answer: "Mizoram", speak: "Mizoram means Land of Blue Mountains" },
+  ];
+  const [voiceQIdx, setVoiceQIdx] = useState(0);
+  const [voiceScore, setVoiceScore] = useState(0);
+  const [voiceFeedback, setVoiceFeedback] = useState<"correct" | "wrong" | null>(null);
+  const [voiceDone, setVoiceDone] = useState(false);
+  const voiceCurrent = VOICE_QUIZ[voiceQIdx % VOICE_QUIZ.length]!;
+
+  const handleVoiceAnswer = (answer: string) => {
+    if (voiceFeedback !== null) return;
+    const isCorrect = answer === voiceCurrent.answer;
+    setVoiceFeedback(isCorrect ? "correct" : "wrong");
+    if (isCorrect) { soundEffects.playSuccess(); setVoiceScore(s => s + 25); }
+    speak(voiceCurrent.speak, "en-IN");
+    setTimeout(() => {
+      setVoiceFeedback(null);
+      if (voiceQIdx + 1 >= VOICE_QUIZ.length) {
+        setVoiceDone(true);
+      } else {
+        setVoiceQIdx(i => i + 1);
+      }
+    }, 1200);
+  };
+
   useEffect(() => {
-    if (!isAutoPlaying) return;
     const timer = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % carouselSlides.length);
+      setReviewIndex((previous) => (previous + 1) % REVIEWS.length);
     }, 6000);
     return () => clearInterval(timer);
-  }, [isAutoPlaying, carouselSlides.length]);
+  }, []);
 
   const handleStateVoice = (stateObj: (typeof NER_STATES)[number]) => {
     soundEffects.playChime();
-    speak(stateObj.pronounce, "en-IN");
-  };
-
-  const handleDemoClick = () => {
-    soundEffects.playSuccess();
-    setDemoFlipped(true);
-    setTimeout(() => {
-      setDemoMatched(true);
-    }, 500);
+    speak(`${stateObj.greeting}. ${stateObj.pronounce}`, "en-IN");
   };
 
   const resetDemo = () => {
     soundEffects.playClick();
-    setDemoFlipped(false);
-    setDemoMatched(false);
-    setStroopSelected(null);
-    setVoiceSpoken(false);
+    setMemCards(makeMemoryDeck());
+    setMemSelected([]);
+    setMemScore(0);
+    setMemLocked(false);
+    setStroopIdx(0);
+    setStroopScore(0);
+    setStroopFeedback(null);
+    setStroopDone(false);
+    setVoiceQIdx(0);
+    setVoiceScore(0);
+    setVoiceFeedback(null);
+    setVoiceDone(false);
   };
 
   return (
@@ -316,24 +381,24 @@ export function LandingPage({
       {/* =======================================================================
       {/* LEADERSHIP CAMPAIGN BANNER                                               */}
       {/* ======================================================================= */}
-      <section className="relative overflow-hidden border-b-4 border-orange-500 bg-white">
+      <section className="leadership-banner relative overflow-hidden border-b-4">
 
         {/* Tricolor background */}
-        <div className="absolute inset-0 bg-gradient-to-r from-orange-500 via-white via-[48%] to-emerald-600" />
+        <div className="leadership-banner-stripe absolute inset-0" />
 
         {/* White angled center */}
         <div
-          className="absolute inset-y-0 left-[18%] right-[12%] bg-white"
+          className="leadership-banner-panel absolute inset-y-0 left-[18%] right-[12%]"
           style={{
             clipPath: "polygon(8% 0, 100% 0, 92% 100%, 0% 100%)",
           }}
         />
 
         {/* Very subtle circular watermark */}
-        <div className="pointer-events-none absolute right-[25%] top-1/2 h-[280px] w-[280px] -translate-y-1/2 rounded-full border-[18px] border-slate-900/[0.035]">
-          <div className="absolute inset-6 rounded-full border-2 border-slate-900/[0.035]" />
-          <div className="absolute inset-1/2 h-[85%] w-px -translate-x-1/2 -translate-y-1/2 bg-slate-900/[0.025]" />
-          <div className="absolute inset-1/2 h-px w-[85%] -translate-x-1/2 -translate-y-1/2 bg-slate-900/[0.025]" />
+        <div className="pointer-events-none absolute right-[25%] top-1/2 h-[280px] w-[280px] -translate-y-1/2 rounded-full border-[18px] leadership-watermark">
+          <div className="absolute inset-6 rounded-full border-2 leadership-watermark" />
+          <div className="absolute inset-1/2 h-[85%] w-px -translate-x-1/2 -translate-y-1/2 leadership-watermark-line" />
+          <div className="absolute inset-1/2 h-px w-[85%] -translate-x-1/2 -translate-y-1/2 leadership-watermark-line" />
         </div>
 
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6">
@@ -346,33 +411,33 @@ export function LandingPage({
             <div className="absolute inset-y-0 left-0 z-20 flex w-[50%] items-center">
               <div className="max-w-[520px] pl-3 sm:pl-6 lg:pl-10">
 
-                <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-orange-600 px-3 py-1 text-[9px] font-extrabold uppercase tracking-[0.15em] text-white shadow-sm sm:text-[10px]">
+                <div className="leadership-badge mb-3 inline-flex items-center gap-2 rounded-full px-3 py-1 text-[9px] font-extrabold uppercase tracking-[0.15em] shadow-sm sm:text-[10px]">
                   <Sparkles className="h-3 w-3" />
                   {t("lead.initiative")}
                 </div>
 
-                <h2 className="font-serif text-3xl font-black leading-[0.98] tracking-tight text-slate-900 sm:text-4xl lg:text-5xl">
+                <h2 className="font-serif text-3xl font-black leading-[0.98] tracking-tight leadership-text sm:text-4xl lg:text-5xl">
                   {t("lead.title1")}
                   <br />
-                  <span className="text-orange-600">
+                  <span className="leadership-accent">
                     {t("lead.title2")}
                   </span>
                 </h2>
 
-                <p className="mt-3 max-w-md text-xs leading-relaxed text-slate-600 sm:text-sm">
+                <p className="leadership-muted mt-3 max-w-md text-xs leading-relaxed sm:text-sm">
                   {t("lead.subtitle")}
                 </p>
 
                 <div className="mt-4 flex flex-wrap gap-2">
-                  <span className="rounded-full bg-white/90 px-3 py-1.5 text-[9px] font-bold text-slate-700 shadow-sm ring-1 ring-slate-200">
+                  <span className="leadership-chip rounded-full px-3 py-1.5 text-[9px] font-bold shadow-sm ring-1">
                     {t("lead.badge1")}
                   </span>
 
-                  <span className="rounded-full bg-white/90 px-3 py-1.5 text-[9px] font-bold text-slate-700 shadow-sm ring-1 ring-slate-200">
+                  <span className="leadership-chip rounded-full px-3 py-1.5 text-[9px] font-bold shadow-sm ring-1">
                     {t("lead.badge2")}
                   </span>
 
-                  <span className="rounded-full bg-white/90 px-3 py-1.5 text-[9px] font-bold text-slate-700 shadow-sm ring-1 ring-slate-200">
+                  <span className="leadership-chip rounded-full px-3 py-1.5 text-[9px] font-bold shadow-sm ring-1">
                     {t("lead.badge3")}
                   </span>
                 </div>
@@ -413,9 +478,7 @@ export function LandingPage({
               </div>
 
             </div>
-
-            Bottom alignment line
-            <div className="absolute bottom-0 left-0 right-0 z-50 h-[5px] bg-gradient-to-r from-orange-600 via-orange-400 to-emerald-600" />
+            {/* <div className="absolute bottom-0 left-0 right-0 z-50 h-[5px] bg-gradient-to-r from-orange-600 via-orange-400 to-emerald-600" /> */}
 
           </div>
         </div>
@@ -424,32 +487,51 @@ export function LandingPage({
       {/* ========================================================================= */}
       {/* 1. HERO SECTION WITH INTERACTIVE LIVE MINI-DEMO                           */}
       {/* ========================================================================= */}
-      <section className="relative overflow-hidden surface-hero border-b border-border/80">
-        {/* Ambient background glow orbs */}
-        <div className="pointer-events-none absolute -top-24 left-1/4 h-96 w-96 rounded-full bg-primary/15 blur-3xl" />
-        <div className="pointer-events-none absolute top-1/2 -right-20 h-96 w-96 rounded-full bg-emerald-500/10 blur-3xl" />
+      <section
+        className="hero-stage relative overflow-hidden surface-hero border-b border-border/80"
+        onPointerMove={(event) => {
+          const bounds = event.currentTarget.getBoundingClientRect();
+          event.currentTarget.style.setProperty("--hero-x", `${event.clientX - bounds.left}px`);
+          event.currentTarget.style.setProperty("--hero-y", `${event.clientY - bounds.top}px`);
+        }}
+        onPointerLeave={(event) => {
+          event.currentTarget.style.removeProperty("--hero-x");
+          event.currentTarget.style.removeProperty("--hero-y");
+        }}
+      >
+        <div className="hero-grid pointer-events-none absolute inset-0" />
+        <div className="hero-pulse pointer-events-none absolute" aria-hidden="true">
+          <svg viewBox="0 0 900 120" preserveAspectRatio="none">
+            <g>
+              <path className="hero-pulse-trace" d="M0 64 H120 L138 64 L151 58 L164 64 H290 L306 64 L321 20 L337 102 L353 64 H500 L516 64 L530 54 L544 64 H670 L686 64 L700 34 L714 91 L728 64 H900" />
+              <path className="hero-pulse-trace" transform="translate(900 0)" d="M0 64 H120 L138 64 L151 58 L164 64 H290 L306 64 L321 20 L337 102 L353 64 H500 L516 64 L530 54 L544 64 H670 L686 64 L700 34 L714 91 L728 64 H900" />
+            </g>
+          </svg>
+          <span />
+        </div>
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/70 to-transparent" />
 
         <div className="mx-auto grid max-w-6xl items-center gap-8 sm:gap-12 px-4 py-12 sm:py-16 sm:px-6 lg:grid-cols-12 lg:py-24">
           {/* Left Column: Heading & CTAs */}
           <div className="lg:col-span-7 space-y-5 sm:space-y-6">
-            <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3.5 py-1 text-xs font-bold text-primary shadow-sm">
+            <div className="inline-flex items-center gap-2 border-l-2 border-primary bg-primary/10 px-3.5 py-1 text-xs font-bold text-primary">
               <span className="flex h-2 w-2 rounded-full bg-primary animate-pulse" />
               <span>{t("hero.badge")}</span>
             </div>
 
-            <h1 className="text-3xl font-extrabold leading-[1.15] tracking-tight text-foreground sm:text-5xl lg:text-6xl">
+            <h1 className="max-w-3xl text-4xl font-black leading-[0.98] tracking-tight text-foreground sm:text-6xl lg:text-7xl">
               {t("hero.title1")} <br />
               <span className="text-gradient">{t("hero.titleGradient")}</span> {t("hero.title2")}
             </h1>
 
-            <p className="max-w-xl text-sm leading-relaxed text-muted-foreground sm:text-lg">
+            <p className="max-w-xl border-l border-border/80 pl-4 text-sm leading-relaxed text-muted-foreground sm:text-lg">
               {t("hero.subhead")}
             </p>
 
             <div className="flex flex-wrap items-center gap-3 pt-2">
               <Button
                 size="lg"
-                className="w-full sm:w-auto rounded-full px-7 py-5 sm:py-6 text-sm sm:text-base font-bold shadow-lift hover:scale-105 transition-all gap-2"
+                className="w-full sm:w-auto rounded-md px-7 py-5 sm:py-6 text-sm sm:text-base font-bold shadow-lift hover:-translate-y-0.5 transition-all gap-2"
                 onClick={() => {
                   soundEffects.playSuccess();
                   onStart();
@@ -463,7 +545,7 @@ export function LandingPage({
                 <Button
                   size="lg"
                   variant="outline"
-                  className="w-full sm:w-auto rounded-full px-6 py-5 sm:py-6 text-sm sm:text-base font-bold hover:bg-muted"
+                  className="w-full sm:w-auto rounded-md px-6 py-5 sm:py-6 text-sm sm:text-base font-bold hover:bg-muted"
                   onClick={() => {
                     soundEffects.playClick();
                     onResume();
@@ -475,7 +557,7 @@ export function LandingPage({
                 <a
                   href="#interactive-demo"
                   onClick={() => soundEffects.playClick()}
-                  className="w-full sm:w-auto inline-flex items-center justify-center rounded-full border border-border/80 bg-card/80 px-6 py-3 text-sm font-bold text-foreground hover:bg-muted transition-all"
+                  className="w-full sm:w-auto inline-flex items-center justify-center rounded-md border border-border/80 bg-card/80 px-6 py-3 text-sm font-bold text-foreground hover:bg-muted transition-all"
                 >
                   <Play className="h-4 w-4 mr-2 text-primary" />
                   {t("hero.ctaDemo")}
@@ -484,16 +566,16 @@ export function LandingPage({
             </div>
 
             {/* Micro Feature Badges */}
-            <div className="grid grid-cols-3 gap-2.5 sm:gap-3 pt-2 sm:pt-4 max-w-lg">
-              <div className="rounded-2xl border border-border/60 bg-card/60 p-2.5 sm:p-3 text-center backdrop-blur-sm">
+            <div className="grid max-w-lg grid-cols-3 gap-2.5 border-t border-border/70 pt-2 sm:gap-3 sm:pt-4">
+              <div className="border-b border-border/60 p-2.5 text-center sm:p-3">
                 <p className="text-lg sm:text-xl font-extrabold text-primary">{t("hero.metric3Value")}</p>
                 <p className="text-[10px] sm:text-[11px] font-semibold text-muted-foreground">{t("hero.metric3Label")}</p>
               </div>
-              <div className="rounded-2xl border border-border/60 bg-card/60 p-2.5 sm:p-3 text-center backdrop-blur-sm">
+              <div className="border-b border-border/60 p-2.5 text-center sm:p-3">
                 <p className="text-lg sm:text-xl font-extrabold text-primary">{t("hero.metric2Value")}</p>
                 <p className="text-[10px] sm:text-[11px] font-semibold text-muted-foreground">{t("hero.metric2Label")}</p>
               </div>
-              <div className="rounded-2xl border border-border/60 bg-card/60 p-2.5 sm:p-3 text-center backdrop-blur-sm">
+              <div className="border-b border-emerald-500/40 p-2.5 text-center sm:p-3">
                 <p className="text-lg sm:text-xl font-extrabold text-emerald-600 dark:text-emerald-400">{t("hero.metric1Value")}</p>
                 <p className="text-[10px] sm:text-[11px] font-semibold text-muted-foreground">{t("hero.metric1Label")}</p>
               </div>
@@ -504,9 +586,11 @@ export function LandingPage({
           {/* Right Column: Interactive Live Mini-Demo Widget */}
           <div
             id="interactive-demo"
-            className="lg:col-span-5 rounded-3xl border border-border bg-card p-6 shadow-lift relative glass-card"
+            className="hero-demo lg:col-span-5 relative border border-border/80 bg-card/75 p-5 shadow-lift glass-card sm:p-6"
           >
-            <div className="flex items-center justify-between border-b border-border pb-4">
+            <div className="absolute -right-px -top-px h-10 w-10 border-r-2 border-t-2 border-primary/70" />
+            <div className="absolute -bottom-px -left-px h-10 w-10 border-b-2 border-l-2 border-primary/40" />
+            <div className="relative flex items-center justify-between border-b border-border pb-4">
               <div className="flex items-center gap-2">
                 <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-primary/10 text-primary">
                   <Zap className="h-4 w-4" />
@@ -516,14 +600,19 @@ export function LandingPage({
                   <p className="text-[11px] text-muted-foreground">{t("demo.subtitle")}</p>
                 </div>
               </div>
-              <button
-                type="button"
-                onClick={resetDemo}
-                className="rounded-full p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
-                title="Reset Demo"
-              >
-                <RotateCcw className="h-4 w-4" />
-              </button>
+              <div className="flex items-center gap-2">
+                <span className="hero-live-status hidden items-center gap-1.5 text-[9px] font-bold uppercase tracking-[0.16em] text-primary sm:flex">
+                  <span className="h-1.5 w-1.5 rounded-full bg-primary" /> Live
+                </span>
+                <button
+                  type="button"
+                  onClick={resetDemo}
+                  className="rounded-full p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+                  title="Reset Demo"
+                >
+                  <RotateCcw className="h-4 w-4" />
+                </button>
+              </div>
             </div>
 
             {/* Demo Tabs */}
@@ -552,120 +641,149 @@ export function LandingPage({
             </div>
 
             {/* Demo Body */}
-            <div className="mt-5 min-h-[210px] flex flex-col items-center justify-center text-center">
+            <div className="mt-4 min-h-[240px] flex flex-col items-center justify-center">
+
+              {/* ── MEMORY CARD GAME ── */}
               {demoStep === "memory" && (
-                <div className="space-y-4 w-full">
-                  <p className="text-xs text-muted-foreground">
-                    {t("demo.promptMemory")}
-                  </p>
-                  <div className="flex justify-center gap-4">
-                    <div className="flex h-20 w-20 items-center justify-center rounded-2xl border-2 border-primary/40 bg-primary/10 text-3xl shadow-sm">
-                      🍃
-                    </div>
-                    <button
-                      type="button"
-                      onClick={handleDemoClick}
-                      className={`flex h-20 w-20 items-center justify-center rounded-2xl border-2 text-3xl transition-all ${demoFlipped
-                        ? "border-emerald-500 bg-emerald-500/20 rotate-y-180"
-                        : "border-dashed border-border bg-muted hover:border-primary cursor-pointer animate-pulse"
-                        }`}
-                    >
-                      {demoFlipped ? "🍃" : "❓"}
-                    </button>
+                <div className="w-full space-y-3">
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-muted-foreground font-medium">Match the pairs! Flip 2 cards</span>
+                    <span className="font-bold text-primary">✨ {memScore} pts · {memPairs}/{MEMORY_PAIRS.length} pairs</span>
                   </div>
-                  {demoMatched && (
-                    <div className="rounded-xl bg-emerald-500/10 border border-emerald-500/20 p-2 text-xs font-bold text-emerald-700 dark:text-emerald-300 flex items-center justify-center gap-1.5 animate-in fade-in">
-                      <CheckCircle2 className="h-4 w-4" /> Match found! +20 XP awarded.
+                  <div className="grid grid-cols-4 gap-2">
+                    {memCards.map((card) => (
+                      <button
+                        key={card.id}
+                        type="button"
+                        onClick={() => handleMemCard(card.id)}
+                        disabled={card.matched || memLocked}
+                        className={`h-14 w-full rounded-xl border-2 text-2xl font-bold transition-all duration-300 select-none
+                          ${ card.matched
+                              ? "border-emerald-500/50 bg-emerald-500/15 scale-95 opacity-60"
+                              : card.flipped
+                              ? "border-primary bg-primary/10 scale-105 shadow-md"
+                              : "border-border bg-muted/60 hover:border-primary hover:bg-primary/5"
+                          }`}
+                      >
+                        {card.flipped || card.matched ? card.emoji : "❓"}
+                      </button>
+                    ))}
+                  </div>
+                  {memPairs === MEMORY_PAIRS.length && (
+                    <div className="rounded-xl bg-emerald-500/10 border border-emerald-500/30 p-2.5 text-center text-xs font-bold text-emerald-700 dark:text-emerald-300 animate-in fade-in">
+                      🎉 Perfect! All pairs matched! Score: {memScore} pts
                     </div>
                   )}
                 </div>
               )}
 
+              {/* ── STROOP CHALLENGE ── */}
               {demoStep === "stroop" && (
-                <div className="space-y-4 w-full">
-                  <p className="text-xs text-muted-foreground">
-                    {t("demo.promptStroop")}
-                  </p>
-                  <div className="py-2 text-3xl font-extrabold text-emerald-600">
-                    "RED"
-                  </div>
-                  <div className="flex justify-center gap-3">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        soundEffects.playClick();
-                        setStroopSelected("red");
-                      }}
-                      className={`px-4 py-2 rounded-xl text-xs font-bold border transition-all ${stroopSelected === "red"
-                        ? "border-rose-500 bg-rose-500/20 text-rose-700"
-                        : "border-border bg-card hover:bg-muted"
-                        }`}
-                    >
-                      Red
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        soundEffects.playSuccess();
-                        setStroopSelected("green");
-                      }}
-                      className={`px-4 py-2 rounded-xl text-xs font-bold border transition-all ${stroopSelected === "green"
-                        ? "border-emerald-500 bg-emerald-500/20 text-emerald-700 font-extrabold"
-                        : "border-border bg-card hover:bg-muted"
-                        }`}
-                    >
-                      Green (Correct!)
-                    </button>
-                  </div>
-                  {stroopSelected === "green" && (
-                    <p className="text-xs font-bold text-emerald-600 animate-in fade-in">
-                      ✓ Great cognitive inhibitory control!
-                    </p>
+                <div className="w-full space-y-3 text-center">
+                  {stroopDone ? (
+                    <div className="rounded-2xl border border-primary/30 bg-primary/10 p-5 space-y-2 animate-in fade-in">
+                      <p className="text-2xl">🧠</p>
+                      <p className="text-sm font-bold text-foreground">Attention Test Complete!</p>
+                      <p className="text-xl font-extrabold text-primary">{stroopScore} / {STROOP_WORDS.length * 20} pts</p>
+                      <p className="text-[11px] text-muted-foreground">Stroop tests cognitive inhibitory control — a key dementia marker.</p>
+                    </div>
+                  ) : (
+                    <>
+                      <div className="flex items-center justify-between text-xs">
+                        <span className="text-muted-foreground">Round {stroopIdx + 1} of {STROOP_WORDS.length}</span>
+                        <span className="font-bold text-primary">⚡ {stroopScore} pts</span>
+                      </div>
+                      <p className="text-[11px] text-muted-foreground">What COLOR is the ink? (ignore the word!)</p>
+                      <div className={`py-3 text-4xl font-extrabold tracking-widest ${stroopCurrent.inkColor} transition-all`}>
+                        {stroopCurrent.word}
+                      </div>
+                      <div className="grid grid-cols-3 gap-2">
+                        {["Red", "Blue", "Green", "Purple", "Orange", "Amber"].slice(0, 5).map((color) => (
+                          <button
+                            key={color}
+                            type="button"
+                            onClick={() => handleStroopAnswer(color)}
+                            disabled={stroopFeedback !== null}
+                            className={`rounded-xl border py-2 text-xs font-bold transition-all
+                              ${ stroopFeedback !== null && color === stroopCurrent.correct
+                                  ? "border-emerald-500 bg-emerald-500/20 text-emerald-700 scale-105"
+                                  : stroopFeedback === "wrong" && color !== stroopCurrent.correct
+                                  ? "opacity-40"
+                                  : "border-border bg-card hover:bg-muted hover:border-primary"
+                              }`}
+                          >
+                            {color}
+                          </button>
+                        ))}
+                      </div>
+                      {stroopFeedback && (
+                        <p className={`text-xs font-bold animate-in fade-in ${ stroopFeedback === "correct" ? "text-emerald-600" : "text-rose-600"}`}>
+                          {stroopFeedback === "correct" ? "✓ Correct! +20 pts" : `✗ It was ${stroopCurrent.correct}`}
+                        </p>
+                      )}
+                    </>
                   )}
                 </div>
               )}
 
+              {/* ── VOICE / NE KNOWLEDGE QUIZ ── */}
               {demoStep === "voice" && (
-                <div className="space-y-4 w-full">
-                  <p className="text-xs text-muted-foreground">
-                    {t("demo.promptVoice")}
-                  </p>
-                  <div className="rounded-2xl border border-border bg-muted/40 p-3 text-xs">
-                    <p className="font-semibold text-foreground">
-                      "আজি আপোনাৰ দিনটো কেনে গৈছে?"
-                    </p>
-                    <p className="text-muted-foreground text-[11px] mt-0.5">
-                      (How has your day been going?)
-                    </p>
-                  </div>
-                  <div className="flex justify-center gap-3">
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => {
-                        soundEffects.playChime();
-                        speak("Aji aponar dinto kene goise?", "as-IN");
-                        setVoiceSpoken(true);
-                      }}
-                      className="rounded-full text-xs font-bold gap-1.5"
-                    >
-                      <Volume2 className="h-3.5 w-3.5 text-primary" />
-                      Play Voice Sample
-                    </Button>
-                  </div>
-                  {voiceSpoken && (
-                    <p className="text-[11px] text-primary font-semibold animate-in fade-in">
-                      🗣️ Voice engine ready in Assamese, Hindi, and English.
-                    </p>
+                <div className="w-full space-y-3">
+                  {voiceDone ? (
+                    <div className="rounded-2xl border border-primary/30 bg-primary/10 p-5 space-y-2 text-center animate-in fade-in">
+                      <p className="text-2xl">🗣️</p>
+                      <p className="text-sm font-bold text-foreground">NE Culture Quiz Done!</p>
+                      <p className="text-xl font-extrabold text-primary">{voiceScore} / {VOICE_QUIZ.length * 25} pts</p>
+                      <p className="text-[11px] text-muted-foreground">Regional memory recall is a core cognitive biomarker.</p>
+                    </div>
+                  ) : (
+                    <>
+                      <div className="flex items-center justify-between text-xs">
+                        <span className="text-muted-foreground">Q {voiceQIdx + 1} of {VOICE_QUIZ.length}</span>
+                        <div className="flex items-center gap-2">
+                          <button type="button" onClick={() => speak(voiceCurrent.question, "en-IN")} className="flex items-center gap-1 rounded-full border border-border/80 bg-muted px-2 py-0.5 text-[10px] font-bold hover:bg-muted/80">
+                            <Volume2 className="h-3 w-3 text-primary" /> Hear
+                          </button>
+                          <span className="font-bold text-primary">🌿 {voiceScore} pts</span>
+                        </div>
+                      </div>
+                      <div className="rounded-xl border border-border bg-muted/40 p-3">
+                        <p className="text-xs font-semibold text-foreground leading-relaxed">{voiceCurrent.question}</p>
+                      </div>
+                      <div className="grid grid-cols-2 gap-2">
+                        {voiceCurrent.options.map((opt) => (
+                          <button
+                            key={opt}
+                            type="button"
+                            onClick={() => handleVoiceAnswer(opt)}
+                            disabled={voiceFeedback !== null}
+                            className={`rounded-xl border py-2.5 text-xs font-bold transition-all
+                              ${ voiceFeedback !== null && opt === voiceCurrent.answer
+                                  ? "border-emerald-500 bg-emerald-500/20 text-emerald-700 scale-105"
+                                  : voiceFeedback === "wrong" && opt !== voiceCurrent.answer
+                                  ? "opacity-40"
+                                  : "border-border bg-card hover:bg-muted hover:border-primary"
+                              }`}
+                          >
+                            {opt}
+                          </button>
+                        ))}
+                      </div>
+                      {voiceFeedback && (
+                        <p className={`text-xs font-bold text-center animate-in fade-in ${ voiceFeedback === "correct" ? "text-emerald-600" : "text-rose-600"}`}>
+                          {voiceFeedback === "correct" ? "✓ Correct! +25 pts" : `✗ Answer: ${voiceCurrent.answer}`}
+                        </p>
+                      )}
+                    </>
                   )}
                 </div>
               )}
             </div>
 
             {/* Quick Action Footer */}
-            <div className="mt-5 border-t border-border pt-4 flex items-center justify-between">
+            <div className="mt-4 border-t border-border pt-3 flex items-center justify-between">
               <span className="text-[11px] text-muted-foreground">
-                No sign-in required to try full tests
+                No sign-in needed to explore
               </span>
               <Button
                 size="sm"
@@ -675,145 +793,55 @@ export function LandingPage({
                   onStart();
                 }}
               >
-                Start Free Onboarding →
+                Start Free Screening →
               </Button>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ========================================================================= */}
-      {/* 2. DYNAMIC INTERACTIVE FEATURE CAROUSEL                                   */}
-      {/* ========================================================================= */}
-      <section
-        id="features"
-        className="mx-auto max-w-6xl px-4 py-20 sm:px-6"
-        onMouseEnter={() => setIsAutoPlaying(false)}
-        onMouseLeave={() => setIsAutoPlaying(true)}
-      >
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
-          <div>
-            <p className="text-xs font-bold uppercase tracking-[0.2em] text-primary">
-              {t("carousel.tag")}
-            </p>
-            <h2 className="mt-2 text-3xl font-extrabold text-foreground sm:text-4xl">
-              {t("carousel.heading")}
-            </h2>
-            <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
-              {t("carousel.subheading")}
-            </p>
+      {/* Public health partners and initiatives */}
+      <section className="government-marquee border-y border-border/70 py-12 sm:py-14">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6">
+          <div className="government-heading text-center">
+            <p className="text-xl font-semibold tracking-tight sm:text-2xl">Proudly Supported By</p>
+            <span className="mx-auto mt-2 block h-0.5 w-56 bg-gradient-to-r from-primary via-cyan-400 to-blue-500" />
           </div>
-
-          {/* Carousel Navigation Buttons */}
-          <div className="flex items-center gap-2">
-            <button
-              type="button"
-              onClick={() => {
-                soundEffects.playClick();
-                setCurrentSlide((prev) => (prev - 1 + carouselSlides.length) % carouselSlides.length);
-              }}
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-border bg-card text-foreground hover:bg-muted transition-colors shadow-soft"
-              aria-label="Previous slide"
-            >
-              <ChevronLeft className="h-5 w-5" />
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                soundEffects.playClick();
-                setCurrentSlide((prev) => (prev + 1) % carouselSlides.length);
-              }}
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-border bg-card text-foreground hover:bg-muted transition-colors shadow-soft"
-              aria-label="Next slide"
-            >
-              <ChevronRight className="h-5 w-5" />
-            </button>
-          </div>
-        </div>
-
-        {/* Carousel Slide Viewer */}
-        <div className="mt-8 relative overflow-hidden rounded-3xl border border-border bg-card p-6 sm:p-10 shadow-lift">
-          {(() => {
-            const slide = carouselSlides[currentSlide] || carouselSlides[0];
-            const Icon = slide.icon;
-            return (
-              <div className="grid gap-8 lg:grid-cols-12 items-center animate-in fade-in duration-300">
-                <div className="lg:col-span-7 space-y-4">
-                  <div className="flex items-center gap-2">
-                    <span className="rounded-full bg-primary/10 px-3 py-1 text-xs font-bold text-primary">
-                      {slide.tag}
-                    </span>
-                    <span className="text-xs text-muted-foreground font-semibold">
-                      {slide.badge}
-                    </span>
-                  </div>
-
-                  <h3 className="text-2xl sm:text-3xl font-extrabold text-foreground">
-                    {slide.title}
-                  </h3>
-
-                  <p className="text-sm sm:text-base leading-relaxed text-muted-foreground">
-                    {slide.description}
-                  </p>
-
-                  <ul className="space-y-2 pt-2 text-sm text-foreground font-medium">
-                    {slide.bullets.map((b) => (
-                      <li key={b} className="flex items-center gap-2.5">
-                        <CheckCircle2 className="h-4 w-4 text-primary shrink-0" />
-                        <span>{b}</span>
-                      </li>
-                    ))}
-                  </ul>
-
-                  <div className="pt-4">
-                    <Button
-                      onClick={() => {
-                        soundEffects.playSuccess();
-                        onStart();
-                      }}
-                      className="rounded-full px-6 font-bold"
-                    >
-                      {t("demo.tryModule")} <ArrowRight className="h-4 w-4 ml-1.5" />
-                    </Button>
+          <div className="mt-10 overflow-hidden" aria-label="Government ministries and public health initiatives">
+            <div className="government-marquee-track">
+              {[...GOVERNMENT_SHOUTOUTS, ...GOVERNMENT_SHOUTOUTS].map((item, index) => (
+                <div key={`${item.institution}-${index}`} className="government-shoutout">
+                  <img src={item.image} alt={`${item.institution} emblem`} />
+                  <div>
+                    <strong>{item.wordmark}</strong>
+                    <p>{item.institution}</p>
                   </div>
                 </div>
-
-                <div className="lg:col-span-5 flex justify-center">
-                  <div className={`relative flex h-64 w-64 sm:h-72 sm:w-72 items-center justify-center rounded-3xl border border-border bg-gradient-to-br ${slide.accent} shadow-inner`}>
-                    <Icon className="h-28 w-28 text-primary animate-float" />
-                    <div className="absolute bottom-4 left-4 right-4 rounded-2xl bg-card/90 p-3 text-center border border-border/70 backdrop-blur-md">
-                      <p className="text-xs font-bold text-foreground">{t("demo.activeModule")}</p>
-                      <p className="text-[11px] text-muted-foreground">{slide.tag}</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            );
-          })()}
-
-          {/* Carousel Slide Indicators */}
-          <div className="mt-8 flex items-center justify-center gap-2 border-t border-border/60 pt-6">
-            {CAROUSEL_SLIDES.map((_, idx) => (
-              <button
-                key={idx}
-                type="button"
-                onClick={() => {
-                  soundEffects.playClick();
-                  setCurrentSlide(idx);
-                }}
-                className={`h-2 rounded-full transition-all ${currentSlide === idx ? "w-8 bg-primary" : "w-2 bg-muted hover:bg-muted-foreground/40"
-                  }`}
-                aria-label={`Go to slide ${idx + 1}`}
-              />
-            ))}
+              ))}
+            </div>
           </div>
+          <p className="government-marquee-note mt-8 text-center text-[10px]">
+            SmritiMitra is an independent project inspired by public digital-health and community-care goals.
+          </p>
         </div>
       </section>
 
       {/* ========================================================================= */}
       {/* 3. INTERACTIVE 8 NER STATES CULTURAL EXPLORER                             */}
       {/* ========================================================================= */}
-      <section id="regional-culture" className="weave border-y border-border/80 bg-muted/20 py-20">
+      <section
+        id="regional-culture"
+        className="weave pixel-grid relative border-y border-border/80 bg-muted/20 py-20"
+        onPointerMove={(event) => {
+          const bounds = event.currentTarget.getBoundingClientRect();
+          event.currentTarget.style.setProperty("--grid-x", `${event.clientX - bounds.left}px`);
+          event.currentTarget.style.setProperty("--grid-y", `${event.clientY - bounds.top}px`);
+        }}
+        onPointerLeave={(event) => {
+          event.currentTarget.style.removeProperty("--grid-x");
+          event.currentTarget.style.removeProperty("--grid-y");
+        }}
+      >
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <div className="text-center max-w-2xl mx-auto space-y-2">
             <p className="text-xs font-bold uppercase tracking-[0.2em] text-primary">
@@ -827,23 +855,33 @@ export function LandingPage({
             </p>
           </div>
 
-          {/* State Tabs Selector */}
-          <div className="mt-10 flex gap-2 overflow-x-auto pb-2 justify-start sm:justify-center">
+          {/* Hoverable State Matrix */}
+          <div className="culture-matrix mt-10 grid grid-cols-2 gap-2.5 sm:grid-cols-4 lg:grid-cols-8" role="list" aria-label="Explore North East states">
             {NER_STATES.map((st, idx) => (
               <button
                 key={st.name}
                 type="button"
+                role="listitem"
+                aria-pressed={selectedState === idx}
                 onClick={() => {
                   soundEffects.playClick();
                   setSelectedState(idx);
                 }}
-                className={`flex items-center gap-1.5 rounded-full px-4 py-2 text-xs font-bold whitespace-nowrap transition-all ${selectedState === idx
-                  ? "bg-primary text-primary-foreground shadow-md scale-105"
-                  : "bg-card border border-border text-muted-foreground hover:text-foreground"
+                className={`culture-matrix-cell relative min-h-24 overflow-hidden rounded-2xl border p-3 text-left transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${selectedState === idx
+                  ? "is-selected border-primary bg-primary text-primary-foreground shadow-lg -translate-y-1"
+                  : "border-border/80 bg-card/75 text-foreground"
                   }`}
               >
-                <span>{st.emoji}</span>
-                <span>{st.name}</span>
+                <span className="relative z-10 flex items-center justify-between text-xl">
+                  <span aria-hidden>{st.emoji}</span>
+                  <span className={`text-[10px] font-bold uppercase tracking-wider ${selectedState === idx ? "text-primary-foreground/75" : "text-muted-foreground"}`}>
+                    0{idx + 1}
+                  </span>
+                </span>
+                <span className="relative z-10 mt-3 block text-xs font-extrabold leading-tight">{st.name}</span>
+                <span className={`relative z-10 mt-1 block truncate text-[10px] ${selectedState === idx ? "text-primary-foreground/80" : "text-muted-foreground"}`}>
+                  {st.greeting}
+                </span>
               </button>
             ))}
           </div>
@@ -852,7 +890,7 @@ export function LandingPage({
           {(() => {
             const state = NER_STATES[selectedState];
             return (
-              <div className="mt-8 rounded-3xl border border-border bg-card p-6 sm:p-8 shadow-soft">
+              <div className="mt-8 border-y border-border/80 bg-background/20 p-6 sm:p-8">
                 <div className="grid gap-6 md:grid-cols-12 items-center">
                   <div className="md:col-span-7 space-y-4">
                     <div className="flex items-center gap-2">
@@ -901,67 +939,7 @@ export function LandingPage({
           })()}
         </div>
       </section>
-
-      {/* ========================================================================= */}
-      {/* 4. 9 COGNITIVE GAMES GALLERY                                              */}
-      {/* ========================================================================= */}
-      <section className="mx-auto max-w-6xl px-4 py-20 sm:px-6">
-        <div className="max-w-2xl">
-          <p className="text-xs font-bold uppercase tracking-[0.2em] text-primary">
-            Cognitive Gym
-          </p>
-          <h2 className="mt-2 text-3xl font-extrabold text-foreground sm:text-4xl">
-            9 Interactive Brain Activities
-          </h2>
-          <p className="mt-2 text-sm text-muted-foreground">
-            Targeting memory preservation, focus control, daily routine recall, and verbal fluency.
-          </p>
-        </div>
-
-        <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {GAMES.map((game) => {
-            const Icon = game.icon;
-            return (
-              <div
-                key={game.id}
-                className="group rounded-3xl border border-border bg-card p-5 shadow-soft hover:shadow-lift hover:border-primary/40 transition-all flex flex-col justify-between"
-              >
-                <div>
-                  <div className="flex items-center justify-between">
-                    <div className={`flex h-11 w-11 items-center justify-center rounded-2xl ${game.accent}`}>
-                      <Icon className="h-5 w-5" />
-                    </div>
-                    <span className="rounded-full bg-muted px-2.5 py-0.5 text-[10px] font-bold text-muted-foreground">
-                      {game.category}
-                    </span>
-                  </div>
-                  <h3 className="mt-4 text-base font-bold text-foreground group-hover:text-primary transition-colors">
-                    {game.title}
-                  </h3>
-                  <p className="mt-0.5 text-xs font-semibold text-primary">{game.skill}</p>
-                  <p className="mt-2 text-xs leading-relaxed text-muted-foreground">{game.desc}</p>
-                </div>
-
-                <div className="mt-4 pt-3 border-t border-border/60 flex items-center justify-between text-xs">
-                  <span className="text-[11px] font-bold text-muted-foreground">Level 1–5 Adaptive</span>
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    onClick={() => {
-                      soundEffects.playSuccess();
-                      onStart();
-                    }}
-                    className="rounded-full text-xs font-bold text-primary hover:bg-primary/10 h-7 px-3"
-                  >
-                    Play →
-                  </Button>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </section>
-
+      
       {/* ========================================================================= */}
       {/* 5. PRIVACY & HOW WE MONITOR SECTION                                       */}
       {/* ========================================================================= */}
@@ -980,7 +958,7 @@ export function LandingPage({
           </div>
 
           <div className="mt-10 grid gap-6 md:grid-cols-2">
-            <article className="rounded-3xl border border-border bg-card p-6 shadow-soft space-y-4">
+            <article className="border-l-2 border-primary/40 bg-transparent p-6 space-y-4">
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
                 <Activity className="h-5 w-5" />
               </div>
@@ -1005,7 +983,7 @@ export function LandingPage({
               </ul>
             </article>
 
-            <article className="rounded-3xl border border-border bg-card p-6 shadow-soft space-y-4">
+            <article className="border-l-2 border-emerald-500/50 bg-transparent p-6 space-y-4">
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-600">
                 <ShieldCheck className="h-5 w-5" />
               </div>
@@ -1049,30 +1027,74 @@ export function LandingPage({
           </p>
         </div>
 
-        <div className="mt-10 grid gap-6 md:grid-cols-3">
-          {REVIEWS.map((review) => (
-            <blockquote
-              key={review.name}
-              className="flex flex-col justify-between rounded-3xl border border-border bg-card p-6 shadow-soft"
-            >
-              <div>
-                <div className="flex items-center justify-between mb-3">
+        <div className="mt-10">
+          {(() => {
+            const review = REVIEWS[reviewIndex] || REVIEWS[0];
+            return (
+              <blockquote
+                key={review.name}
+                className="mx-auto max-w-3xl border-l-2 border-primary/60 bg-transparent px-6 py-2 text-left animate-in fade-in slide-in-from-right-2 duration-500 sm:px-10"
+              >
+                <div className="flex items-center justify-between gap-4">
                   <span className="rounded-full bg-primary/10 px-2.5 py-0.5 text-[10px] font-bold text-primary">
                     {review.tag}
                   </span>
-                  <div className="flex text-amber-500 text-xs">{"★".repeat(review.rating)}</div>
+                  <div className="flex text-amber-500 text-xs" aria-label={`${review.rating} out of 5 stars`}>
+                    {"★".repeat(review.rating)}
+                  </div>
                 </div>
-                <p className="text-sm leading-relaxed text-foreground italic">
+                <p className="mt-5 text-lg leading-relaxed text-foreground italic sm:text-xl">
                   "{review.quote}"
                 </p>
-              </div>
+                <footer className="mt-7 border-t border-border/60 pt-4">
+                  <p className="text-sm font-bold text-foreground">{review.name}</p>
+                  <p className="text-xs text-muted-foreground">{review.role}</p>
+                </footer>
+              </blockquote>
+            );
+          })()}
 
-              <footer className="mt-6 border-t border-border/60 pt-4">
-                <p className="text-sm font-bold text-foreground">{review.name}</p>
-                <p className="text-xs text-muted-foreground">{review.role}</p>
-              </footer>
-            </blockquote>
-          ))}
+          <div className="mx-auto mt-8 flex max-w-3xl items-center justify-between gap-4 border-t border-border/60 pt-4">
+            <div className="flex items-center gap-1.5" aria-label="Testimonial slides">
+              {REVIEWS.map((review, idx) => (
+                <button
+                  key={review.name}
+                  type="button"
+                  onClick={() => {
+                    soundEffects.playClick();
+                    setReviewIndex(idx);
+                  }}
+                  className={`h-1.5 transition-all ${reviewIndex === idx ? "w-8 bg-primary" : "w-1.5 bg-border hover:bg-primary/50"}`}
+                  aria-label={`Show testimonial ${idx + 1}`}
+                  aria-current={reviewIndex === idx ? "true" : undefined}
+                />
+              ))}
+            </div>
+            <div className="flex items-center gap-1">
+              <button
+                type="button"
+                onClick={() => {
+                  soundEffects.playClick();
+                  setReviewIndex((previous) => (previous - 1 + REVIEWS.length) % REVIEWS.length);
+                }}
+                className="flex h-9 w-9 items-center justify-center border border-border text-foreground transition-colors hover:bg-muted"
+                aria-label="Previous testimonial"
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  soundEffects.playClick();
+                  setReviewIndex((previous) => (previous + 1) % REVIEWS.length);
+                }}
+                className="flex h-9 w-9 items-center justify-center border border-border text-foreground transition-colors hover:bg-muted"
+                aria-label="Next testimonial"
+              >
+                <ChevronRight className="h-4 w-4" />
+              </button>
+            </div>
+          </div>
         </div>
       </section>
 

@@ -85,6 +85,13 @@ export function OnboardingPage({
         </button>
 
         <div className="mt-4">
+          <div className="mb-4 flex items-center gap-3">
+            <img src="/logo.png" alt="SmritiMitra logo" className="h-14 w-14 rounded-2xl object-cover shadow-soft" />
+            <div>
+              <p className="font-display text-lg font-bold text-foreground">SmritiMitra</p>
+              <p className="text-xs text-muted-foreground">A friend that helps preserve memories.</p>
+            </div>
+          </div>
           <p className="text-xs sm:text-sm font-bold uppercase tracking-[0.18em] text-primary">
             {t("onboarding.tag")}
           </p>

@@ -8,11 +8,14 @@ import {
   Sparkles,
   Menu,
   X,
-  Languages,
   User,
   LogOut,
+  Settings,
+  ChevronDown,
+  Languages,
 } from "lucide-react";
-import { useState } from "react";
+import { Link } from "@tanstack/react-router";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useApp } from "@/lib/app-state";
 import { useI18n, LANGUAGES } from "@/lib/i18n";
@@ -51,6 +54,8 @@ export function SiteHeader({
     const elem = document.getElementById(targetId);
     if (elem) {
       elem.scrollIntoView({ behavior: "smooth" });
+    } else if (window.location.pathname !== "/") {
+      window.location.assign(`/#${targetId}`);
     } else {
       window.location.hash = targetId;
     }
@@ -65,7 +70,7 @@ export function SiteHeader({
   const resolvedCta = ctaLabel || (activePatient || session ? t("nav.resume") : t("nav.start"));
 
   return (
-    <header className="sticky top-0 z-40 border-b border-border/80 bg-background/95 backdrop-blur-md transition-colors duration-300">
+    <header className="glass-surface sticky top-0 z-40 border-b transition-colors duration-300">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-2 px-3 py-2.5 sm:gap-4 sm:px-6 sm:py-3">
         {/* Brand / Logo */}
         <button
@@ -73,12 +78,16 @@ export function SiteHeader({
           onClick={() => {
             soundEffects.playClick();
             setMobileMenuOpen(false);
-            onLogoClick?.();
+            if (onLogoClick) {
+              onLogoClick();
+            } else {
+              window.location.assign("/");
+            }
           }}
           className="flex items-center gap-2 sm:gap-3 text-left group shrink-0"
         >
-          <div className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-soft transition-transform group-hover:scale-105">
-            <Brain className="h-5 w-5" />
+          <div className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center overflow-hidden rounded-xl bg-primary text-primary-foreground shadow-soft transition-transform group-hover:scale-105">
+            <img src="/logo.png" alt="" className="h-full w-full object-cover" />
           </div>
           <div>
             <div className="flex items-center gap-1 sm:gap-1.5">
@@ -105,13 +114,13 @@ export function SiteHeader({
             >
               {t("nav.demo")}
             </a>
-            <a
-              href="#features"
-              onClick={(e) => handleNavClick(e, "features")}
+            <Link
+              to="/features"
+              onClick={() => soundEffects.playClick()}
               className="hover:text-foreground transition-colors"
             >
               {t("nav.features")}
-            </a>
+            </Link>
             <a
               href="#regional-culture"
               onClick={(e) => handleNavClick(e, "regional-culture")}
@@ -138,89 +147,41 @@ export function SiteHeader({
 
         {/* Action Controls */}
         <div className="flex items-center gap-1.5 sm:gap-2">
-          {/* Quick Language Toggle */}
-          <div className="hidden items-center rounded-full border border-border/80 bg-muted/50 p-0.5 sm:flex">
-            {LANGUAGES.map((item) => (
-              <button
-                key={item.code}
-                type="button"
-                onClick={() => {
-                  soundEffects.playClick();
-                  setLang(item.code);
-                }}
-                className={`rounded-full px-2 py-1 text-[11px] sm:text-xs font-bold transition-all ${
-                  lang === item.code
-                    ? "bg-card text-foreground shadow-sm scale-100"
-                    : "text-muted-foreground hover:text-foreground hover:bg-background/40"
-                }`}
-                title={item.native}
-                aria-label={`Switch to ${item.label}`}
-              >
-                {item.code.toUpperCase()}
-              </button>
-            ))}
+          {/* Language Dropdown */}
+          <div className="relative flex items-center">
+            <Languages className="pointer-events-none absolute left-2.5 h-3.5 w-3.5 text-muted-foreground z-10" />
+            <select
+              value={lang}
+              onChange={(e) => {
+                soundEffects.playClick();
+                setLang(e.target.value as typeof lang);
+              }}
+              className="h-8 appearance-none rounded-full border border-border/80 bg-muted/50 pl-7 pr-6 text-[11px] font-bold text-foreground hover:bg-muted transition-colors focus:outline-none focus:ring-2 focus:ring-ring/50 sm:h-9 sm:text-xs"
+              aria-label="Select language"
+            >
+              {LANGUAGES.map((item) => (
+                <option key={item.code} value={item.code}>
+                  {item.native} ({item.code.toUpperCase()})
+                </option>
+              ))}
+            </select>
+            {/* Custom chevron */}
+            <svg className="pointer-events-none absolute right-2 h-3 w-3 text-muted-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+            </svg>
           </div>
-          <select
-            value={lang}
-            onChange={(event) => {
-              soundEffects.playClick();
-              setLang(event.target.value as typeof lang);
-            }}
-            className="h-8 w-12 rounded-full border border-border/80 bg-muted/50 px-1 text-center text-[11px] font-bold text-foreground sm:hidden"
-            aria-label="Language"
-          >
-            {LANGUAGES.map((item) => (
-              <option key={item.code} value={item.code}>
-                {item.code.toUpperCase()}
-              </option>
-            ))}
-          </select>
 
-          {/* Accessibility Toggle */}
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={() => {
-              soundEffects.playClick();
-              openA11yPanel();
-            }}
-            className="flex h-8 w-8 items-center justify-center gap-1 rounded-full border-border/80 px-0 text-xs font-semibold text-foreground hover:bg-muted sm:h-9 sm:w-auto sm:px-3"
-            title={t("a11y.title")}
-          >
-            <Accessibility className="h-4 w-4 text-primary shrink-0" />
-            <span className="hidden xl:inline">{t("a11y.title")}</span>
-          </Button>
-
-          {/* User Profile Pill when logged in */}
-          {(session || activePatient) && (
-            <div className="flex items-center gap-1 sm:gap-1.5">
-              <button
-                type="button"
-                onClick={handleStart}
-                className="flex items-center gap-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2 sm:px-2.5 py-1 text-xs font-semibold text-emerald-800 dark:text-emerald-300 hover:bg-emerald-500/20 transition-all"
-                title={userName}
-              >
-                <div className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-600 text-[10px] font-bold text-white">
-                  {initials || <User className="h-3 w-3" />}
-                </div>
-                <span className="hidden md:inline max-w-[100px] truncate">{userName}</span>
-              </button>
-              {session && (
-                <button
-                  type="button"
-                  onClick={() => void signOut()}
-                  title={t("nav.signOut")}
-                  className="rounded-full p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
-                >
-                  <LogOut className="h-3.5 w-3.5" />
-                </button>
-              )}
-            </div>
-          )}
-
-          {/* CTA Button */}
-          {onStart ? (
+          {/* Avatar Dropdown (shown when logged in) */}
+          {(session || activePatient) ? (
+            <AvatarMenu
+              initials={initials}
+              userName={userName}
+              onDashboard={handleStart}
+              onA11y={() => { soundEffects.playClick(); openA11yPanel(); }}
+              onSignOut={() => void signOut()}
+              hasSession={!!session}
+            />
+          ) : onStart ? (
             <Button
               onClick={handleStart}
               size="sm"
@@ -250,7 +211,7 @@ export function SiteHeader({
 
       {/* Mobile Drawer Menu */}
       {!simple && mobileMenuOpen && (
-        <div className="lg:hidden border-t border-border bg-card/95 backdrop-blur-xl px-4 py-4 shadow-xl animate-in slide-in-from-top-2 duration-200">
+        <div className="glass-surface lg:hidden border-t px-4 py-4 animate-in slide-in-from-top-2 duration-200">
           <nav className="flex flex-col space-y-3 text-sm font-semibold text-foreground">
             <a
               href="#interactive-demo"
@@ -260,14 +221,17 @@ export function SiteHeader({
               <span>{t("nav.demo")}</span>
               <span className="text-xs text-primary font-bold">Try Now →</span>
             </a>
-            <a
-              href="#features"
-              onClick={(e) => handleNavClick(e, "features")}
+            <Link
+              to="/features"
+              onClick={() => {
+                soundEffects.playClick();
+                setMobileMenuOpen(false);
+              }}
               className="flex items-center justify-between rounded-xl p-2.5 hover:bg-muted/70 transition-colors"
             >
               <span>{t("nav.features")}</span>
               <span className="text-xs text-muted-foreground">3 Biomarkers</span>
-            </a>
+            </Link>
             <a
               href="#regional-culture"
               onClick={(e) => handleNavClick(e, "regional-culture")}
@@ -337,8 +301,99 @@ export function SiteHeader({
   );
 }
 
+// ─── Avatar Dropdown Component ────────────────────────────────────────────────
+function AvatarMenu({
+  initials,
+  userName,
+  onDashboard,
+  onA11y,
+  onSignOut,
+  hasSession,
+}: {
+  initials: string;
+  userName: string;
+  onDashboard?: () => void;
+  onA11y?: () => void;
+  onSignOut?: () => void;
+  hasSession?: boolean;
+}) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const close = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener("mousedown", close);
+    return () => document.removeEventListener("mousedown", close);
+  }, []);
+
+  return (
+    <div ref={ref} className="relative">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        className="flex items-center gap-1.5 rounded-full border border-border/80 bg-card px-2 py-1 shadow-sm hover:bg-muted transition-all"
+        aria-label="Profile menu"
+      >
+        <span className="flex h-7 w-7 items-center justify-center rounded-full bg-primary text-[11px] font-bold text-primary-foreground shrink-0">
+          {initials || <User className="h-3.5 w-3.5" />}
+        </span>
+        <span className="hidden sm:inline max-w-[90px] truncate text-xs font-semibold text-foreground">
+          {userName.split(" ")[0]}
+        </span>
+        <ChevronDown className={`h-3 w-3 text-muted-foreground transition-transform ${open ? "rotate-180" : ""}`} />
+      </button>
+
+      {open && (
+        <div className="glass-surface absolute right-0 top-full mt-2 w-52 rounded-2xl border z-50 overflow-hidden animate-in fade-in-0 zoom-in-95 duration-150">
+          {/* User info header */}
+          <div className="border-b border-border px-4 py-3">
+            <p className="text-xs font-bold text-foreground truncate">{userName || "Patient"}</p>
+            <p className="text-[11px] text-muted-foreground">SmritiMitra Account</p>
+          </div>
+
+          {/* Menu items */}
+          <div className="py-1.5">
+            <button
+              type="button"
+              onClick={() => { setOpen(false); onDashboard?.(); }}
+              className="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm font-medium text-foreground hover:bg-muted transition-colors"
+            >
+              <Brain className="h-4 w-4 text-primary" />
+              Go to Dashboard
+            </button>
+            <button
+              type="button"
+              onClick={() => { setOpen(false); onA11y?.(); }}
+              className="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm font-medium text-foreground hover:bg-muted transition-colors"
+            >
+              <Settings className="h-4 w-4 text-muted-foreground" />
+              Settings & Accessibility
+            </button>
+          </div>
+
+          {hasSession && (
+            <div className="border-t border-border py-1.5">
+              <button
+                type="button"
+                onClick={() => { setOpen(false); onSignOut?.(); }}
+                className="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm font-medium text-rose-600 dark:text-rose-400 hover:bg-rose-500/10 transition-colors"
+              >
+                <LogOut className="h-4 w-4" />
+                Sign Out
+              </button>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ─── Site Footer ───────────────────────────────────────────────────────────────
 export function SiteFooter({ onStart }: { onStart?: () => void }) {
-  const { lang, setLang, t } = useI18n();
+  const { t } = useI18n();
   const [legalModalOpen, setLegalModalOpen] = useState(false);
   const [legalTab, setLegalTab] = useState<LegalTab>("terms");
 
@@ -350,205 +405,70 @@ export function SiteFooter({ onStart }: { onStart?: () => void }) {
 
   return (
     <>
-      <footer className="border-t border-border bg-card/90 transition-colors duration-300">
-        {/* Emergency Tele-MANAS Banner */}
-        <div className="border-b border-border/70 bg-gradient-to-r from-rose-500/10 via-amber-500/5 to-primary/10 px-4 py-3">
-          <div className="mx-auto flex max-w-6xl flex-col sm:flex-row items-center justify-between gap-3 text-xs sm:px-6">
-            <div className="flex items-center gap-2.5 text-center sm:text-left">
-              <div className="flex h-7 w-7 items-center justify-center rounded-full bg-rose-500/20 text-rose-600 dark:text-rose-400 shrink-0">
-                <HeartPulse className="h-4 w-4" />
-              </div>
-              <div>
-                <p className="font-bold text-foreground">
-                  {t("footer.helplineTitle")}
-                </p>
-                <p className="text-muted-foreground text-[11px]">
-                  {t("footer.helplineDesc")}
-                </p>
-              </div>
+      <footer className="glass-surface border-t transition-colors duration-300">
+        {/* ── Main Footer Row ── */}
+        <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-8 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+          {/* Brand */}
+          <div className="flex items-center gap-3">
+            <div className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-xl bg-primary text-primary-foreground shadow-soft shrink-0">
+              <img src="/logo.png" alt="" className="h-full w-full object-cover" />
             </div>
-            <div className="flex items-center gap-2 shrink-0">
-              <a
-                href="tel:14416"
-                className="inline-flex items-center gap-1.5 rounded-full bg-rose-600 px-4 py-1.5 text-xs font-bold text-white shadow-soft hover:bg-rose-700 transition-colors"
-              >
-                <PhoneCall className="h-3.5 w-3.5" />
-                <span>Call 14416 Free</span>
-              </a>
-              <button
-                type="button"
-                onClick={() => openLegal("helplines")}
-                className="rounded-full border border-border/80 bg-background px-3 py-1.5 text-xs font-semibold text-foreground hover:bg-muted transition-colors"
-              >
-                View NE Centers
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* 4-Column Responsive Grid */}
-        <div className="mx-auto grid max-w-6xl gap-8 px-4 py-12 sm:grid-cols-2 lg:grid-cols-4 sm:px-6">
-          <div className="space-y-3">
-            <div className="flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-soft">
-                <Brain className="h-4 w-4" />
-              </div>
-              <p className="font-display text-lg font-bold text-foreground">{t("app.name")}</p>
-            </div>
-            <p className="text-xs leading-relaxed text-muted-foreground">
-              {t("hero.subhead")}
-            </p>
-            <div className="flex items-center gap-2 pt-1">
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-0.5 text-[11px] font-bold text-emerald-700 dark:text-emerald-300">
-                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                {t("hero.metric1Label")}
-              </span>
+            <div>
+              <p className="font-display text-base font-bold text-foreground leading-tight">{t("app.name")}</p>
+              <p className="text-[11px] text-muted-foreground">{t("app.tagline")}</p>
             </div>
           </div>
 
-          <div>
-            <p className="text-xs font-bold uppercase tracking-wider text-foreground">{t("footer.quickLinks")}</p>
-            <ul className="mt-3 space-y-2 text-xs text-muted-foreground">
-              <li>
-                <button
-                  type="button"
-                  onClick={onStart}
-                  className="hover:text-primary transition-colors text-left flex items-center gap-1.5"
-                >
-                  <Sparkles className="h-3 w-3 text-primary" />
-                  {t("features.title")}
-                </button>
-              </li>
-              <li>
-                <a href="#features" className="hover:text-primary transition-colors flex items-center gap-1.5">
-                  <Brain className="h-3 w-3 text-primary" />
-                  10 AI Adaptive Brain Games
-                </a>
-              </li>
-              <li>
-                <button
-                  type="button"
-                  onClick={() => openLegal("privacy")}
-                  className="hover:text-primary transition-colors text-left flex items-center gap-1.5"
-                >
-                  <Shield className="h-3 w-3 text-primary" />
-                  {t("nav.privacy")}
-                </button>
-              </li>
-              <li>
-                <button
-                  type="button"
-                  onClick={() => openLegal("helplines")}
-                  className="hover:text-primary transition-colors text-left flex items-center gap-1.5"
-                >
-                  <HeartPulse className="h-3 w-3 text-primary" />
-                  North East Neuro-Clinic Network
-                </button>
-              </li>
-            </ul>
-          </div>
-
-          <div>
-            <p className="text-xs font-bold uppercase tracking-wider text-foreground">{t("footer.legal")}</p>
-            <ul className="mt-3 space-y-2 text-xs text-muted-foreground">
-              <li>
-                <button
-                  type="button"
-                  onClick={() => openLegal("terms")}
-                  className="hover:text-primary transition-colors text-left flex items-center gap-1.5"
-                >
-                  <FileText className="h-3 w-3" />
-                  Terms of Service
-                </button>
-              </li>
-              <li>
-                <button
-                  type="button"
-                  onClick={() => openLegal("privacy")}
-                  className="hover:text-primary transition-colors text-left flex items-center gap-1.5"
-                >
-                  <Shield className="h-3 w-3" />
-                  Privacy Policy (DPDP Act 2023)
-                </button>
-              </li>
-              <li>
-                <button
-                  type="button"
-                  onClick={() => openLegal("disclaimer")}
-                  className="hover:text-primary transition-colors text-left flex items-center gap-1.5"
-                >
-                  <HeartPulse className="h-3 w-3" />
-                  Clinical & AI Disclaimer
-                </button>
-              </li>
-              <li>
-                <button
-                  type="button"
-                  onClick={() => openLegal("helplines")}
-                  className="hover:text-primary transition-colors text-left flex items-center gap-1.5 font-bold text-primary"
-                >
-                  <PhoneCall className="h-3 w-3" />
-                  {t("nav.emergency")}
-                </button>
-              </li>
-            </ul>
-          </div>
-
-          <div>
-            <p className="text-xs font-bold uppercase tracking-wider text-foreground">{t("nav.states")}</p>
-            <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
-              Culturally localized across all 8 North Eastern states with multi-dialect support.
-            </p>
-            <div className="mt-3 flex flex-wrap gap-1.5">
-              {LANGUAGES.map((langItem) => (
-                <button
-                  key={langItem.code}
-                  type="button"
-                  onClick={() => {
-                    soundEffects.playClick();
-                    setLang(langItem.code);
-                  }}
-                  className={`rounded-md px-2 py-0.5 text-[11px] font-semibold transition-all ${
-                    lang === langItem.code
-                      ? "bg-primary text-primary-foreground shadow-sm"
-                      : "bg-muted/70 text-muted-foreground hover:text-foreground hover:bg-muted"
-                  }`}
-                  title={`Switch to ${langItem.label}`}
-                >
-                  {langItem.native} ({langItem.code.toUpperCase()})
-                </button>
-              ))}
+          {/* Emergency helpline */}
+          <div className="flex items-center gap-2 rounded-2xl border border-rose-500/20 bg-rose-500/5 px-4 py-2.5">
+            <div className="flex h-7 w-7 items-center justify-center rounded-full bg-rose-500/15 text-rose-600 dark:text-rose-400 shrink-0">
+              <HeartPulse className="h-3.5 w-3.5" />
             </div>
+            <div className="leading-tight">
+              <p className="text-[11px] font-bold text-foreground">Mental Health Helpline</p>
+              <p className="text-[10px] text-muted-foreground">Tele-MANAS · 24/7 Free</p>
+            </div>
+            <a
+              href="tel:14416"
+              className="ml-2 inline-flex items-center gap-1 rounded-full bg-rose-600 px-3 py-1 text-[11px] font-bold text-white hover:bg-rose-700 transition-colors shrink-0"
+            >
+              <PhoneCall className="h-3 w-3" /> 14416
+            </a>
           </div>
-        </div>
 
-        <div className="border-t border-border/80 px-4 py-4 text-center text-xs text-muted-foreground flex flex-col sm:flex-row items-center justify-between max-w-6xl mx-auto gap-2 sm:px-6">
-          <p>© {new Date().getFullYear()} {t("footer.rights")}</p>
-          <div className="flex items-center gap-4">
+          {/* Quick legal links */}
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs text-muted-foreground">
             <button
               type="button"
               onClick={() => openLegal("terms")}
-              className="hover:text-foreground transition-colors underline"
+              className="flex items-center gap-1 hover:text-foreground transition-colors"
             >
-              Legal
+              <FileText className="h-3 w-3" /> Terms
             </button>
-            <span>·</span>
+            <span aria-hidden className="opacity-40">·</span>
             <button
               type="button"
               onClick={() => openLegal("privacy")}
-              className="hover:text-foreground transition-colors underline"
+              className="flex items-center gap-1 hover:text-foreground transition-colors"
             >
-              Privacy
+              <Shield className="h-3 w-3" /> Privacy
             </button>
-            <span>·</span>
+            <span aria-hidden className="opacity-40">·</span>
             <button
               type="button"
               onClick={() => openLegal("disclaimer")}
-              className="hover:text-foreground transition-colors underline"
+              className="flex items-center gap-1 hover:text-foreground transition-colors"
             >
-              Disclaimer
+              <HeartPulse className="h-3 w-3" /> Disclaimer
             </button>
           </div>
+        </div>
+
+        {/* ── Copyright Bar ── */}
+        <div className="border-t border-border/60 px-4 py-3 text-center">
+          <p className="text-[11px] text-muted-foreground">
+            © {new Date().getFullYear()} {t("footer.rights")} · Built for NE India with ❤️
+          </p>
         </div>
       </footer>
 

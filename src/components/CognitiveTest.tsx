@@ -153,7 +153,7 @@ export function CognitiveTest({ onComplete, onBack }: CognitiveTestProps) {
               </div>
               <div>
                 <p className="text-xs font-bold uppercase tracking-widest text-primary">
-                  NeuroTrack™ Clinical Screening Record
+                  SmritiMitra Clinical Screening Record
                 </p>
                 <h1 className="text-2xl font-bold text-foreground sm:text-3xl">
                   {patientDisplayName}

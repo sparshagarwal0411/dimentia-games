@@ -116,6 +116,9 @@
     linear-gradient(180deg, oklch(0.985 0.014 88) 0%, oklch(0.965 0.02 96) 100%);
   --gradient-calm: linear-gradient(140deg, oklch(0.47 0.084 197) 0%, oklch(0.55 0.09 165) 100%);
   --gradient-warm: linear-gradient(140deg, oklch(0.82 0.13 78) 0%, oklch(0.68 0.13 42) 100%);
+  --glass-surface: oklch(0.997 0.006 90 / 0.72);
+  --glass-highlight: oklch(1 0 0 / 0.58);
+  --glass-shadow: 0 10px 35px oklch(0.3 0.04 200 / 0.1);
 }
 
 .dark {
@@ -153,6 +156,9 @@
     ),
     radial-gradient(100% 80% at 92% 4%, oklch(0.38 0.07 70 / 0.7) 0%, transparent 60%),
     linear-gradient(180deg, oklch(0.2 0.028 210) 0%, oklch(0.23 0.03 205) 100%);
+  --glass-surface: oklch(0.24 0.032 208 / 0.72);
+  --glass-highlight: oklch(1 0 0 / 0.16);
+  --glass-shadow: 0 10px 35px oklch(0 0 0 / 0.28);
 }
 
 /* High contrast accessibility theme */
@@ -173,6 +179,9 @@
   --input: #000000;
   --gradient-hero: none;
   --gradient-calm: #0f172a;
+  --glass-surface: #ffffff;
+  --glass-highlight: #ffffff;
+  --glass-shadow: none;
 }
 
 .high-contrast :is(h1, h2, h3, h4, p, span, li, button, a, label, input) {
@@ -222,6 +231,9 @@
   --border: #ffffff !important;
   --input: #ffffff !important;
   --muted-foreground: #ffffff !important;
+  --glass-surface: #000000 !important;
+  --glass-highlight: #ffffff !important;
+  --glass-shadow: none !important;
 }
 
 .extra-high-contrast * {
@@ -234,6 +246,39 @@
 
 .extra-high-contrast button {
   border: 2px solid #ffffff !important;
+}
+
+/* Keep shared glass chrome readable when utility colors were authored for dark mode. */
+.high-contrast .glass-surface {
+  background: #ffffff !important;
+  color: #000000 !important;
+  border-color: #000000 !important;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
+.high-contrast .glass-surface .text-muted-foreground {
+  color: #111827 !important;
+}
+
+.high-contrast.dark .glass-surface,
+.extra-high-contrast .glass-surface {
+  background: #000000 !important;
+  color: #ffffff !important;
+  border-color: #ffffff !important;
+}
+
+.high-contrast.dark .glass-surface .text-muted-foreground,
+.extra-high-contrast .glass-surface .text-muted-foreground {
+  color: #ffffff !important;
+}
+
+.high-contrast .glass-surface select,
+.high-contrast.dark .glass-surface select,
+.extra-high-contrast .glass-surface select {
+  background: var(--card) !important;
+  color: var(--foreground) !important;
+  border-color: var(--border) !important;
 }
 
 .reduced-motion *,
@@ -253,29 +298,23 @@
   filter: contrast(120%) saturate(115%);
 }
 
-/* Large buttons touch mode */
+/* Large buttons touch mode — only targets .tap class elements and form inputs in content areas */
 .large-buttons {
   --tap-size: 3.75rem;
 }
 
-.large-buttons button,
-.large-buttons [role="button"],
-.large-buttons input,
-.large-buttons select,
+/* Scale only explicitly marked tap-targets and form controls, NOT tiny icon / nav buttons */
 .large-buttons .tap {
   min-height: 3.5rem !important;
   font-size: 1.05rem !important;
-  padding-left: 1.25rem !important;
-  padding-right: 1.25rem !important;
+  padding-inline: 1.25rem !important;
 }
 
-.large-buttons button.rounded-full {
-  min-height: 3.5rem !important;
-  padding-left: 1.5rem !important;
-  padding-right: 1.5rem !important;
-}
-
-.large-buttons input {
+.large-buttons main input,
+.large-buttons main select,
+.large-buttons main textarea {
+  min-height: 3.25rem !important;
+  font-size: 1.05rem !important;
   padding-top: 0.75rem !important;
   padding-bottom: 0.75rem !important;
 }
@@ -313,6 +352,30 @@
     font-weight: 600;
     letter-spacing: -0.015em;
   }
+
+  /* Pointer cursor on all interactive elements */
+  button,
+  a,
+  select,
+  label[for],
+  [role="button"],
+  [role="tab"],
+  [role="checkbox"],
+  [role="radio"],
+  [role="switch"],
+  [role="menuitem"],
+  [role="option"],
+  summary {
+    cursor: pointer;
+  }
+
+  button:disabled,
+  [role="button"][aria-disabled="true"],
+  input:disabled,
+  select:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
 }
 
 @utility surface-hero {
@@ -325,6 +388,30 @@
 
 @utility surface-warm {
   background-image: var(--gradient-warm);
+}
+
+@utility glass-surface {
+  background: var(--glass-surface);
+  border-color: color-mix(in oklab, var(--border) 78%, var(--glass-highlight));
+  box-shadow: var(--glass-shadow), inset 0 1px 0 var(--glass-highlight);
+  -webkit-backdrop-filter: blur(18px) saturate(125%);
+  backdrop-filter: blur(18px) saturate(125%);
+}
+
+.glass-banner {
+  border-block: 1px solid color-mix(in oklab, currentColor 18%, transparent);
+  box-shadow: inset 0 -1px 0 var(--glass-highlight), 0 4px 18px oklch(0.3 0.04 200 / 0.08);
+  -webkit-backdrop-filter: blur(16px) saturate(130%);
+  backdrop-filter: blur(16px) saturate(130%);
+}
+
+.high-contrast .glass-surface,
+.extra-high-contrast .glass-surface,
+.high-contrast .glass-banner,
+.extra-high-contrast .glass-banner {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  box-shadow: none;
 }
 
 @utility tap {
@@ -340,6 +427,48 @@
     transparent 2px,
     transparent 10px
   );
+}
+
+@utility pixel-grid {
+  isolation: isolate;
+}
+
+.pixel-grid::before {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  content: "";
+  background-image:
+    linear-gradient(oklch(0.47 0.084 197 / 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, oklch(0.47 0.084 197 / 0.08) 1px, transparent 1px);
+  background-size: 16px 16px;
+  mask-image: linear-gradient(to bottom, transparent, black 12%, black 88%, transparent);
+}
+
+.pixel-grid::after {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  content: "";
+  background: radial-gradient(
+    220px circle at var(--grid-x, 50%) var(--grid-y, 50%),
+    oklch(0.58 0.1 150 / 0.2),
+    transparent 72%
+  );
+  opacity: 0;
+  transition: opacity 180ms ease;
+}
+
+.pixel-grid:hover::after {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pixel-grid::after {
+    transition: none;
+  }
 }
 
 @keyframes floatSlow {
@@ -389,15 +518,349 @@
   animation-play-state: paused;
 }
 
+.government-marquee {
+  --gov-bg: oklch(0.995 0.006 90);
+  --gov-text: oklch(0.2 0.035 220);
+  --gov-muted: oklch(0.45 0.025 220);
+  --gov-rule: oklch(0.86 0.02 220);
+  background: var(--gov-bg);
+  color: var(--gov-text);
+  overflow: hidden;
+}
+
+.government-marquee-track {
+  display: flex;
+  gap: 2.5rem;
+  width: max-content;
+  align-items: center;
+  animation: governmentScroll 34s linear infinite;
+}
+
+.government-shoutout {
+  display: flex;
+  min-width: 340px;
+  align-items: center;
+  justify-content: center;
+  gap: 1.25rem;
+  padding-inline: 1.25rem;
+}
+
+.government-shoutout img {
+  width: 72px;
+  height: 72px;
+  flex: 0 0 72px;
+  padding: 0.5rem;
+  border: 0;
+  background: transparent;
+  object-fit: contain;
+  object-position: center;
+  filter: none;
+}
+
+.government-shoutout strong {
+  display: block;
+  color: var(--gov-text);
+  font-size: 0.82rem;
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  line-height: 1.1;
+}
+
+.government-shoutout p {
+  max-width: 220px;
+  margin-top: 0.25rem;
+  color: var(--gov-muted);
+  font-size: 0.68rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.government-marquee-note {
+  color: var(--gov-muted);
+}
+
+.dark .government-marquee {
+  --gov-bg: oklch(0.19 0.028 210);
+  --gov-text: oklch(0.95 0.014 88);
+  --gov-muted: oklch(0.75 0.02 205);
+  --gov-rule: oklch(1 0 0 / 0.24);
+}
+
+.high-contrast .government-marquee,
+.extra-high-contrast .government-marquee {
+  --gov-bg: var(--background);
+  --gov-text: var(--foreground);
+  --gov-muted: var(--muted-foreground);
+  --gov-rule: var(--border);
+}
+
+.high-contrast .government-shoutout img,
+.extra-high-contrast .government-shoutout img {
+  filter: none;
+  background: var(--gov-bg);
+}
+
+.dark .government-shoutout img,
+.high-contrast.dark .government-shoutout img,
+.extra-high-contrast .government-shoutout img {
+  filter: brightness(0) invert(1);
+  background: transparent;
+}
+
+@media (max-width: 640px) {
+  .government-marquee {
+    padding-block: 1.5rem;
+  }
+
+  .government-shoutout {
+    min-width: 270px;
+  }
+
+  .government-shoutout img {
+    width: 56px;
+    height: 56px;
+    flex-basis: 56px;
+  }
+
+  .government-shoutout {
+    min-width: 280px;
+  }
+}
+
+@keyframes governmentScroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .government-marquee-track {
+    animation: none;
+  }
+}
+
 .glass-card {
   background: color-mix(in oklch, var(--card) 80%, transparent);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
 }
 
+.leadership-banner {
+  --lead-bg: var(--background);
+  --lead-panel: var(--card);
+  --lead-text: var(--foreground);
+  --lead-muted: var(--muted-foreground);
+  --lead-accent: var(--clay);
+  --lead-green: var(--leaf);
+  background: var(--lead-bg);
+  border-color: var(--lead-accent);
+}
+
+.leadership-banner-stripe {
+  background: linear-gradient(110deg, color-mix(in oklab, var(--lead-accent) 78%, var(--lead-bg)), var(--lead-panel) 48%, color-mix(in oklab, var(--lead-green) 76%, var(--lead-bg)));
+  opacity: 0.92;
+}
+
+.leadership-banner-panel {
+  background: color-mix(in oklab, var(--lead-panel) 94%, transparent);
+}
+
+.leadership-text { color: var(--lead-text); }
+.leadership-muted { color: var(--lead-muted); }
+.leadership-accent { color: var(--lead-accent); }
+.leadership-badge { background: var(--lead-accent); color: var(--primary-foreground); }
+.leadership-chip { background: color-mix(in oklab, var(--lead-panel) 88%, transparent); color: var(--lead-text); --tw-ring-color: var(--border); }
+.leadership-watermark { border-color: color-mix(in oklab, var(--lead-text) 8%, transparent); }
+.leadership-watermark-line { background: color-mix(in oklab, var(--lead-text) 7%, transparent); }
+
+.dark .leadership-banner {
+  --lead-bg: oklch(0.19 0.028 210);
+  --lead-panel: oklch(0.24 0.032 208);
+  --lead-accent: oklch(0.78 0.13 76);
+  --lead-green: oklch(0.7 0.11 152);
+}
+
+.high-contrast .leadership-banner,
+.extra-high-contrast .leadership-banner {
+  --lead-bg: var(--background);
+  --lead-panel: var(--card);
+  --lead-accent: var(--primary);
+  --lead-green: var(--primary);
+}
+
+.hero-grid {
+  z-index: -2;
+  background-image:
+    linear-gradient(to right, color-mix(in oklch, var(--primary) 10%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in oklch, var(--primary) 10%, transparent) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: linear-gradient(to bottom, transparent, black 20%, black 80%, transparent);
+  opacity: 0.7;
+}
+
+.hero-grid::after {
+  position: absolute;
+  inset: 0;
+  content: "";
+  background: radial-gradient(
+    280px circle at var(--hero-x, 50%) var(--hero-y, 45%),
+    color-mix(in oklch, var(--primary) 18%, transparent),
+    transparent 72%
+  );
+  opacity: 0.9;
+}
+
+.hero-pulse {
+  z-index: -1;
+  top: -120px;
+  right: 0;
+  width: 100%;
+  height: 132px;
+  opacity: 0.42;
+  transform: rotate(-1deg);
+  animation: pulseDrop 8s ease-in-out infinite;
+}
+
+.hero-pulse svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.hero-pulse path {
+  fill: none;
+  stroke: var(--primary);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  filter: drop-shadow(0 0 7px color-mix(in oklch, var(--primary) 60%, transparent));
+}
+
+.hero-pulse-trace {
+  stroke-dasharray: 150 900;
+  stroke-dashoffset: 0;
+  stroke-width: 3.5;
+  opacity: 0.95;
+  animation: pulseTrace 2.2s linear infinite;
+}
+
+.hero-pulse span {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 5px;
+  height: 5px;
+  border-radius: 999px;
+  background: var(--primary);
+  box-shadow: 0 0 14px 3px color-mix(in oklch, var(--primary) 65%, transparent);
+  transform: translateX(-50%);
+  animation: pulseDot 7s linear infinite;
+}
+
+.hero-stage {
+  isolation: isolate;
+}
+
+.hero-demo {
+  clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 18px 100%, 0 calc(100% - 18px));
+  transition: border-color 250ms ease, box-shadow 250ms ease, transform 250ms ease;
+}
+
+.hero-demo:hover {
+  border-color: color-mix(in oklch, var(--primary) 65%, var(--border));
+  box-shadow: var(--shadow-lift), 0 0 34px color-mix(in oklch, var(--primary) 14%, transparent);
+  transform: translateY(-3px);
+}
+
+.hero-live-status .h-1\.5 {
+  animation: signalPulse 1.8s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-demo,
+  .hero-pulse,
+  .hero-pulse span,
+  .hero-pulse-trace,
+  .hero-live-status .h-1\.5 {
+    clip-path: none;
+    animation: none;
+    transform: none;
+  }
+}
+
+@keyframes pulseDrop {
+  0% { transform: translateY(0) rotate(-1deg); opacity: 0; }
+  10% { opacity: 0.7; }
+  82% { opacity: 0.5; }
+  100% { transform: translateY(780px) rotate(-1deg); opacity: 0; }
+}
+
+@keyframes pulseDot {
+  0% { top: 0; opacity: 0; }
+  10% { opacity: 1; }
+  82% { top: 780px; opacity: 0.8; }
+  100% { top: 780px; opacity: 0; }
+}
+
+@keyframes pulseTrace {
+  from { stroke-dashoffset: 0; }
+  to { stroke-dashoffset: -1050; }
+}
+
+@keyframes signalPulse {
+  0%, 100% { opacity: 0.4; transform: scale(0.8); }
+  50% { opacity: 1; transform: scale(1.2); }
+}
+
+@media (max-width: 640px) {
+  .hero-pulse {
+    top: -120px;
+    right: -20%;
+    width: 140%;
+    opacity: 0.32;
+  }
+}
+
 .text-gradient {
   background: linear-gradient(135deg, var(--primary) 0%, color-mix(in oklch, var(--primary) 60%, var(--leaf)) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+}
+
+.feature-hero {
+  isolation: isolate;
+  background: var(--gradient-hero);
+}
+
+.feature-hero-grid {
+  background-image:
+    linear-gradient(to right, color-mix(in oklch, var(--primary) 10%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in oklch, var(--primary) 10%, transparent) 1px, transparent 1px);
+  background-size: 44px 44px;
+  mask-image: linear-gradient(to bottom, transparent, black 16%, black 80%, transparent);
+}
+
+.feature-lane {
+  transition: background-color 220ms ease, padding-left 220ms ease;
+}
+
+.feature-lane:hover {
+  background: color-mix(in oklch, var(--card) 38%, transparent);
+  padding-left: 1rem;
+}
+
+.feature-lane--teal { color: var(--river); }
+.feature-lane--sun { color: var(--sun); }
+.feature-lane--clay { color: var(--clay); }
+.feature-lane--leaf { color: var(--leaf); }
+
+@media (prefers-reduced-motion: reduce) {
+  .feature-lane {
+    transition: none;
+  }
+
+  .feature-lane:hover {
+    padding-left: 0;
+  }
 }
 

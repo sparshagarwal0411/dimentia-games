@@ -876,7 +876,7 @@ export function BehavioralPage() {
                     className="w-full rounded-xl gap-2 text-foreground font-medium"
                     onClick={() => {
                       alert(
-                        `NeuroTrack NE Behavioral Summary:\nOverall Score: ${analysis?.overallScore}/100\nMobility: ${analysis?.activityScore}%\nCircadian: ${analysis?.circadianScore}%\nMotor: ${analysis?.typingScore}%\nSocial: ${analysis?.socialScore}%`,
+                        `SmritiMitra Behavioral Summary:\nOverall Score: ${analysis?.overallScore}/100\nMobility: ${analysis?.activityScore}%\nCircadian: ${analysis?.circadianScore}%\nMotor: ${analysis?.typingScore}%\nSocial: ${analysis?.socialScore}%`,
                       );
                     }}
                   >

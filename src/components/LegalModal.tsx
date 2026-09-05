@@ -43,7 +43,7 @@ export function LegalModal({
                 Legal, Privacy & Clinical Transparency
               </h2>
               <p className="text-xs text-muted-foreground">
-                NeuroTrack NE · Governed under Indian Healthcare Data Guidelines & DPDP Act 2023
+                SmritiMitra · Governed under Indian Healthcare Data Guidelines & DPDP Act 2023
               </p>
             </div>
           </div>
@@ -91,7 +91,7 @@ export function LegalModal({
             <div className="space-y-4 text-foreground">
               <h3 className="text-base font-bold text-foreground">1. User Agreement & Acceptable Use</h3>
               <p className="leading-relaxed">
-                By accessing or using NeuroTrack NE ("the Platform"), you acknowledge and agree that this software is an
+                By accessing or using SmritiMitra ("the Platform"), you acknowledge and agree that this software is an
                 assistive cognitive monitoring tool intended for educational screening, habit tracking, and brain exercises.
               </p>
               <h4 className="font-semibold text-foreground">2. Scope of Services</h4>
@@ -106,7 +106,7 @@ export function LegalModal({
               </p>
               <h4 className="font-semibold text-foreground">4. Intellectual Property & Regional Adaptation</h4>
               <p className="leading-relaxed">
-                All regional translations (Assamese, Hindi), indigenous cultural illustrations, cognitive task formulations, and adaptive AI algorithms are proprietary to NeuroTrack NE and licensed clinical partners.
+                All regional translations (Assamese, Hindi), indigenous cultural illustrations, cognitive task formulations, and adaptive AI algorithms are proprietary to SmritiMitra and licensed clinical partners.
               </p>
             </div>
           )}
@@ -125,7 +125,7 @@ export function LegalModal({
 
               <h3 className="text-base font-bold text-foreground">Digital Personal Data Protection (DPDP Act 2023) Compliance</h3>
               <p className="leading-relaxed">
-                NeuroTrack NE adheres to the principles of purpose limitation, data minimization, and storage limitation under Indian data protection statutes:
+                SmritiMitra adheres to the principles of purpose limitation, data minimization, and storage limitation under Indian data protection statutes:
               </p>
               <ul className="list-disc pl-5 space-y-1 text-sm">
                 <li><strong>No Commercial Data Brokerage:</strong> We never sell, lease, or monetize cognitive assessment records.</li>
@@ -144,7 +144,7 @@ export function LegalModal({
                   Non-Diagnostic Medical Notice
                 </p>
                 <p className="text-xs mt-1">
-                  NeuroTrack NE is NOT a certified medical diagnostic device. It does not replace a clinical neurological examination, MRI/PET scan, or formal neuropsychological evaluation.
+                  SmritiMitra is NOT a certified medical diagnostic device. It does not replace a clinical neurological examination, MRI/PET scan, or formal neuropsychological evaluation.
                 </p>
               </div>
 

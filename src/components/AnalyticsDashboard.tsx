@@ -74,8 +74,8 @@ export function AnalyticsDashboard({ onPlayGame }: { onPlayGame?: () => void }) 
   const handleDownloadReport = () => {
     setDownloadingReport(true);
     setTimeout(() => {
-      const reportText = `NEUROTRACK™ CLINICAL NEURO-COGNITIVE REPORT
-Platform: NeuroTrack NE Cognitive Intervention System
+      const reportText = `SMRITIMITRA CLINICAL NEURO-COGNITIVE REPORT
+    Platform: SmritiMitra Cognitive Intervention System
 Patient Name: ${patientName}
 Age / Sex: ${activePatient?.age || 65} yrs / ${activePatient?.sex || "Unspecified"}
 Phone: ${activePatient?.phone || "N/A"}
@@ -103,7 +103,7 @@ TELEMETRY RISK ASSESSMENT:
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
-      link.download = `NeuroTrack_Report_${patientName.replace(/\s+/g, "_")}.txt`;
+      link.download = `SmritiMitra_Report_${patientName.replace(/\s+/g, "_")}.txt`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -122,7 +122,7 @@ TELEMETRY RISK ASSESSMENT:
             </div>
             <div>
               <span className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest text-emerald-400">
-                <ShieldCheck className="h-4 w-4" /> NeuroTrack™ Telemetry Engine
+                <ShieldCheck className="h-4 w-4" /> SmritiMitra Telemetry Engine
               </span>
               <h1 className="mt-0.5 text-2xl font-extrabold text-white sm:text-3xl">
                 Cognitive Analytics & Trajectory

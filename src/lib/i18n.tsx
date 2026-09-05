@@ -13,8 +13,8 @@ type Dict = Record<string, string>;
 
 const en: Dict = {
   // App brand & Nav
-  "app.name": "NeuroTrack NE",
-  "app.tagline": "Cognitive Care · North East India",
+  "app.name": "SmritiMitra",
+  "app.tagline": "A friend that helps preserve memories.",
   "app.badge": "AI",
   "nav.demo": "Live Demo",
   "nav.features": "Care Suite",
@@ -83,7 +83,7 @@ const en: Dict = {
 
   // Auth / Login
   "auth.portalBadge": "Secure Clinical Portal",
-  "auth.title": "Sign in to NeuroTrack NE",
+  "auth.title": "Sign in to SmritiMitra",
   "auth.subtitle": "Securely manage patient records, cognitive assessments, and care data across North East India.",
   "auth.bullet1": "Clinical patient records synced securely across nodes",
   "auth.bullet2": "End-to-end encrypted, DPDP Act 2023 aligned storage",
@@ -227,15 +227,15 @@ const en: Dict = {
   // Footer & Common
   "footer.quickLinks": "Platform Features",
   "footer.legal": "Legal & Privacy",
-  "footer.rights": "NeuroTrack NE · Built with clinical respect for North East India",
+  "footer.rights": "SmritiMitra · Built with clinical respect for North East India",
   "footer.helplineTitle": "24/7 Tele-MANAS Emergency Helpline",
   "footer.helplineDesc": "Govt of India Toll-Free Mental Health & Neurological Support: Call 14416",
 };
 
 const hi: Dict = {
   // App brand & Nav
-  "app.name": "न्यूरोट्रैक उत्तर-पूर्व",
-  "app.tagline": "संज्ञानात्मक देखभाल · पूर्वोत्तर भारत",
+  "app.name": "SmritiMitra",
+  "app.tagline": "A friend that helps preserve memories.",
   "app.badge": "एआई",
   "nav.demo": "लाइव डेमो",
   "nav.features": "केयर सुइट",
@@ -455,8 +455,8 @@ const hi: Dict = {
 
 const as: Dict = {
   // App brand & Nav
-  "app.name": "নিউৰোট্ৰেক উত্তৰ-পূব",
-  "app.tagline": "কগনিটিভ কেয়াৰ · উত্তৰ পূৰ্বাঞ্চল",
+  "app.name": "SmritiMitra",
+  "app.tagline": "A friend that helps preserve memories.",
   "app.badge": "AI",
   "nav.demo": "লাইভ ডেমো",
   "nav.features": "কেয়াৰ চুইট",
