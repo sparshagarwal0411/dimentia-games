@@ -108,6 +108,8 @@ export function SiteHeader({
           </div>
         </button>
 
+        {navigation}
+
         {/* Desktop Navigation */}
         {!simple && (
           <nav className="hidden items-center gap-5 text-sm font-semibold text-muted-foreground lg:flex">
@@ -212,7 +214,6 @@ export function SiteHeader({
           )}
         </div>
 
-        {navigation}
       </div>
 
       {/* Mobile Drawer Menu */}

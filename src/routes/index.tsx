@@ -172,7 +172,7 @@ function Platform({
       patientName={activePatient?.name}
       onHome={onHome}
       navigation={(
-        <nav className="mx-auto flex max-w-6xl justify-center gap-1 overflow-x-auto border-t border-border/60 px-3 py-2 sm:px-6" aria-label="Dashboard sections">
+        <nav className="flex min-w-0 flex-1 justify-center gap-1 overflow-x-auto px-2" aria-label="Dashboard sections">
           {(
             [
               { id: "home" as const, label: "Home", icon: Brain },
