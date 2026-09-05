@@ -15,7 +15,7 @@ import {
   Languages,
 } from "lucide-react";
 import { Link } from "@tanstack/react-router";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 import { useApp } from "@/lib/app-state";
 import { useI18n, LANGUAGES } from "@/lib/i18n";
@@ -27,11 +27,15 @@ export function SiteHeader({
   onLogoClick,
   ctaLabel,
   simple = false,
+  subtitle,
+  navigation,
 }: {
   onStart?: () => void;
   onLogoClick?: () => void;
   ctaLabel?: string;
   simple?: boolean;
+  subtitle?: string;
+  navigation?: ReactNode;
 }) {
   const { openA11yPanel, session, activePatient, signOut } = useApp();
   const { lang, setLang, t } = useI18n();
@@ -99,7 +103,7 @@ export function SiteHeader({
               </span>
             </div>
             <p className="hidden sm:block mt-0.5 text-[11px] font-medium tracking-wide text-muted-foreground">
-              {t("app.tagline")}
+              {subtitle || t("app.tagline")}
             </p>
           </div>
         </button>
@@ -207,6 +211,8 @@ export function SiteHeader({
             </button>
           )}
         </div>
+
+        {navigation}
       </div>
 
       {/* Mobile Drawer Menu */}

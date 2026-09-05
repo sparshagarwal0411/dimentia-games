@@ -1,9 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
-import { Accessibility, Brain, LogOut, Phone, Play, Stethoscope, User } from "lucide-react";
+import { Brain, Phone, Play, Stethoscope } from "lucide-react";
 
 import { useApp } from "@/lib/app-state";
-import { useI18n, LANGUAGES } from "@/lib/i18n";
+import { useI18n } from "@/lib/i18n";
 import { persistAssessment, type ScreeningResult } from "@/lib/screening";
 import { AssessmentPage } from "@/components/AssessmentPage";
 import { AuthGate } from "@/components/AuthGate";
@@ -15,7 +15,7 @@ import { HomeDashboard } from "@/components/HomeDashboard";
 import { DoctorsPage } from "@/components/DoctorsPage";
 import { GamesHub } from "@/components/games/GamesHub";
 import { Button } from "@/components/ui/button";
-import { SiteFooter } from "@/components/layout/SiteChrome";
+import { SiteFooter, SiteHeader } from "@/components/layout/SiteChrome";
 import { soundEffects } from "@/lib/audio-effects";
 import type { GameId } from "@/lib/games-catalog";
 
@@ -166,9 +166,11 @@ function Platform({
   );
 
   return (
-    <AppShell patientName={activePatient?.name} onHome={onHome}>
-      <div className="border-b border-border bg-card/80">
-        <div className="mx-auto flex max-w-3xl gap-1 overflow-x-auto px-4 py-2 sm:px-6">
+    <AppShell
+      patientName={activePatient?.name}
+      onHome={onHome}
+      navigation={(
+        <nav className="mx-auto flex max-w-6xl gap-1 overflow-x-auto border-t border-border/60 px-3 py-2 sm:px-6" aria-label="Dashboard sections">
           {(
             [
               { id: "home" as const, label: "Home", icon: Brain },
@@ -196,8 +198,9 @@ function Platform({
               </button>
             );
           })}
-        </div>
-      </div>
+        </nav>
+      )}
+    >
 
       {tab === "home" && (
         <HomeDashboard
@@ -222,10 +225,12 @@ function AppShell({
   children,
   onHome,
   patientName,
+  navigation,
 }: {
   children: ReactNode;
   onHome: () => void;
   patientName?: string | undefined;
+  navigation?: ReactNode;
 }) {
   const { session, signOut, openA11yPanel } = useApp();
   const { lang, setLang, t } = useI18n();
@@ -242,7 +247,8 @@ function AppShell({
   return (
     <div className="flex min-h-screen flex-col bg-background text-foreground transition-colors duration-300">
       <OfflineBanner />
-      <header className="glass-surface sticky top-0 z-40 border-b">
+      <SiteHeader simple onLogoClick={onHome} subtitle={patientName || undefined} navigation={navigation} />
+      <header className="hidden">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-2 px-3 py-2.5 sm:gap-4 sm:px-6 sm:py-3">
           <button type="button" onClick={onHome} className="flex items-center gap-2 sm:gap-3 text-left">
             <div className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center overflow-hidden rounded-xl bg-primary text-primary-foreground shadow-soft">
@@ -315,6 +321,7 @@ function AppShell({
             )}
           </div>
         </div>
+        {navigation}
       </header>
       <main className="flex-1 pb-12">{children}</main>
       <SiteFooter onStart={onHome} />
