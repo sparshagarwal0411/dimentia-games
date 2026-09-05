@@ -130,6 +130,11 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
   };
 
   const signOut = async () => {
+    setPatients([]);
+    setActiveId(null);
+    window.localStorage.removeItem(ACTIVE_KEY);
+    window.localStorage.removeItem(PATIENTS_STORE_KEY);
+    await cacheSet("patients", []);
     try {
       await supabase.auth.signOut();
     } catch {
