@@ -270,6 +270,116 @@ export function LandingPage({
         </div>
       </div>
 
+      {/* =======================================================================
+      {/* LEADERSHIP CAMPAIGN BANNER                                               */}
+      {/* ======================================================================= */}
+      <section className="relative overflow-hidden border-b-4 border-orange-500 bg-white">
+
+        {/* Tricolor background */}
+        <div className="absolute inset-0 bg-gradient-to-r from-orange-500 via-white via-[48%] to-emerald-600" />
+
+        {/* White angled center */}
+        <div
+          className="absolute inset-y-0 left-[18%] right-[12%] bg-white"
+          style={{
+            clipPath: "polygon(8% 0, 100% 0, 92% 100%, 0% 100%)",
+          }}
+        />
+
+        {/* Very subtle circular watermark */}
+        <div className="pointer-events-none absolute right-[25%] top-1/2 h-[280px] w-[280px] -translate-y-1/2 rounded-full border-[18px] border-slate-900/[0.035]">
+          <div className="absolute inset-6 rounded-full border-2 border-slate-900/[0.035]" />
+          <div className="absolute inset-1/2 h-[85%] w-px -translate-x-1/2 -translate-y-1/2 bg-slate-900/[0.025]" />
+          <div className="absolute inset-1/2 h-px w-[85%] -translate-x-1/2 -translate-y-1/2 bg-slate-900/[0.025]" />
+        </div>
+
+        <div className="relative mx-auto max-w-7xl px-4 sm:px-6">
+          <div className="relative h-[270px] sm:h-[300px] lg:h-[330px]">
+
+            {/* =============================================================== */}
+            {/* LEFT TEXT                                                       */}
+            {/* =============================================================== */}
+
+            <div className="absolute inset-y-0 left-0 z-20 flex w-[50%] items-center">
+              <div className="max-w-[520px] pl-3 sm:pl-6 lg:pl-10">
+
+                <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-orange-600 px-3 py-1 text-[9px] font-extrabold uppercase tracking-[0.15em] text-white shadow-sm sm:text-[10px]">
+                  <Sparkles className="h-3 w-3" />
+                  Cognitive Care Initiative
+                </div>
+
+                <h2 className="font-serif text-3xl font-black leading-[0.98] tracking-tight text-slate-900 sm:text-4xl lg:text-5xl">
+                  Care that reaches
+                  <br />
+                  <span className="text-orange-600">
+                    every family.
+                  </span>
+                </h2>
+
+                <p className="mt-3 max-w-md text-xs leading-relaxed text-slate-600 sm:text-sm">
+                  Accessible cognitive screening, regional languages and
+                  privacy-first brain games — designed for communities
+                  across North East India.
+                </p>
+
+                <div className="mt-4 flex flex-wrap gap-2">
+                  <span className="rounded-full bg-white/90 px-3 py-1.5 text-[9px] font-bold text-slate-700 shadow-sm ring-1 ring-slate-200">
+                    🛡 Privacy First
+                  </span>
+
+                  <span className="rounded-full bg-white/90 px-3 py-1.5 text-[9px] font-bold text-slate-700 shadow-sm ring-1 ring-slate-200">
+                    🗣 Regional Languages
+                  </span>
+
+                  <span className="rounded-full bg-white/90 px-3 py-1.5 text-[9px] font-bold text-slate-700 shadow-sm ring-1 ring-slate-200">
+                    🧠 Cognitive Care
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* =============================================================== */}
+            {/* PORTRAIT GROUP                                                   */}
+            {/* =============================================================== */}
+
+            <div className="absolute bottom-0 right-0 z-30 flex h-[270px] w-[58%] items-end justify-center sm:h-[300px] lg:h-[330px]">
+
+              {/* Person 1 */}
+              <div className="relative flex h-[99 %] w-[60%] items-end justify-center">
+                <img
+                  src="/1.png"
+                  alt="Leadership"
+                  className="block h-full w-full object-contain object-bottom"
+                />
+              </div>
+
+              {/* Person 3 */}
+              <div className="relative z-10 flex h-[90%] w-[60%] items-end justify-center">
+                <img
+                  src="/3.png"
+                  alt="Leadership"
+                  className="block h-full w-full object-contain object-bottom"
+                />
+              </div>
+
+              {/* Person 4 */}
+              <div className="relative flex h-[92%] w-[60%] items-end justify-center">
+                <img
+                  src="/4.png"
+                  alt="Leadership"
+                  className="block h-full w-full object-contain object-bottom"
+                />
+              </div>
+
+            </div>
+
+            Bottom alignment line
+            <div className="absolute bottom-0 left-0 right-0 z-50 h-[5px] bg-gradient-to-r from-orange-600 via-orange-400 to-emerald-600" />
+
+          </div>
+        </div>
+      </section>
+
       {/* ========================================================================= */}
       {/* 1. HERO SECTION WITH INTERACTIVE LIVE MINI-DEMO                           */}
       {/* ========================================================================= */}
