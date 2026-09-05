@@ -156,6 +156,80 @@ const en: Dict = {
   "offline.pending": "activities waiting to sync",
   "offline.synced": "All activities synchronized",
   "offline.offline": "You are offline — everything still works seamlessly",
+
+  // Leadership banner
+  "lead.initiative": "Cognitive Care Initiative",
+  "lead.title1": "Care that reaches",
+  "lead.title2": "every family.",
+  "lead.subtitle": "Accessible cognitive screening, regional languages and privacy-first brain games — designed for communities across North East India.",
+  "lead.badge1": "🛡 Privacy First",
+  "lead.badge2": "🗣 Regional Languages",
+  "lead.badge3": "🧠 Cognitive Care",
+
+  // Carousel & Core Pillars
+  "carousel.tag": "Core Capabilities",
+  "carousel.heading": "Engineered for real homes & field clinics",
+  "carousel.subheading": "Explore the four pillars supporting cognitive wellbeing across the North Eastern Region.",
+  "carousel.slide1.tag": "Clinical Triad",
+  "carousel.slide1.title": "Triple-Biomarker Guided Screening",
+  "carousel.slide1.badge": "Cognitive · Speech · Behavioral",
+  "carousel.slide1.desc": "A calm, conversational screening combining memory tasks, spoken language rhythm, and daily behavioral indicators. Scored directly on-device with zero diagnostic stigma.",
+  "carousel.slide1.b1": "No intimidating hospital forms",
+  "carousel.slide1.b2": "Instant risk category & clinician next-steps",
+  "carousel.slide1.b3": "Automatic offline caching in remote districts",
+  "carousel.slide2.tag": "AI Cognitive Gym",
+  "carousel.slide2.title": "10 AI-Adaptive Brain Games",
+  "carousel.slide2.badge": "Real-time Difficulty Scaling (L1–L5)",
+  "carousel.slide2.desc": "Engaging memory cards, routine recall, Stroop attention, family face recognition, and speech echo games that dynamically adjust challenge level based on response speed and accuracy.",
+  "carousel.slide2.b1": "Memory, attention, logic & temporal recall",
+  "carousel.slide2.b2": "Weekly community tournaments & XP streaks",
+  "carousel.slide2.b3": "Designed specifically for elderly hand dexterity",
+  "carousel.slide3.tag": "Regional Dialects",
+  "carousel.slide3.title": "Multilingual & Voice-Assisted",
+  "carousel.slide3.badge": "Assamese · Hindi · English · Regional",
+  "carousel.slide3.desc": "Elderly-friendly large tap buttons, full voice read-aloud, and speech-based answers tailored for North East Indian households with familiar tea garden and market cues.",
+  "carousel.slide3.b1": "Assamese & Hindi voice guidance built-in",
+  "carousel.slide3.b2": "High contrast & slow interaction modes",
+  "carousel.slide3.b3": "Culturally familiar objects from all 8 states",
+  "carousel.slide4.tag": "Privacy Guarantee",
+  "carousel.slide4.title": "Zero-Cloud Local Privacy",
+  "carousel.slide4.badge": "DPDP Act 2023 Compliant",
+  "carousel.slide4.desc": "All screening data and behavioral telemetry stay securely encrypted on your device. Works completely offline without requiring an active internet connection.",
+  "carousel.slide4.b1": "Works in zero-connectivity hills & tea estates",
+  "carousel.slide4.b2": "No keystrokes or private messages logged",
+  "carousel.slide4.b3": "1-click data deletion anytime",
+
+  // Demo section
+  "demo.title": "Interactive Live Mini-Demo",
+  "demo.subtitle": "Try a 30-second exercise right now in your browser",
+  "demo.tabMemory": "Memory Card",
+  "demo.tabStroop": "Attention Stroop",
+  "demo.tabVoice": "Voice Echo",
+  "demo.promptMemory": "Find the matching cultural tea garden card:",
+  "demo.promptStroop": "Choose the COLOR of the word (not the text):",
+  "demo.promptVoice": "Tap the mic and say this morning greeting:",
+  "demo.tryModule": "Try this module",
+  "demo.activeModule": "Active Module",
+
+  // Games Section
+  "games.heading": "Cognitive Gym & Memory Retention",
+  "games.subheading": "10 culturally tailored games training episodic memory, visual attention, and verbal fluency.",
+  "games.play": "Play Game",
+
+  // Privacy Section
+  "privacy.heading": "Strict Local-First Privacy for Vulnerable Elders",
+  "privacy.subheading": "Built to uphold the highest data sovereignty standards under the Indian Digital Personal Data Protection Act 2023.",
+
+  // Reviews
+  "reviews.heading": "Trusted by Families, ASHAs & Clinicians",
+  "reviews.subheading": "Real feedback from clinics and households across North East India.",
+
+  // Footer & Common
+  "footer.quickLinks": "Platform Features",
+  "footer.legal": "Legal & Privacy",
+  "footer.rights": "NeuroTrack NE · Built with clinical respect for North East India",
+  "footer.helplineTitle": "24/7 Tele-MANAS Emergency Helpline",
+  "footer.helplineDesc": "Govt of India Toll-Free Mental Health & Neurological Support: Call 14416",
 };
 
 const hi: Dict = {
@@ -303,6 +377,80 @@ const hi: Dict = {
   "offline.pending": "गतिविधियाँ सिंक होने की प्रतीक्षा में",
   "offline.synced": "सभी गतिविधियाँ सिंक हो गईं",
   "offline.offline": "आप ऑफ़लाइन हैं — सब कुछ सामान्य रूप से चलता रहेगा",
+
+  // Leadership banner
+  "lead.initiative": "संज्ञानात्मक देखभाल पहल",
+  "lead.title1": "देखभाल जो पहुंचे",
+  "lead.title2": "हर परिवार तक।",
+  "lead.subtitle": "सुलभ संज्ञानात्मक जांच, क्षेत्रीय भाषाएं और पूर्णतः निजी दिमागी खेल — पूर्वोत्तर भारत के परिवारों के लिए विशेष रूप से निर्मित।",
+  "lead.badge1": "🛡 पूर्णतः निजी",
+  "lead.badge2": "🗣 क्षेत्रीय भाषाएं",
+  "lead.badge3": "🧠 दिमागी देखभाल",
+
+  // Carousel & Core Pillars
+  "carousel.tag": "मुख्य क्षमताएं",
+  "carousel.heading": "घरों एवं क्लिनिकों के लिए तैयार",
+  "carousel.subheading": "पूर्वोत्तर क्षेत्र में संज्ञानात्मक स्वास्थ्य का समर्थन करने वाले चार प्रमुख आधार।",
+  "carousel.slide1.tag": "क्लिनिकल ट्रायड",
+  "carousel.slide1.title": "ट्रिपल-बायोमार्कर आधारित स्क्रीनिंग",
+  "carousel.slide1.badge": "संज्ञानात्मक · वाक् · व्यवहार",
+  "carousel.slide1.desc": "स्मृति परीक्षण, वाक् गति और दैनिक व्यवहार संकेतकों का सरल और तनावमुक्त संयोजन। सीधे इसी डिवाइस पर सुरक्षित रूप से विश्लेषित।",
+  "carousel.slide1.b1": "अस्पताल के कठिन फ़ॉर्मों से मुक्ति",
+  "carousel.slide1.b2": "तत्काल जोखिम श्रेणी और डॉक्टर के मार्गदर्शन",
+  "carousel.slide1.b3": "दूरदराज के इलाकों में स्वतः ऑफ़लाइन कार्य",
+  "carousel.slide2.tag": "एआई ब्रेन जिम",
+  "carousel.slide2.title": "१० एआई-अनुकूली दिमागी खेल",
+  "carousel.slide2.badge": "रीयल-टाइम कठिनाई स्तर (L1–L5)",
+  "carousel.slide2.desc": "मेमोरी कार्ड, दैनिक दिनचर्या याद करना, परिवार के चेहरों की पहचान और वाक् अभ्यास खेल जो खिलाड़ी की गति के अनुसार स्वतः ढलते हैं।",
+  "carousel.slide2.b1": "स्मृति, एकाग्रता और तार्किक अभ्यास",
+  "carousel.slide2.b2": "साप्ताहिक चुनौतियां और प्रोत्साहन अंक",
+  "carousel.slide2.b3": "बुजुर्गों के हाथों की सहजता के अनुकूल",
+  "carousel.slide3.tag": "क्षेत्रीय बोलियां",
+  "carousel.slide3.title": "बहुभाषी एवं आवाज़-निर्देशित",
+  "carousel.slide3.badge": "असमिया · हिंदी · अंग्रेजी · स्थानीय",
+  "carousel.slide3.desc": "बुजुर्गों के लिए बड़े टच बटन, आवाज़ द्वारा पढ़कर सुनाने की सुविधा और स्थानीय परिचित प्रतीकों के साथ तैयार।",
+  "carousel.slide3.b1": "असमिया एवं हिंदी ध्वनि मार्गदर्शन अंतर्निहित",
+  "carousel.slide3.b2": "उच्च कंट्रास्ट और धीमा मोड",
+  "carousel.slide3.b3": "पूर्वोत्तर के सभी ८ राज्यों के जाने-पहचाने सांस्कृतिक प्रतीक",
+  "carousel.slide4.tag": "गोपनीयता गारंटी",
+  "carousel.slide4.title": "शून्य-क्लाउड स्थानीय सुरक्षा",
+  "carousel.slide4.badge": "DPDP अधिनियम २०२३ के अनुरूप",
+  "carousel.slide4.desc": "सभी जांच डेटा और व्यवहार संबंधी जानकारी आपके डिवाइस पर एन्क्रिप्टेड रहती है। इंटरनेट कनेक्शन के बिना भी पूरी तरह काम करता है।",
+  "carousel.slide4.b1": "इंटरनेट रहित चाय बागानों और पहाड़ियों में सक्षम",
+  "carousel.slide4.b2": "कोई कीस्ट्रोक या निजी संदेश रिकॉर्ड नहीं",
+  "carousel.slide4.b3": "कभी भी १-क्लिक में डेटा मिटाने की सुविधा",
+
+  // Demo section
+  "demo.title": "लाइव इंटरैक्टिव मिनी-डेमो",
+  "demo.subtitle": "अपने ब्राउज़र में अभी ३० सेकंड का अभ्यास आज़माएं",
+  "demo.tabMemory": "मेमोरी कार्ड",
+  "demo.tabStroop": "स्ट्रूप एकाग्रता",
+  "demo.tabVoice": "आवाज़ दोहराव",
+  "demo.promptMemory": "सांस्कृतिक चाय बागान कार्ड का जोड़ा खोजें:",
+  "demo.promptStroop": "शब्द के रंग का चयन करें (लिखे शब्द का नहीं):",
+  "demo.promptVoice": "माइक दबाएं और यह अभिवादन बोलें:",
+  "demo.tryModule": "यह मॉड्यूल आज़माएँ",
+  "demo.activeModule": "सक्रिय मॉड्यूल",
+
+  // Games Section
+  "games.heading": "संज्ञानात्मक जिम एवं स्मृति अभ्यास",
+  "games.subheading": "पूर्वोत्तर संस्कृति के अनुसार १० खेल जो स्मृति, दृष्टि एकाग्रता और वाक् कौशल को मजबूत करते हैं।",
+  "games.play": "खेलें",
+
+  // Privacy Section
+  "privacy.heading": "बुजुर्गों के लिए सुरक्षित, स्थानीय गोपनीयता",
+  "privacy.subheading": "भारतीय डिजिटल व्यक्तिगत डेटा संरक्षण अधिनियम २०२३ के उच्चतम मानकों के साथ निर्मित।",
+
+  // Reviews
+  "reviews.heading": "परिवारों, आशा कार्यकर्ताओं और डॉक्टरों का भरोसा",
+  "reviews.subheading": "पूर्वोत्तर भारत के क्लीनिकों और परिवारों से वास्तविक अनुभव।",
+
+  // Footer & Common
+  "footer.quickLinks": "प्लेटफ़ॉर्म सुविधाएं",
+  "footer.legal": "कानूनी एवं गोपनीयता",
+  "footer.rights": "न्यूरोट्रैक पूर्वोत्तर · पूर्वोत्तर भारत के प्रति सम्मान के साथ निर्मित",
+  "footer.helplineTitle": "२४/७ टेली-मानस आपातकालीन हेल्पलाइन",
+  "footer.helplineDesc": "भारत सरकार की निःशुल्क मानसिक स्वास्थ्य एवं न्यूरो सहायता: डायल करें १४४१६",
 };
 
 const as: Dict = {
@@ -450,6 +598,80 @@ const as: Dict = {
   "offline.pending": "কাম সিংক হ'বলৈ বাকী",
   "offline.synced": "সকলো কাম সিংক হ'ল",
   "offline.offline": "আপুনি অফলাইন — সকলো চলি থাকিব",
+
+  // Leadership banner
+  "lead.initiative": "জ্ঞান আৰু স্মৃতি যত্ন পদক্ষেপ",
+  "lead.title1": "যত্ন যি স্পৰ্শ কৰে",
+  "lead.title2": "প্ৰতিটো পৰিয়ালক।",
+  "lead.subtitle": "সহজ জ্ঞান পৰীক্ষা, আঞ্চলিক ভাষা আৰু সম্পূৰ্ণ ব্যক্তিগত মগজুৰ খেল — উত্তৰ-পূৰ্বাঞ্চলৰ পৰিয়ালসমূহৰ বাবে নিৰ্মিত।",
+  "lead.badge1": "🛡 সম্পূৰ্ণ ব্যক্তিগত",
+  "lead.badge2": "🗣 স্থানীয় ভাষা",
+  "lead.badge3": "🧠 মগজুৰ যত্ন",
+
+  // Carousel & Core Pillars
+  "carousel.tag": "মূল সেৱাসমূহ",
+  "carousel.heading": "ঘৰ আৰু স্বাস্থ্য কেন্দ্ৰৰ বাবে উপযুক্ত",
+  "carousel.subheading": "উত্তৰ-পূৰ্বাঞ্চলত জ্ঞান আৰু স্মৃতি সুস্থতাৰ বাবে চাৰিটা মূল স্তম্ভ।",
+  "carousel.slide1.tag": "ক্লিনিক্যাল ট্ৰায়াড",
+  "carousel.slide1.title": "তিনিটা লক্ষণ ভিত্তিক পৰীক্ষা",
+  "carousel.slide1.badge": "স্মৃতি · মাত · দৈনন্দিন আচৰণ",
+  "carousel.slide1.desc": "স্মৃতি পৰীক্ষা, মাতৰ তাল আৰু দৈনন্দিন অভ্যাসৰ সহজ সংমিশ্ৰণ। ডিভাইচতে কোনো ভয় নোহোৱাকৈ স্কোৰ কৰা হয়।",
+  "carousel.slide1.b1": "হাস্পতালৰ দীঘলীয়া প্ৰপত্ৰৰ প্ৰয়োজন নাই",
+  "carousel.slide1.b2": "তৎক্ষণাৎ ফলাফল আৰু চিকিৎসকৰ পৰামৰ্শ",
+  "carousel.slide1.b3": "দুৰ্গম অঞ্চলতো অফলাইনত চলে",
+  "carousel.slide2.tag": "AI মগজুৰ ব্যায়াম",
+  "carousel.slide2.title": "১০টা AI-আধাৰিত মগজুৰ খেল",
+  "carousel.slide2.badge": "পৰীক্ষাৰ স্তৰ (L1–L5)",
+  "carousel.slide2.desc": "স্মৃতি কাৰ্ড, পুৰণি অভ্যাস মনত পেলোৱা, পৰিয়ালৰ চিনাকি মুখ চিনাক্তকৰণ খেল যিবোৰ খেলুৱৈৰ দক্ষতা অনুসৰি সলনি হয়।",
+  "carousel.slide2.b1": "স্মৃতি, মনোযোগ আৰু তৰ্ক শক্তি বৃদ্ধি",
+  "carousel.slide2.b2": "সাপ্তাহিক প্ৰতিযোগিতা আৰু পুৰস্কাৰ",
+  "carousel.slide2.b3": "বয়োবৃদ্ধসকলৰ বাবে সহজ স্পর্শ স্ক্ৰীন",
+  "carousel.slide3.tag": "আঞ্চলিক ভাষা",
+  "carousel.slide3.title": "মাত আৰু স্থানীয় ভাষাত নিৰ্দেশনা",
+  "carousel.slide3.badge": "অসমীয়া · হিন্দী · ইংৰাজী · স্থানীয়",
+  "carousel.slide3.desc": "ডাঙৰ বুটাম, মাতৰ দ্বাৰা পঢ়ি শুনোৱা সুবিধা আৰু চাহ বাগিচা বা চিনাকি সাংস্কৃতিক উপাদানৰ সৈতে সজ্জিত।",
+  "carousel.slide3.b1": "অসমীয়া আৰু হিন্দীত মাত অন্তৰ্ভুক্ত",
+  "carousel.slide3.b2": "স্পষ্ট দেখা পোৱা হাই কণ্ট্ৰাষ্ট আৰু লেহেমীয়া মোড",
+  "carousel.slide3.b3": "উত্তৰ-পূৰ্বাঞ্চলৰ ৮খন ৰাজ্যৰ সাংস্কৃতিক প্ৰতীক",
+  "carousel.slide4.tag": "গোপনীয়তা সুৰক্ষা",
+  "carousel.slide4.title": "ডিভাইচতে সুৰক্ষিত তথ্য",
+  "carousel.slide4.badge": "DPDP আইন ২০২৩ অনুসাৰে",
+  "carousel.slide4.desc": "সকলো পৰীক্ষা আৰু তথ্য আপোনাৰ ডিভাইচতে এনক্ৰিপ্ট হৈ থাকে। ইণ্টাৰনেট নোহোৱাকৈয়ো চলে।",
+  "carousel.slide4.b1": "পাহাৰীয়া আৰু চাহ বাগিচা অঞ্চলত অফলাইনত চলে",
+  "carousel.slide4.b2": "ব্যক্তিগত বাৰ্তা কেতিয়াও সংগ্ৰহ নহয়",
+  "carousel.slide4.b3": "১-ক্লিকত সকলো তথ্য মচি পেলোৱাৰ সুবিধা",
+
+  // Demo section
+  "demo.title": "অনলাইন লাইভ ডেমো",
+  "demo.subtitle": "আপোনাৰ ব্ৰাউজাৰতে ৩০ ছেকেণ্ডৰ অনুশীলন কৰি চাওক",
+  "demo.tabMemory": "স্মৃতি কাৰ্ড",
+  "demo.tabStroop": "মনোযোগ পৰীক্ষা",
+  "demo.tabVoice": "মাতৰ প্ৰতিধ্বনি",
+  "demo.promptMemory": "চাহ বাগিচাৰ চিনাকি কাৰ্ডৰ যোৰ মিলাওক:",
+  "demo.promptStroop": "শব্দটোৰ ৰং বাছক (লিখা শব্দটো নহয়):",
+  "demo.promptVoice": "মাইক টিপি এই প্ৰভাতী সম্ভাষণ কওক:",
+  "demo.tryModule": "এই খেলটো খেলি চাওক",
+  "demo.activeModule": "সক্ৰিয় খেল",
+
+  // Games Section
+  "games.heading": "মগজুৰ ব্যায়াম আৰু স্মৃতি সংৰক্ষণ",
+  "games.subheading": "উত্তৰ-পূৰ্বাঞ্চলৰ সংস্কৃতিৰ ১০টা খেল যিয়ে স্মৃতি আৰু মনোযোগ শক্তিশালী কৰে।",
+  "games.play": "খেলক",
+
+  // Privacy Section
+  "privacy.heading": "বয়োবৃদ্ধসকলৰ বাবে কঠোৰ স্থানীয় গোপনীয়তা",
+  "privacy.subheading": "ভাৰতীয় ডিজিটেল ব্যক্তিগত তথ্য সুৰক্ষা আইন ২০২৩ অনুসাৰে নিৰ্মিত।",
+
+  // Reviews
+  "reviews.heading": "পৰিয়াল, আশা কৰ্মী আৰু চিকিৎসকৰ আস্থা",
+  "reviews.subheading": "উত্তৰ-পূৰ্বাঞ্চলৰ ক্লিনিক আৰু ঘৰৰ পৰা পোৱা প্ৰকৃত মতামত।",
+
+  // Footer & Common
+  "footer.quickLinks": "প্লেটফৰ্ম সেৱাসমূহ",
+  "footer.legal": "আইন আৰু গোপনীয়তা",
+  "footer.rights": "নিউৰোট্ৰেক উত্তৰ-পূব · শ্ৰদ্ধা আৰু নিষ্ঠাৰে নিৰ্মিত",
+  "footer.helplineTitle": "২৪/৭ টেলি-মানস জৰুৰীকালীন হেল্পলাইন",
+  "footer.helplineDesc": "ভাৰত চৰকাৰৰ বিনামূলীয়া মানসিক স্বাস্থ্য আৰু স্নায়ু সাহায্য: কল কৰক ১৪৪১৬",
 };
 
 const DICTS: Record<LanguageCode, Dict> = { en, hi, as };

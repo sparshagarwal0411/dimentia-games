@@ -98,7 +98,13 @@ function Index() {
   if (stage === "landing") {
     return (
       <LandingPage
-        onStart={() => setJourney("onboarding")}
+        onStart={() => {
+          if (activePatient) {
+            setJourney("dashboard");
+          } else {
+            setJourney("onboarding");
+          }
+        }}
         onResume={activePatient ? () => setJourney("dashboard") : undefined}
       />
     );

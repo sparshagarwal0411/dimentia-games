@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   Activity,
   ArrowRight,
@@ -202,6 +202,49 @@ export function LandingPage({
 }) {
   const { t } = useI18n();
 
+  // Localized Carousel Slides
+  const carouselSlides = useMemo(
+    () => [
+      {
+        tag: t("carousel.slide1.tag"),
+        title: t("carousel.slide1.title"),
+        badge: t("carousel.slide1.badge"),
+        description: t("carousel.slide1.desc"),
+        icon: Brain,
+        accent: "from-teal-500/20 via-primary/10 to-transparent",
+        bullets: [t("carousel.slide1.b1"), t("carousel.slide1.b2"), t("carousel.slide1.b3")],
+      },
+      {
+        tag: t("carousel.slide2.tag"),
+        title: t("carousel.slide2.title"),
+        badge: t("carousel.slide2.badge"),
+        description: t("carousel.slide2.desc"),
+        icon: Sparkles,
+        accent: "from-indigo-500/20 via-primary/10 to-transparent",
+        bullets: [t("carousel.slide2.b1"), t("carousel.slide2.b2"), t("carousel.slide2.b3")],
+      },
+      {
+        tag: t("carousel.slide3.tag"),
+        title: t("carousel.slide3.title"),
+        badge: t("carousel.slide3.badge"),
+        description: t("carousel.slide3.desc"),
+        icon: Languages,
+        accent: "from-amber-500/20 via-primary/10 to-transparent",
+        bullets: [t("carousel.slide3.b1"), t("carousel.slide3.b2"), t("carousel.slide3.b3")],
+      },
+      {
+        tag: t("carousel.slide4.tag"),
+        title: t("carousel.slide4.title"),
+        badge: t("carousel.slide4.badge"),
+        description: t("carousel.slide4.desc"),
+        icon: ShieldCheck,
+        accent: "from-emerald-500/20 via-primary/10 to-transparent",
+        bullets: [t("carousel.slide4.b1"), t("carousel.slide4.b2"), t("carousel.slide4.b3")],
+      },
+    ],
+    [t],
+  );
+
   // Carousel State
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
@@ -220,10 +263,10 @@ export function LandingPage({
   useEffect(() => {
     if (!isAutoPlaying) return;
     const timer = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % CAROUSEL_SLIDES.length);
+      setCurrentSlide((prev) => (prev + 1) % carouselSlides.length);
     }, 6000);
     return () => clearInterval(timer);
-  }, [isAutoPlaying]);
+  }, [isAutoPlaying, carouselSlides.length]);
 
   const handleStateVoice = (stateObj: (typeof NER_STATES)[number]) => {
     soundEffects.playChime();
@@ -248,8 +291,8 @@ export function LandingPage({
 
   return (
     <div className="min-h-screen bg-background text-foreground transition-colors duration-300 selection:bg-primary/20 selection:text-primary">
-      {/* Dynamic Header */}
-      <SiteHeader onStart={onStart} />
+      {/* Dynamic Header with Profile & Resume support */}
+      <SiteHeader onStart={onResume || onStart} ctaLabel={onResume ? t("nav.resume") : t("nav.start")} />
 
       {/* Marquee Banner */}
       <div className="overflow-hidden border-b border-border/70 bg-gradient-to-r from-primary/10 via-emerald-500/10 to-primary/10 py-2 text-xs font-semibold text-primary">
@@ -305,34 +348,32 @@ export function LandingPage({
 
                 <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-orange-600 px-3 py-1 text-[9px] font-extrabold uppercase tracking-[0.15em] text-white shadow-sm sm:text-[10px]">
                   <Sparkles className="h-3 w-3" />
-                  Cognitive Care Initiative
+                  {t("lead.initiative")}
                 </div>
 
                 <h2 className="font-serif text-3xl font-black leading-[0.98] tracking-tight text-slate-900 sm:text-4xl lg:text-5xl">
-                  Care that reaches
+                  {t("lead.title1")}
                   <br />
                   <span className="text-orange-600">
-                    every family.
+                    {t("lead.title2")}
                   </span>
                 </h2>
 
                 <p className="mt-3 max-w-md text-xs leading-relaxed text-slate-600 sm:text-sm">
-                  Accessible cognitive screening, regional languages and
-                  privacy-first brain games — designed for communities
-                  across North East India.
+                  {t("lead.subtitle")}
                 </p>
 
                 <div className="mt-4 flex flex-wrap gap-2">
                   <span className="rounded-full bg-white/90 px-3 py-1.5 text-[9px] font-bold text-slate-700 shadow-sm ring-1 ring-slate-200">
-                    🛡 Privacy First
+                    {t("lead.badge1")}
                   </span>
 
                   <span className="rounded-full bg-white/90 px-3 py-1.5 text-[9px] font-bold text-slate-700 shadow-sm ring-1 ring-slate-200">
-                    🗣 Regional Languages
+                    {t("lead.badge2")}
                   </span>
 
                   <span className="rounded-full bg-white/90 px-3 py-1.5 text-[9px] font-bold text-slate-700 shadow-sm ring-1 ring-slate-200">
-                    🧠 Cognitive Care
+                    {t("lead.badge3")}
                   </span>
                 </div>
               </div>
@@ -471,8 +512,8 @@ export function LandingPage({
                   <Zap className="h-4 w-4" />
                 </div>
                 <div>
-                  <h2 className="text-sm font-bold text-foreground">Interactive Demo</h2>
-                  <p className="text-[11px] text-muted-foreground">Experience a quick cognitive exercise</p>
+                  <h2 className="text-sm font-bold text-foreground">{t("demo.title")}</h2>
+                  <p className="text-[11px] text-muted-foreground">{t("demo.subtitle")}</p>
                 </div>
               </div>
               <button
@@ -488,9 +529,9 @@ export function LandingPage({
             {/* Demo Tabs */}
             <div className="mt-4 flex rounded-xl bg-muted/60 p-1 text-xs font-bold">
               {[
-                { id: "memory" as const, label: "Memory Match" },
-                { id: "stroop" as const, label: "Stroop Attention" },
-                { id: "voice" as const, label: "Voice Echo" },
+                { id: "memory" as const, label: t("demo.tabMemory") },
+                { id: "stroop" as const, label: t("demo.tabStroop") },
+                { id: "voice" as const, label: t("demo.tabVoice") },
               ].map((tab) => (
                 <button
                   key={tab.id}
@@ -515,7 +556,7 @@ export function LandingPage({
               {demoStep === "memory" && (
                 <div className="space-y-4 w-full">
                   <p className="text-xs text-muted-foreground">
-                    Tap the card to match with the regional Assam Tea Leaf:
+                    {t("demo.promptMemory")}
                   </p>
                   <div className="flex justify-center gap-4">
                     <div className="flex h-20 w-20 items-center justify-center rounded-2xl border-2 border-primary/40 bg-primary/10 text-3xl shadow-sm">
@@ -543,7 +584,7 @@ export function LandingPage({
               {demoStep === "stroop" && (
                 <div className="space-y-4 w-full">
                   <p className="text-xs text-muted-foreground">
-                    Tap the <strong>INK COLOR</strong>, not what the word says:
+                    {t("demo.promptStroop")}
                   </p>
                   <div className="py-2 text-3xl font-extrabold text-emerald-600">
                     "RED"
@@ -587,7 +628,7 @@ export function LandingPage({
               {demoStep === "voice" && (
                 <div className="space-y-4 w-full">
                   <p className="text-xs text-muted-foreground">
-                    Listen to regional voice guidance & repeat aloud:
+                    {t("demo.promptVoice")}
                   </p>
                   <div className="rounded-2xl border border-border bg-muted/40 p-3 text-xs">
                     <p className="font-semibold text-foreground">
@@ -653,13 +694,13 @@ export function LandingPage({
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div>
             <p className="text-xs font-bold uppercase tracking-[0.2em] text-primary">
-              Core Capabilities
+              {t("carousel.tag")}
             </p>
             <h2 className="mt-2 text-3xl font-extrabold text-foreground sm:text-4xl">
-              Engineered for real homes & field clinics
+              {t("carousel.heading")}
             </h2>
             <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
-              Explore the four pillars supporting cognitive wellbeing across the North Eastern Region.
+              {t("carousel.subheading")}
             </p>
           </div>
 
@@ -669,7 +710,7 @@ export function LandingPage({
               type="button"
               onClick={() => {
                 soundEffects.playClick();
-                setCurrentSlide((prev) => (prev - 1 + CAROUSEL_SLIDES.length) % CAROUSEL_SLIDES.length);
+                setCurrentSlide((prev) => (prev - 1 + carouselSlides.length) % carouselSlides.length);
               }}
               className="flex h-10 w-10 items-center justify-center rounded-full border border-border bg-card text-foreground hover:bg-muted transition-colors shadow-soft"
               aria-label="Previous slide"
@@ -680,7 +721,7 @@ export function LandingPage({
               type="button"
               onClick={() => {
                 soundEffects.playClick();
-                setCurrentSlide((prev) => (prev + 1) % CAROUSEL_SLIDES.length);
+                setCurrentSlide((prev) => (prev + 1) % carouselSlides.length);
               }}
               className="flex h-10 w-10 items-center justify-center rounded-full border border-border bg-card text-foreground hover:bg-muted transition-colors shadow-soft"
               aria-label="Next slide"
@@ -693,7 +734,7 @@ export function LandingPage({
         {/* Carousel Slide Viewer */}
         <div className="mt-8 relative overflow-hidden rounded-3xl border border-border bg-card p-6 sm:p-10 shadow-lift">
           {(() => {
-            const slide = CAROUSEL_SLIDES[currentSlide];
+            const slide = carouselSlides[currentSlide] || carouselSlides[0];
             const Icon = slide.icon;
             return (
               <div className="grid gap-8 lg:grid-cols-12 items-center animate-in fade-in duration-300">
@@ -732,7 +773,7 @@ export function LandingPage({
                       }}
                       className="rounded-full px-6 font-bold"
                     >
-                      Try this module <ArrowRight className="h-4 w-4 ml-1.5" />
+                      {t("demo.tryModule")} <ArrowRight className="h-4 w-4 ml-1.5" />
                     </Button>
                   </div>
                 </div>
@@ -741,7 +782,7 @@ export function LandingPage({
                   <div className={`relative flex h-64 w-64 sm:h-72 sm:w-72 items-center justify-center rounded-3xl border border-border bg-gradient-to-br ${slide.accent} shadow-inner`}>
                     <Icon className="h-28 w-28 text-primary animate-float" />
                     <div className="absolute bottom-4 left-4 right-4 rounded-2xl bg-card/90 p-3 text-center border border-border/70 backdrop-blur-md">
-                      <p className="text-xs font-bold text-foreground">Active Module</p>
+                      <p className="text-xs font-bold text-foreground">{t("demo.activeModule")}</p>
                       <p className="text-[11px] text-muted-foreground">{slide.tag}</p>
                     </div>
                   </div>

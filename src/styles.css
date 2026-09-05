@@ -157,50 +157,83 @@
 
 /* High contrast accessibility theme */
 .high-contrast {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.13 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.13 0 0);
-  --muted: oklch(0.95 0 0);
-  --muted-foreground: oklch(0.25 0 0);
-  --primary: oklch(0.25 0.08 250);
-  --primary-foreground: oklch(1 0 0);
-  --secondary: oklch(0.93 0 0);
-  --secondary-foreground: oklch(0.13 0 0);
-  --accent: oklch(0.9 0.02 90);
-  --accent-foreground: oklch(0.13 0 0);
-  --border: oklch(0.3 0 0);
-  --input: oklch(0.3 0 0);
+  --background: #ffffff;
+  --foreground: #000000;
+  --card: #ffffff;
+  --card-foreground: #000000;
+  --muted: #f3f4f6;
+  --muted-foreground: #111827;
+  --primary: #0f172a;
+  --primary-foreground: #ffffff;
+  --secondary: #e5e7eb;
+  --secondary-foreground: #000000;
+  --accent: #f9fafb;
+  --accent-foreground: #000000;
+  --border: #000000;
+  --input: #000000;
   --gradient-hero: none;
-  --gradient-calm: linear-gradient(140deg, oklch(0.25 0.08 250), oklch(0.2 0.06 250));
+  --gradient-calm: #0f172a;
+}
+
+.high-contrast :is(h1, h2, h3, h4, p, span, li, button, a, label, input) {
+  text-shadow: none !important;
+}
+
+.high-contrast .text-muted-foreground {
+  color: #111827 !important;
+}
+
+.high-contrast .text-slate-400,
+.high-contrast .text-slate-300,
+.high-contrast .text-slate-500 {
+  color: #000000 !important;
 }
 
 .high-contrast.dark {
-  --background: oklch(0.1 0 0);
-  --foreground: oklch(1 0 0);
-  --card: oklch(0.15 0 0);
-  --card-foreground: oklch(1 0 0);
-  --muted: oklch(0.22 0 0);
-  --muted-foreground: oklch(0.85 0 0);
-  --primary: oklch(0.9 0.15 95);
-  --primary-foreground: oklch(0.1 0 0);
-  --secondary: oklch(0.24 0 0);
-  --secondary-foreground: oklch(1 0 0);
-  --border: oklch(0.8 0 0);
-  --input: oklch(0.8 0 0);
-}
-
-.extra-high-contrast {
   --background: #000000;
   --foreground: #ffffff;
-  --card: #000000;
+  --card: #0a0a0a;
   --card-foreground: #ffffff;
-  --primary: #ffff00;
+  --muted: #1f2937;
+  --muted-foreground: #f9fafb;
+  --primary: #facc15;
   --primary-foreground: #000000;
-  --secondary: #1a1a1a;
+  --secondary: #27272a;
   --secondary-foreground: #ffffff;
   --border: #ffffff;
   --input: #ffffff;
+}
+
+.high-contrast.dark .text-muted-foreground,
+.high-contrast.dark .text-slate-400,
+.high-contrast.dark .text-slate-300 {
+  color: #f9fafb !important;
+}
+
+.extra-high-contrast {
+  --background: #000000 !important;
+  --foreground: #ffffff !important;
+  --card: #000000 !important;
+  --card-foreground: #ffffff !important;
+  --primary: #ffff00 !important;
+  --primary-foreground: #000000 !important;
+  --secondary: #18181b !important;
+  --secondary-foreground: #ffffff !important;
+  --border: #ffffff !important;
+  --input: #ffffff !important;
+  --muted-foreground: #ffffff !important;
+}
+
+.extra-high-contrast * {
+  border-color: #ffffff !important;
+}
+
+.extra-high-contrast :is(p, span, li, a, h1, h2, h3, h4, label) {
+  color: #ffffff !important;
+}
+
+.extra-high-contrast button {
+  border: 2px solid #ffffff !important;
 }
 
 .reduced-motion *,
@@ -217,11 +250,34 @@
 }
 
 .colorblind-friendly {
-  filter: contrast(115%) saturate(110%);
+  filter: contrast(120%) saturate(115%);
 }
 
+/* Large buttons touch mode */
 .large-buttons {
-  --tap-size: 4.5rem;
+  --tap-size: 3.75rem;
+}
+
+.large-buttons button,
+.large-buttons [role="button"],
+.large-buttons input,
+.large-buttons select,
+.large-buttons .tap {
+  min-height: 3.5rem !important;
+  font-size: 1.05rem !important;
+  padding-left: 1.25rem !important;
+  padding-right: 1.25rem !important;
+}
+
+.large-buttons button.rounded-full {
+  min-height: 3.5rem !important;
+  padding-left: 1.5rem !important;
+  padding-right: 1.5rem !important;
+}
+
+.large-buttons input {
+  padding-top: 0.75rem !important;
+  padding-bottom: 0.75rem !important;
 }
 
 .slow-mode * {

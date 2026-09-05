@@ -5,8 +5,18 @@
 
 class SoundSynthesizer {
   private ctx: AudioContext | null = null;
+  private muted: boolean = false;
+
+  setMuted(muted: boolean) {
+    this.muted = muted;
+  }
+
+  isMuted() {
+    return this.muted;
+  }
 
   private getContext(): AudioContext | null {
+    if (this.muted) return null;
     if (typeof window === "undefined") return null;
     if (!this.ctx) {
       const AudioCtx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
@@ -21,6 +31,7 @@ class SoundSynthesizer {
   }
 
   playSuccess() {
+    if (this.muted) return;
     try {
       const ctx = this.getContext();
       if (!ctx) return;
@@ -47,6 +58,7 @@ class SoundSynthesizer {
   }
 
   playClick() {
+    if (this.muted) return;
     try {
       const ctx = this.getContext();
       if (!ctx) return;
@@ -72,6 +84,7 @@ class SoundSynthesizer {
   }
 
   playChime() {
+    if (this.muted) return;
     try {
       const ctx = this.getContext();
       if (!ctx) return;

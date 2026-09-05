@@ -16,7 +16,7 @@ export function OnboardingPage({
   onBack: () => void;
   onComplete: () => void;
 }) {
-  const { registerPatient } = useApp();
+  const { registerPatient, activePatient } = useApp();
   const { t, lang } = useI18n();
 
   const [role, setRole] = useState<PatientRole>("self");
@@ -95,6 +95,29 @@ export function OnboardingPage({
             {t("onboarding.subtitle")}
           </p>
         </div>
+
+        {activePatient && (
+          <div className="mt-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-4 text-emerald-950 dark:text-emerald-200">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-400">
+                Active Patient Profile Found
+              </p>
+              <p className="text-sm font-semibold mt-0.5">
+                {activePatient.name} ({activePatient.age}y, {activePatient.region})
+              </p>
+              <p className="text-xs text-muted-foreground mt-0.5">
+                You are already onboarded. You can resume activity or register an additional patient below.
+              </p>
+            </div>
+            <Button
+              type="button"
+              onClick={onComplete}
+              className="rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shrink-0"
+            >
+              Resume Dashboard →
+            </Button>
+          </div>
+        )}
 
         <form onSubmit={handleSubmit} className="mt-6 sm:mt-8 space-y-6 rounded-3xl border border-border bg-card p-5 sm:p-8 shadow-soft">
           <fieldset>

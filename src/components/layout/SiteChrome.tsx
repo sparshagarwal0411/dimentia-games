@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   Accessibility,
   Brain,
@@ -10,7 +9,10 @@ import {
   Menu,
   X,
   Languages,
+  User,
+  LogOut,
 } from "lucide-react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useApp } from "@/lib/app-state";
 import { useI18n, LANGUAGES } from "@/lib/i18n";
@@ -28,9 +30,19 @@ export function SiteHeader({
   ctaLabel?: string;
   simple?: boolean;
 }) {
-  const { openA11yPanel } = useApp();
+  const { openA11yPanel, session, activePatient, signOut } = useApp();
   const { lang, setLang, t } = useI18n();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const userName = activePatient?.name || session?.user?.user_metadata?.["full_name"] || session?.user?.email || "";
+  const initials = userName
+    ? userName
+        .split(" ")
+        .slice(0, 2)
+        .map((w: string) => w[0])
+        .join("")
+        .toUpperCase()
+    : "";
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, targetId: string) => {
     e.preventDefault();
@@ -50,7 +62,7 @@ export function SiteHeader({
     onStart?.();
   };
 
-  const resolvedCta = ctaLabel || t("nav.start");
+  const resolvedCta = ctaLabel || (activePatient || session ? t("nav.resume") : t("nav.start"));
 
   return (
     <header className="sticky top-0 z-40 border-b border-border/80 bg-background/95 backdrop-blur-md transition-colors duration-300">
@@ -180,15 +192,42 @@ export function SiteHeader({
             <span className="hidden xl:inline">{t("a11y.title")}</span>
           </Button>
 
+          {/* User Profile Pill when logged in */}
+          {(session || activePatient) && (
+            <div className="flex items-center gap-1 sm:gap-1.5">
+              <button
+                type="button"
+                onClick={handleStart}
+                className="flex items-center gap-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2 sm:px-2.5 py-1 text-xs font-semibold text-emerald-800 dark:text-emerald-300 hover:bg-emerald-500/20 transition-all"
+                title={userName}
+              >
+                <div className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-600 text-[10px] font-bold text-white">
+                  {initials || <User className="h-3 w-3" />}
+                </div>
+                <span className="hidden md:inline max-w-[100px] truncate">{userName}</span>
+              </button>
+              {session && (
+                <button
+                  type="button"
+                  onClick={() => void signOut()}
+                  title={t("nav.signOut")}
+                  className="rounded-full p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+                >
+                  <LogOut className="h-3.5 w-3.5" />
+                </button>
+              )}
+            </div>
+          )}
+
           {/* CTA Button */}
           {onStart ? (
             <Button
               onClick={handleStart}
               size="sm"
-              className="h-8 w-8 rounded-full px-0 font-bold shadow-soft transition-all hover:shadow-lift sm:h-9 sm:w-auto sm:px-5"
+              className="h-8 rounded-full px-3 font-bold shadow-soft transition-all hover:shadow-lift sm:h-9 sm:px-5"
             >
               <Sparkles className="h-3.5 w-3.5 sm:mr-1" />
-              <span className="hidden truncate text-xs sm:inline sm:max-w-none sm:text-sm">{resolvedCta}</span>
+              <span className="truncate text-xs sm:text-sm">{resolvedCta}</span>
             </Button>
           ) : null}
 
@@ -299,7 +338,7 @@ export function SiteHeader({
 }
 
 export function SiteFooter({ onStart }: { onStart?: () => void }) {
-  const { t } = useI18n();
+  const { lang, setLang, t } = useI18n();
   const [legalModalOpen, setLegalModalOpen] = useState(false);
   const [legalTab, setLegalTab] = useState<LegalTab>("terms");
 
@@ -311,11 +350,47 @@ export function SiteFooter({ onStart }: { onStart?: () => void }) {
 
   return (
     <>
-      <footer className="border-t border-border bg-card transition-colors duration-300">
-        <div className="mx-auto grid max-w-6xl gap-8 px-4 py-12 sm:grid-cols-2 md:grid-cols-4 sm:px-6">
+      <footer className="border-t border-border bg-card/90 transition-colors duration-300">
+        {/* Emergency Tele-MANAS Banner */}
+        <div className="border-b border-border/70 bg-gradient-to-r from-rose-500/10 via-amber-500/5 to-primary/10 px-4 py-3">
+          <div className="mx-auto flex max-w-6xl flex-col sm:flex-row items-center justify-between gap-3 text-xs sm:px-6">
+            <div className="flex items-center gap-2.5 text-center sm:text-left">
+              <div className="flex h-7 w-7 items-center justify-center rounded-full bg-rose-500/20 text-rose-600 dark:text-rose-400 shrink-0">
+                <HeartPulse className="h-4 w-4" />
+              </div>
+              <div>
+                <p className="font-bold text-foreground">
+                  {t("footer.helplineTitle")}
+                </p>
+                <p className="text-muted-foreground text-[11px]">
+                  {t("footer.helplineDesc")}
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2 shrink-0">
+              <a
+                href="tel:14416"
+                className="inline-flex items-center gap-1.5 rounded-full bg-rose-600 px-4 py-1.5 text-xs font-bold text-white shadow-soft hover:bg-rose-700 transition-colors"
+              >
+                <PhoneCall className="h-3.5 w-3.5" />
+                <span>Call 14416 Free</span>
+              </a>
+              <button
+                type="button"
+                onClick={() => openLegal("helplines")}
+                className="rounded-full border border-border/80 bg-background px-3 py-1.5 text-xs font-semibold text-foreground hover:bg-muted transition-colors"
+              >
+                View NE Centers
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* 4-Column Responsive Grid */}
+        <div className="mx-auto grid max-w-6xl gap-8 px-4 py-12 sm:grid-cols-2 lg:grid-cols-4 sm:px-6">
           <div className="space-y-3">
             <div className="flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-soft">
                 <Brain className="h-4 w-4" />
               </div>
               <p className="font-display text-lg font-bold text-foreground">{t("app.name")}</p>
@@ -332,33 +407,41 @@ export function SiteFooter({ onStart }: { onStart?: () => void }) {
           </div>
 
           <div>
-            <p className="text-xs font-bold uppercase tracking-wider text-foreground">{t("nav.features")}</p>
+            <p className="text-xs font-bold uppercase tracking-wider text-foreground">{t("footer.quickLinks")}</p>
             <ul className="mt-3 space-y-2 text-xs text-muted-foreground">
               <li>
                 <button
                   type="button"
                   onClick={onStart}
-                  className="hover:text-primary transition-colors text-left"
+                  className="hover:text-primary transition-colors text-left flex items-center gap-1.5"
                 >
+                  <Sparkles className="h-3 w-3 text-primary" />
                   {t("features.title")}
                 </button>
               </li>
               <li>
-                <a href="#features" className="hover:text-primary transition-colors">
-                  9 AI Adaptive Brain Games
-                </a>
-              </li>
-              <li>
-                <a href="#how-we-monitor" className="hover:text-primary transition-colors">
-                  {t("nav.privacy")}
+                <a href="#features" className="hover:text-primary transition-colors flex items-center gap-1.5">
+                  <Brain className="h-3 w-3 text-primary" />
+                  10 AI Adaptive Brain Games
                 </a>
               </li>
               <li>
                 <button
                   type="button"
-                  onClick={() => openLegal("helplines")}
-                  className="hover:text-primary transition-colors text-left"
+                  onClick={() => openLegal("privacy")}
+                  className="hover:text-primary transition-colors text-left flex items-center gap-1.5"
                 >
+                  <Shield className="h-3 w-3 text-primary" />
+                  {t("nav.privacy")}
+                </button>
+              </li>
+              <li>
+                <button
+                  type="button"
+                  onClick={() => openLegal("helplines")}
+                  className="hover:text-primary transition-colors text-left flex items-center gap-1.5"
+                >
+                  <HeartPulse className="h-3 w-3 text-primary" />
                   North East Neuro-Clinic Network
                 </button>
               </li>
@@ -366,7 +449,7 @@ export function SiteFooter({ onStart }: { onStart?: () => void }) {
           </div>
 
           <div>
-            <p className="text-xs font-bold uppercase tracking-wider text-foreground">Legal & Privacy</p>
+            <p className="text-xs font-bold uppercase tracking-wider text-foreground">{t("footer.legal")}</p>
             <ul className="mt-3 space-y-2 text-xs text-muted-foreground">
               <li>
                 <button
@@ -375,7 +458,7 @@ export function SiteFooter({ onStart }: { onStart?: () => void }) {
                   className="hover:text-primary transition-colors text-left flex items-center gap-1.5"
                 >
                   <FileText className="h-3 w-3" />
-                  Terms & Conditions
+                  Terms of Service
                 </button>
               </li>
               <li>
@@ -414,23 +497,33 @@ export function SiteFooter({ onStart }: { onStart?: () => void }) {
           <div>
             <p className="text-xs font-bold uppercase tracking-wider text-foreground">{t("nav.states")}</p>
             <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
-              Culturally adapted for Assam, Meghalaya, Manipur, Mizoram, Nagaland, Tripura, Arunachal Pradesh, and Sikkim.
+              Culturally localized across all 8 North Eastern states with multi-dialect support.
             </p>
             <div className="mt-3 flex flex-wrap gap-1.5">
-              {["Assamese", "Hindi", "English", "Khasi", "Meiteilon", "Mizo", "Nagamese"].map((langName) => (
-                <span
-                  key={langName}
-                  className="rounded-md bg-muted/60 px-2 py-0.5 text-[10px] font-semibold text-muted-foreground"
+              {LANGUAGES.map((langItem) => (
+                <button
+                  key={langItem.code}
+                  type="button"
+                  onClick={() => {
+                    soundEffects.playClick();
+                    setLang(langItem.code);
+                  }}
+                  className={`rounded-md px-2 py-0.5 text-[11px] font-semibold transition-all ${
+                    lang === langItem.code
+                      ? "bg-primary text-primary-foreground shadow-sm"
+                      : "bg-muted/70 text-muted-foreground hover:text-foreground hover:bg-muted"
+                  }`}
+                  title={`Switch to ${langItem.label}`}
                 >
-                  {langName}
-                </span>
+                  {langItem.native} ({langItem.code.toUpperCase()})
+                </button>
               ))}
             </div>
           </div>
         </div>
 
         <div className="border-t border-border/80 px-4 py-4 text-center text-xs text-muted-foreground flex flex-col sm:flex-row items-center justify-between max-w-6xl mx-auto gap-2 sm:px-6">
-          <p>© {new Date().getFullYear()} {t("app.name")} · Built with clinical respect for North East India</p>
+          <p>© {new Date().getFullYear()} {t("footer.rights")}</p>
           <div className="flex items-center gap-4">
             <button
               type="button"

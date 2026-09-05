@@ -4,8 +4,22 @@ export function speechSupported() {
   return typeof window !== "undefined" && "speechSynthesis" in window;
 }
 
-export function speak(text: string, locale = "en-IN", slow = false) {
+let _voiceGuidanceEnabled = true;
+
+export function setVoiceGuidanceEnabled(enabled: boolean) {
+  _voiceGuidanceEnabled = enabled;
+  if (!enabled) {
+    stopSpeaking();
+  }
+}
+
+export function isVoiceGuidanceEnabled() {
+  return _voiceGuidanceEnabled;
+}
+
+export function speak(text: string, locale = "en-IN", slow = false, force = false) {
   if (!speechSupported() || !text) return;
+  if (!_voiceGuidanceEnabled && !force) return;
   try {
     window.speechSynthesis.cancel();
     const utterance = new SpeechSynthesisUtterance(text);

@@ -247,10 +247,13 @@ export function AccessibilityPanel() {
                 tabIndex={0}
                 onKeyDown={handleToggleRowKeyDown}
                 onClick={() => {
-                  setPref("voice_guidance", !prefs.voice_guidance);
-                  announce(
-                    prefs.voice_guidance ? "Voice guidance disabled" : "Voice guidance enabled",
-                  );
+                  const nextVal = !prefs.voice_guidance;
+                  setPref("voice_guidance", nextVal);
+                  if (!nextVal) {
+                    stopSpeaking();
+                  } else {
+                    speak("Voice guidance enabled", locale, prefs.slow_mode, true);
+                  }
                 }}
                 className={cn(
                   "flex w-full items-center justify-between rounded-xl border p-3.5 text-left text-sm font-medium transition-colors",
@@ -357,8 +360,10 @@ export function AccessibilityPanel() {
                 tabIndex={0}
                 onKeyDown={handleToggleRowKeyDown}
                 onClick={() => {
-                  setPref("reduce_sounds", !prefs.reduce_sounds);
-                  announce(prefs.reduce_sounds ? "Sound effects enabled" : "Sounds muted");
+                  const nextVal = !prefs.reduce_sounds;
+                  setPref("reduce_sounds", nextVal);
+                  soundEffects.setMuted(nextVal);
+                  announce(nextVal ? "Sounds muted" : "Sound effects enabled");
                 }}
                 className={cn(
                   "flex w-full items-center justify-between rounded-xl border p-3.5 text-left text-sm font-medium transition-colors",

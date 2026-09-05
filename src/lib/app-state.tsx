@@ -5,6 +5,8 @@ import type { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 import { cacheGet, cacheSet, hydrateSimulatedOffline, startSyncWatcher } from "@/lib/offline";
 import type { ScreeningResult } from "@/lib/screening";
+import { setVoiceGuidanceEnabled } from "@/lib/speech";
+import { soundEffects } from "@/lib/audio-effects";
 
 export type PatientRole = "self" | "caregiver";
 
@@ -383,6 +385,10 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
     root.classList.toggle("colorblind-friendly", prefs.colorblind_friendly);
     root.classList.toggle("simplified", prefs.simplify);
     root.classList.toggle("dark", prefs.dark_mode);
+
+    // Sync speech and audio synthesis globals
+    setVoiceGuidanceEnabled(Boolean(prefs.voice_guidance));
+    soundEffects.setMuted(Boolean(prefs.reduce_sounds));
   }, [prefs]);
 
   const value = useMemo(

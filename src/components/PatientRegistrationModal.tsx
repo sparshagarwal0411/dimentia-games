@@ -26,7 +26,7 @@ export function PatientRegistrationModal({
 
   const [name, setName] = useState("");
   const [sex, setSex] = useState<"Male" | "Female" | "Other">("Male");
-  const [age, setAge] = useState<number>(68);
+  const [age, setAge] = useState<number>(69);
   const [phone, setPhone] = useState("");
   const [region, setRegion] = useState("Assam");
   const [district, setDistrict] = useState(NE_DISTRICTS["Assam"]?.[0] || "Kamrup Metropolitan");
