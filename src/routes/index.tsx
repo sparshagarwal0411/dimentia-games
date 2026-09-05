@@ -1,9 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useMemo, useState, type ReactNode } from "react";
-import { Brain, Phone, Play, Stethoscope } from "lucide-react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { Accessibility, Brain, LogOut, Phone, Play, Stethoscope, User } from "lucide-react";
 
 import { useApp } from "@/lib/app-state";
-import { useI18n } from "@/lib/i18n";
+import { useI18n, LANGUAGES } from "@/lib/i18n";
 import { persistAssessment, type ScreeningResult } from "@/lib/screening";
 import { AssessmentPage } from "@/components/AssessmentPage";
 import { AuthGate } from "@/components/AuthGate";
@@ -43,9 +43,11 @@ function Index() {
   const [stage, setStage] = useState<Stage>("landing");
   const [pendingStage, setPendingStage] = useState<Stage | null>(null);
   const [ready, setReady] = useState(false);
+  const stageInitialized = useRef(false);
 
   useEffect(() => {
-    if (patientsLoading || authLoading) return;
+    if (patientsLoading || authLoading || stageInitialized.current) return;
+    stageInitialized.current = true;
     const stored = window.localStorage.getItem(STAGE_KEY);
     // If user is authenticated, resume their in-progress journey
     if (session) {
