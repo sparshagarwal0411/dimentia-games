@@ -390,11 +390,10 @@ export function LandingPage({
                     setDemoStep(tab.id);
                     resetDemo();
                   }}
-                  className={`flex-1 py-1.5 rounded-lg transition-all ${
-                    demoStep === tab.id
-                      ? "bg-card text-foreground shadow-sm"
-                      : "text-muted-foreground hover:text-foreground"
-                  }`}
+                  className={`flex-1 py-1.5 rounded-lg transition-all ${demoStep === tab.id
+                    ? "bg-card text-foreground shadow-sm"
+                    : "text-muted-foreground hover:text-foreground"
+                    }`}
                 >
                   {tab.label}
                 </button>
@@ -415,11 +414,10 @@ export function LandingPage({
                     <button
                       type="button"
                       onClick={handleDemoClick}
-                      className={`flex h-20 w-20 items-center justify-center rounded-2xl border-2 text-3xl transition-all ${
-                        demoFlipped
-                          ? "border-emerald-500 bg-emerald-500/20 rotate-y-180"
-                          : "border-dashed border-border bg-muted hover:border-primary cursor-pointer animate-pulse"
-                      }`}
+                      className={`flex h-20 w-20 items-center justify-center rounded-2xl border-2 text-3xl transition-all ${demoFlipped
+                        ? "border-emerald-500 bg-emerald-500/20 rotate-y-180"
+                        : "border-dashed border-border bg-muted hover:border-primary cursor-pointer animate-pulse"
+                        }`}
                     >
                       {demoFlipped ? "🍃" : "❓"}
                     </button>
@@ -447,11 +445,10 @@ export function LandingPage({
                         soundEffects.playClick();
                         setStroopSelected("red");
                       }}
-                      className={`px-4 py-2 rounded-xl text-xs font-bold border transition-all ${
-                        stroopSelected === "red"
-                          ? "border-rose-500 bg-rose-500/20 text-rose-700"
-                          : "border-border bg-card hover:bg-muted"
-                      }`}
+                      className={`px-4 py-2 rounded-xl text-xs font-bold border transition-all ${stroopSelected === "red"
+                        ? "border-rose-500 bg-rose-500/20 text-rose-700"
+                        : "border-border bg-card hover:bg-muted"
+                        }`}
                     >
                       Red
                     </button>
@@ -461,11 +458,10 @@ export function LandingPage({
                         soundEffects.playSuccess();
                         setStroopSelected("green");
                       }}
-                      className={`px-4 py-2 rounded-xl text-xs font-bold border transition-all ${
-                        stroopSelected === "green"
-                          ? "border-emerald-500 bg-emerald-500/20 text-emerald-700 font-extrabold"
-                          : "border-border bg-card hover:bg-muted"
-                      }`}
+                      className={`px-4 py-2 rounded-xl text-xs font-bold border transition-all ${stroopSelected === "green"
+                        ? "border-emerald-500 bg-emerald-500/20 text-emerald-700 font-extrabold"
+                        : "border-border bg-card hover:bg-muted"
+                        }`}
                     >
                       Green (Correct!)
                     </button>
@@ -654,9 +650,8 @@ export function LandingPage({
                   soundEffects.playClick();
                   setCurrentSlide(idx);
                 }}
-                className={`h-2 rounded-full transition-all ${
-                  currentSlide === idx ? "w-8 bg-primary" : "w-2 bg-muted hover:bg-muted-foreground/40"
-                }`}
+                className={`h-2 rounded-full transition-all ${currentSlide === idx ? "w-8 bg-primary" : "w-2 bg-muted hover:bg-muted-foreground/40"
+                  }`}
                 aria-label={`Go to slide ${idx + 1}`}
               />
             ))}
@@ -691,11 +686,10 @@ export function LandingPage({
                   soundEffects.playClick();
                   setSelectedState(idx);
                 }}
-                className={`flex items-center gap-1.5 rounded-full px-4 py-2 text-xs font-bold whitespace-nowrap transition-all ${
-                  selectedState === idx
-                    ? "bg-primary text-primary-foreground shadow-md scale-105"
-                    : "bg-card border border-border text-muted-foreground hover:text-foreground"
-                }`}
+                className={`flex items-center gap-1.5 rounded-full px-4 py-2 text-xs font-bold whitespace-nowrap transition-all ${selectedState === idx
+                  ? "bg-primary text-primary-foreground shadow-md scale-105"
+                  : "bg-card border border-border text-muted-foreground hover:text-foreground"
+                  }`}
               >
                 <span>{st.emoji}</span>
                 <span>{st.name}</span>
