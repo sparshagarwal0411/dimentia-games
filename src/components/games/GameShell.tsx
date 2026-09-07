@@ -1,5 +1,18 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { ArrowLeft, Trophy } from "lucide-react";
+import {
+  ArrowLeft,
+  CheckCircle2,
+  RotateCcw,
+  Sparkles,
+  Star,
+  Target,
+  Timer,
+  TrendingDown,
+  TrendingUp,
+  Trophy,
+  Volume2,
+  Zap,
+} from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -8,6 +21,7 @@ import { useI18n } from "@/lib/i18n";
 import { speak } from "@/lib/speech";
 import { insertRow } from "@/lib/offline";
 import { recordGamePlay } from "@/lib/game-progress";
+import { soundEffects } from "@/lib/audio-effects";
 import {
   GAME_DOMAIN,
   recommendDifficulty,

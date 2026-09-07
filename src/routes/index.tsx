@@ -167,20 +167,23 @@ function Platform({
     [activePatient?.last_screening],
   );
 
+  const navItems = [
+    { id: "home" as const, label: "Home", icon: Brain, badge: null },
+    { id: "games" as const, label: "Games", icon: Play, badge: "9" },
+    { id: "doctors" as const, label: "Doctors", icon: Phone, badge: "24/7" },
+    { id: "family" as const, label: "Family", icon: Stethoscope, badge: "Live" },
+  ];
+
   return (
     <AppShell
       patientName={activePatient?.name}
       onHome={onHome}
       navigation={(
-        <nav className="flex min-w-0 flex-1 justify-center gap-1 overflow-x-auto px-2" aria-label="Dashboard sections">
-          {(
-            [
-              { id: "home" as const, label: "Home", icon: Brain },
-              { id: "games" as const, label: "Games", icon: Play },
-              { id: "doctors" as const, label: "Doctors", icon: Phone },
-              { id: "family" as const, label: "Family", icon: Stethoscope },
-            ]
-          ).map((item) => {
+        <nav
+          className="flex items-center gap-1 rounded-full border border-border/80 bg-muted/60 p-1 shadow-sm backdrop-blur-md"
+          aria-label="Dashboard sections"
+        >
+          {navItems.map((item) => {
             const Icon = item.icon;
             const active = tab === item.id;
             return (
@@ -188,28 +191,57 @@ function Platform({
                 key={item.id}
                 type="button"
                 onClick={() => {
+                  soundEffects.playClick();
                   setTab(item.id);
                   setSelectedGame(null);
                 }}
-                className={`flex shrink-0 items-center gap-2 rounded-full px-4 py-2 text-sm font-medium ${
-                  active ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-muted"
+                className={`relative flex shrink-0 items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs sm:text-sm font-semibold transition-all duration-200 ${
+                  active
+                    ? "bg-card text-foreground shadow-sm scale-100 ring-1 ring-primary/20 font-bold"
+                    : "text-muted-foreground hover:text-foreground hover:bg-background/50"
                 }`}
               >
-                <Icon className="h-4 w-4" />
-                {item.label}
+                <Icon className={`h-4 w-4 transition-colors ${active ? "text-primary" : "text-muted-foreground"}`} />
+                <span>{item.label}</span>
+                {item.badge && (
+                  <span
+                    className={`ml-0.5 rounded-full px-1.5 py-0.2 text-[9px] sm:text-[10px] font-bold ${
+                      active
+                        ? "bg-primary/15 text-primary"
+                        : "bg-muted-foreground/15 text-muted-foreground"
+                    }`}
+                  >
+                    {item.badge}
+                  </span>
+                )}
               </button>
             );
           })}
         </nav>
       )}
     >
-
       {tab === "home" && (
         <HomeDashboard
           result={screening}
           onStartAssessment={onTakeAssessment}
-          onOpenGames={() => setTab("games")}
-          onOpenDoctors={() => setTab("doctors")}
+          onOpenGames={() => {
+            soundEffects.playClick();
+            setTab("games");
+            setSelectedGame(null);
+          }}
+          onOpenDoctors={() => {
+            soundEffects.playClick();
+            setTab("doctors");
+          }}
+          onOpenFamily={() => {
+            soundEffects.playClick();
+            setTab("family");
+          }}
+          onSelectGame={(id) => {
+            soundEffects.playClick();
+            setTab("games");
+            setSelectedGame(id);
+          }}
         />
       )}
 
