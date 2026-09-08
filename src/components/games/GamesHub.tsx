@@ -45,16 +45,6 @@ export function GamesHub({
   const board = getTournamentBoard(activePatient?.id ?? "guest", activePatient?.name || "You");
   const exit = () => onSelect(null);
 
-  if (selectedGame === "memory-match") return <MemoryMatchGame onExit={exit} />;
-  if (selectedGame === "pattern") return <PatternGame onExit={exit} />;
-  if (selectedGame === "face-match") return <FaceMatchGame onExit={exit} />;
-  if (selectedGame === "tricky-colors") return <TrickyColorsGame onExit={exit} />;
-  if (selectedGame === "word-fluency") return <WordFluencyGame onExit={exit} />;
-  if (selectedGame === "speech-echo") return <SpeechEchoGame onExit={exit} />;
-  if (selectedGame === "find-it") return <FindItGame onExit={exit} />;
-  if (selectedGame === "routine-recall") return <RoutineRecallGame onExit={exit} />;
-  if (selectedGame === "emotion-recognition") return <EmotionGame onExit={exit} />;
-
   const categories = ["All", "Memory", "Attention", "Recall", "Logic", "Language", "Social"];
 
   const filteredGames = useMemo(() => {
@@ -83,6 +73,17 @@ export function GamesHub({
     if (cat === "All") return GAMES.length;
     return GAMES.filter((g) => g.category === cat).length;
   };
+
+  if (selectedGame === "memory-match") return <MemoryMatchGame onExit={exit} />;
+  if (selectedGame === "pattern") return <PatternGame onExit={exit} />;
+  if (selectedGame === "face-match") return <FaceMatchGame onExit={exit} />;
+  if (selectedGame === "tricky-colors") return <TrickyColorsGame onExit={exit} />;
+  if (selectedGame === "word-fluency") return <WordFluencyGame onExit={exit} />;
+  if (selectedGame === "speech-echo") return <SpeechEchoGame onExit={exit} />;
+  if (selectedGame === "find-it") return <FindItGame onExit={exit} />;
+  if (selectedGame === "routine-recall") return <RoutineRecallGame onExit={exit} />;
+  if (selectedGame === "emotion-recognition") return <EmotionGame onExit={exit} />;
+
 
   return (
     <div className="mx-auto max-w-6xl space-y-8 px-4 py-8 sm:px-6 animate-in fade-in duration-300">
