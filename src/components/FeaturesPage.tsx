@@ -124,6 +124,48 @@ export function FeaturesPage() {
           </div>
         </section>
 
+        {/* Relatable Family Spotlight */}
+        <section className="border-b border-border/80 bg-card/40 py-12 sm:py-16">
+          <div className="mx-auto max-w-6xl px-4 sm:px-6">
+            <div className="overflow-hidden rounded-3xl border border-border/80 bg-card shadow-soft">
+              <div className="grid md:grid-cols-12 items-center">
+                <div className="relative md:col-span-6 h-64 sm:h-80 md:h-full min-h-[280px] overflow-hidden bg-muted">
+                  <img
+                    src="/images/family_care_northeast.jpg"
+                    alt="Elderly father and daughter practicing brain exercises together in North East India"
+                    className="absolute inset-0 h-full w-full object-cover object-center"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent md:hidden" />
+                  <div className="absolute bottom-3 left-3 text-white md:hidden">
+                    <span className="rounded-full bg-primary px-2.5 py-0.5 text-[10px] font-bold">Dibrugarh, Assam</span>
+                  </div>
+                </div>
+                <div className="md:col-span-6 p-6 sm:p-10 space-y-4">
+                  <span className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-xs font-bold text-primary">
+                    👵🏼 Made for Elders & Caregivers
+                  </span>
+                  <h3 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
+                    Care that brings generations closer together.
+                  </h3>
+                  <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                    Instead of stressful hospital clinical checklists, SmritiMitra encourages gentle daily practice. A daughter guiding her father through memory tiles or an ASHA worker testing voice fluency in a village courtyard.
+                  </p>
+                  <div className="grid grid-cols-2 gap-3 pt-2">
+                    <div className="rounded-2xl border border-border/80 bg-muted/40 p-3">
+                      <p className="text-xs font-bold text-foreground">Native Voice Prompts</p>
+                      <p className="text-[11px] text-muted-foreground mt-0.5">Assamese, Hindi, and English guidance</p>
+                    </div>
+                    <div className="rounded-2xl border border-border/80 bg-muted/40 p-3">
+                      <p className="text-xs font-bold text-foreground">Elder Mode Controls</p>
+                      <p className="text-[11px] text-muted-foreground mt-0.5">High contrast, large font, relaxed timer</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
         <section className="mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-28">
           <div className="mb-14 flex flex-col justify-between gap-5 md:flex-row md:items-end">
             <div className="max-w-2xl">

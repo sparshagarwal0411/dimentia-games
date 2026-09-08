@@ -36,6 +36,7 @@ const NER_STATES = [
     culture: "Bihu Dance · Assam Tea · Kaziranga Rhino · Brass Pots",
     color: "bg-emerald-500/10 border-emerald-500/30 text-emerald-800 dark:text-emerald-300",
     emoji: "🍃",
+    elderImage: "/images/elder_grandfather_assam.jpg",
     items: ["🍵 Assam Tea", "🍚 Rice Plate", "🏺 Brass Pot", "🪭 Hand Fan"],
   },
   {
@@ -45,6 +46,7 @@ const NER_STATES = [
     culture: "Living Root Bridges · Cherrapunji Rain · Bamboo Weaving",
     color: "bg-sky-500/10 border-sky-500/30 text-sky-800 dark:text-sky-300",
     emoji: "🌧️",
+    elderImage: "/images/elder_grandmother_meghalaya.jpg",
     items: ["🧺 Bamboo Basket", "🌧️ Rain Cloud", "🧥 Wrap Shawl", "☂️ Umbrella"],
   },
   {
@@ -99,6 +101,7 @@ const NER_STATES = [
     culture: "Kanchenjunga · Butter Tea · Monasteries · Yak Herds",
     color: "bg-purple-500/10 border-purple-500/30 text-purple-800 dark:text-purple-300",
     emoji: "☸️",
+    elderImage: "/images/elder_grandmother_sikkim.jpg",
     items: ["🥟 Dumpling", "🫖 Butter Churn", "🧣 Khata Scarf", "🐂 Mountain Yak"],
   },
 ];
@@ -151,6 +154,7 @@ const REVIEWS = [
     role: "Daughter & Caregiver, Jorhat (Assam)",
     rating: 5,
     tag: "Family Care",
+    image: "/images/family_care_northeast.jpg",
   },
   {
     quote:
@@ -159,6 +163,7 @@ const REVIEWS = [
     role: "Community Physician, Kohima (Nagaland)",
     rating: 5,
     tag: "Clinical Validation",
+    image: "/images/elder_grandmother_meghalaya.jpg",
   },
   {
     quote:
@@ -167,6 +172,7 @@ const REVIEWS = [
     role: "ASHA Field Coordinator, Garo Hills (Meghalaya)",
     rating: 5,
     tag: "Cultural Relevance",
+    image: "/images/elder_grandmother_meghalaya.jpg",
   },
   {
     quote:
@@ -175,6 +181,7 @@ const REVIEWS = [
     role: "Daughter & Caregiver, Dibrugarh (Assam)",
     rating: 5,
     tag: "Family Care",
+    image: "/images/elder_grandfather_assam.jpg",
   },
   {
     quote:
@@ -183,6 +190,7 @@ const REVIEWS = [
     role: "Community Health Worker, Mokokchung (Nagaland)",
     rating: 5,
     tag: "Field Access",
+    image: "/images/elder_grandmother_sikkim.jpg",
   },
   {
     quote:
@@ -191,6 +199,7 @@ const REVIEWS = [
     role: "Geriatric Physician, Gangtok (Sikkim)",
     rating: 5,
     tag: "Clinical Practice",
+    image: "/images/elder_grandmother_sikkim.jpg",
   },
   {
     quote:
@@ -199,6 +208,7 @@ const REVIEWS = [
     role: "Family Caregiver, Aizawl (Mizoram)",
     rating: 5,
     tag: "Privacy First",
+    image: "/images/family_care_northeast.jpg",
   },
 ];
 
@@ -475,6 +485,36 @@ export function LandingPage({
                 <p className="text-[10px] sm:text-[11px] font-semibold text-muted-foreground">{t("hero.metric1Label")}</p>
               </div>
             </div>
+
+            {/* Relatable Community Proof Banner */}
+            <div className="flex items-center gap-3.5 rounded-2xl border border-border/80 bg-card/70 p-3 shadow-xs backdrop-blur-sm">
+              <div className="flex -space-x-2.5 overflow-hidden shrink-0">
+                <img
+                  src="/images/elder_grandfather_assam.jpg"
+                  alt="North Eastern grandfather in Assam"
+                  className="inline-block h-10 w-10 rounded-full object-cover ring-2 ring-background shadow-xs"
+                />
+                <img
+                  src="/images/elder_grandmother_meghalaya.jpg"
+                  alt="North Eastern grandmother in Meghalaya"
+                  className="inline-block h-10 w-10 rounded-full object-cover ring-2 ring-background shadow-xs"
+                />
+                <img
+                  src="/images/family_care_northeast.jpg"
+                  alt="Father and daughter in North East India"
+                  className="inline-block h-10 w-10 rounded-full object-cover ring-2 ring-background shadow-xs"
+                />
+                <img
+                  src="/images/elder_grandmother_sikkim.jpg"
+                  alt="North Eastern elder in Sikkim"
+                  className="inline-block h-10 w-10 rounded-full object-cover ring-2 ring-background shadow-xs"
+                />
+              </div>
+              <div className="min-w-0 flex-1 text-xs">
+                <p className="font-bold text-foreground">Built with & for North Eastern families</p>
+                <p className="text-[11px] text-muted-foreground">Gentle on older eyes, large touch targets, culturally familiar memories</p>
+              </div>
+            </div>
           </div>
 
 
@@ -695,6 +735,120 @@ export function LandingPage({
         </div>
       </section>
 
+      {/* ========================================================================= */}
+      {/* 2. WHO SMRITIMITRA IS FOR — ROOTED IN NORTH EASTERN HOMES & FAMILIES        */}
+      {/* ========================================================================= */}
+      <section id="who-its-for" className="relative border-b border-border/80 bg-gradient-to-b from-card/40 via-background to-muted/20 py-16 sm:py-24">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6">
+          <div className="text-center max-w-2xl mx-auto space-y-2.5">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-3 py-1 text-xs font-bold text-primary">
+              🌱 Rooted In North East India
+            </span>
+            <h2 className="text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl lg:text-5xl">
+              Made with Care for Our Grandparents & Families
+            </h2>
+            <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
+              Too many medical tests feel alienating, clinical, and stressful. SmritiMitra is shaped around the rhythms of home life across North East India — gentle, warm, and deeply relatable.
+            </p>
+          </div>
+
+          <div className="mt-12 grid gap-6 sm:gap-8 md:grid-cols-3">
+            {/* Card 1: For Grandparents */}
+            <div className="group overflow-hidden rounded-3xl border border-border/80 bg-card shadow-soft hover:shadow-lift transition-all duration-300 flex flex-col">
+              <div className="relative h-60 sm:h-64 overflow-hidden bg-muted">
+                <img
+                  src="/images/elder_grandfather_assam.jpg"
+                  alt="Elderly grandfather from Assam"
+                  className="h-full w-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent" />
+                <div className="absolute bottom-3 left-3 right-3 text-white">
+                  <span className="rounded-full bg-primary/90 px-2.5 py-0.5 text-[10px] font-extrabold uppercase tracking-wider text-white">
+                    For Elders (Aita & Koka)
+                  </span>
+                  <p className="mt-1 text-xs font-semibold text-white/90">Bhaben K., 74 — Jorhat, Assam</p>
+                </div>
+              </div>
+              <div className="p-6 flex-1 flex flex-col justify-between space-y-4">
+                <div className="space-y-2">
+                  <h3 className="text-xl font-bold text-foreground">Gentle & Anxiety-Free</h3>
+                  <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                    Feels like a quiet morning chat on the veranda over Assam tea. Large high-contrast touch targets, slow animations, and read-aloud voice so shaky hands or weak eyesight are never barriers.
+                  </p>
+                </div>
+                <div className="pt-2 border-t border-border/60 flex flex-wrap gap-1.5 text-[11px] font-semibold text-primary">
+                  <span className="rounded-md bg-primary/10 px-2 py-0.5">Big Touch Buttons</span>
+                  <span className="rounded-md bg-primary/10 px-2 py-0.5">Voice in Mother Tongue</span>
+                  <span className="rounded-md bg-primary/10 px-2 py-0.5">Zero Medical Jargon</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Card 2: For Sons, Daughters & Caregivers */}
+            <div className="group overflow-hidden rounded-3xl border border-border/80 bg-card shadow-soft hover:shadow-lift transition-all duration-300 flex flex-col">
+              <div className="relative h-60 sm:h-64 overflow-hidden bg-muted">
+                <img
+                  src="/images/family_care_northeast.jpg"
+                  alt="Father and daughter in North East India sharing a memory game"
+                  className="h-full w-full object-cover object-center transition-transform duration-700 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent" />
+                <div className="absolute bottom-3 left-3 right-3 text-white">
+                  <span className="rounded-full bg-emerald-600/90 px-2.5 py-0.5 text-[10px] font-extrabold uppercase tracking-wider text-white">
+                    For Family Caregivers
+                  </span>
+                  <p className="mt-1 text-xs font-semibold text-white/90">Priyanka & Father — Dibrugarh</p>
+                </div>
+              </div>
+              <div className="p-6 flex-1 flex flex-col justify-between space-y-4">
+                <div className="space-y-2">
+                  <h3 className="text-xl font-bold text-foreground">Peace of Mind for Loved Ones</h3>
+                  <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                    Stay closely connected to your parents' memory health, whether living under the same roof or working far away in Guwahati or Bengaluru. Track weekly trends and share clear summaries with doctors.
+                  </p>
+                </div>
+                <div className="pt-2 border-t border-border/60 flex flex-wrap gap-1.5 text-[11px] font-semibold text-emerald-700 dark:text-emerald-400">
+                  <span className="rounded-md bg-emerald-500/10 px-2 py-0.5">Caregiver Portal</span>
+                  <span className="rounded-md bg-emerald-500/10 px-2 py-0.5">Doctor Summaries</span>
+                  <span className="rounded-md bg-emerald-500/10 px-2 py-0.5">Gentle Daily Habits</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Card 3: For Remote Villages & Clinics */}
+            <div className="group overflow-hidden rounded-3xl border border-border/80 bg-card shadow-soft hover:shadow-lift transition-all duration-300 flex flex-col">
+              <div className="relative h-60 sm:h-64 overflow-hidden bg-muted">
+                <img
+                  src="/images/elder_grandmother_meghalaya.jpg"
+                  alt="Elderly grandmother in Meghalaya"
+                  className="h-full w-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent" />
+                <div className="absolute bottom-3 left-3 right-3 text-white">
+                  <span className="rounded-full bg-amber-600/90 px-2.5 py-0.5 text-[10px] font-extrabold uppercase tracking-wider text-white">
+                    For Hill Districts & Clinics
+                  </span>
+                  <p className="mt-1 text-xs font-semibold text-white/90">Ka Marak, 72 — Garo Hills</p>
+                </div>
+              </div>
+              <div className="p-6 flex-1 flex flex-col justify-between space-y-4">
+                <div className="space-y-2">
+                  <h3 className="text-xl font-bold text-foreground">Built Beyond the Main Road</h3>
+                  <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                    Designed for remote hill villages where mobile data is weak or intermittent. 100% offline functionality ensures community health workers can conduct screenings anywhere, anytime.
+                  </p>
+                </div>
+                <div className="pt-2 border-t border-border/60 flex flex-wrap gap-1.5 text-[11px] font-semibold text-amber-700 dark:text-amber-400">
+                  <span className="rounded-md bg-amber-500/10 px-2 py-0.5">100% Offline Ready</span>
+                  <span className="rounded-md bg-amber-500/10 px-2 py-0.5">On-Device Privacy</span>
+                  <span className="rounded-md bg-amber-500/10 px-2 py-0.5">North East Clinics</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Public health partners and initiatives */}
       <section className="government-marquee border-y border-border/70 py-12 sm:py-14">
         <div className="mx-auto max-w-7xl px-4 sm:px-6">
@@ -813,19 +967,35 @@ export function LandingPage({
                     </div>
                   </div>
 
-                  <div className="md:col-span-5">
-                    <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-3">
-                      Screening Stimuli Samples
-                    </p>
-                    <div className="grid grid-cols-2 gap-2.5">
-                      {state.items.map((item) => (
-                        <div
-                          key={item}
-                          className="rounded-2xl border border-border/80 bg-muted/40 p-3 text-xs font-semibold text-foreground flex items-center gap-2 shadow-xs"
-                        >
-                          <span>{item}</span>
+                  <div className="md:col-span-5 space-y-3">
+                    {state.elderImage && (
+                      <div className="flex items-center gap-3 rounded-2xl border border-border/80 bg-card/80 p-2.5 shadow-xs">
+                        <img
+                          src={state.elderImage}
+                          alt={`Elder from ${state.name}`}
+                          className="h-14 w-14 rounded-xl object-cover ring-1 ring-border shrink-0"
+                        />
+                        <div className="min-w-0 flex-1 text-xs">
+                          <p className="font-bold text-foreground truncate">Familiar to Elders in {state.name}</p>
+                          <p className="text-[11px] text-muted-foreground leading-tight">Grounded in native language & daily memory prompts</p>
                         </div>
-                      ))}
+                      </div>
+                    )}
+
+                    <div>
+                      <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2">
+                        Screening Stimuli Samples
+                      </p>
+                      <div className="grid grid-cols-2 gap-2">
+                        {state.items.map((item) => (
+                          <div
+                            key={item}
+                            className="rounded-xl border border-border/80 bg-muted/40 p-2.5 text-xs font-semibold text-foreground flex items-center gap-2 shadow-xs"
+                          >
+                            <span>{item}</span>
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -926,26 +1096,44 @@ export function LandingPage({
           {(() => {
             const review = REVIEWS[reviewIndex] || REVIEWS[0];
             return (
-              <blockquote
+              <div
                 key={review.name}
-                className="mx-auto max-w-3xl border-l-2 border-primary/60 bg-transparent px-6 py-2 text-left animate-in fade-in slide-in-from-right-2 duration-500 sm:px-10"
+                className="mx-auto max-w-4xl overflow-hidden rounded-3xl border border-border/80 bg-card/85 shadow-lift backdrop-blur-md animate-in fade-in slide-in-from-right-2 duration-500"
               >
-                <div className="flex items-center justify-between gap-4">
-                  <span className="rounded-full bg-primary/10 px-2.5 py-0.5 text-[10px] font-bold text-primary">
-                    {review.tag}
-                  </span>
-                  <div className="flex text-amber-500 text-xs" aria-label={`${review.rating} out of 5 stars`}>
-                    {"★".repeat(review.rating)}
+                <div className="grid md:grid-cols-12 items-stretch">
+                  <div className="relative md:col-span-5 min-h-[260px] sm:min-h-[300px] overflow-hidden bg-muted">
+                    <img
+                      src={review.image}
+                      alt={review.name}
+                      className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                    <div className="absolute bottom-3 left-3 right-3 rounded-xl bg-black/40 p-2.5 backdrop-blur-md text-white border border-white/10">
+                      <p className="text-xs font-bold">{review.role}</p>
+                      <p className="text-[10px] text-white/80">North East Community Story</p>
+                    </div>
+                  </div>
+                  <div className="md:col-span-7 p-6 sm:p-8 flex flex-col justify-between space-y-4">
+                    <div>
+                      <div className="flex items-center justify-between gap-4">
+                        <span className="rounded-full bg-primary/10 px-2.5 py-0.5 text-[10px] font-bold text-primary">
+                          {review.tag}
+                        </span>
+                        <div className="flex text-amber-500 text-xs" aria-label={`${review.rating} out of 5 stars`}>
+                          {"★".repeat(review.rating)}
+                        </div>
+                      </div>
+                      <p className="mt-4 text-base sm:text-lg leading-relaxed text-foreground italic font-medium">
+                        "{review.quote}"
+                      </p>
+                    </div>
+                    <footer className="border-t border-border/60 pt-4">
+                      <p className="text-sm font-bold text-foreground">{review.name}</p>
+                      <p className="text-xs text-muted-foreground">{review.role}</p>
+                    </footer>
                   </div>
                 </div>
-                <p className="mt-5 text-lg leading-relaxed text-foreground italic sm:text-xl">
-                  "{review.quote}"
-                </p>
-                <footer className="mt-7 border-t border-border/60 pt-4">
-                  <p className="text-sm font-bold text-foreground">{review.name}</p>
-                  <p className="text-xs text-muted-foreground">{review.role}</p>
-                </footer>
-              </blockquote>
+              </div>
             );
           })()}
 

@@ -103,6 +103,26 @@ export function OnboardingPage({
           </p>
         </div>
 
+        {/* Warm Relatable Elder Banner */}
+        <div className="mt-5 flex flex-col sm:flex-row items-center gap-4 rounded-3xl border border-border/80 bg-gradient-to-r from-primary/10 via-card to-background p-4 sm:p-5 shadow-xs">
+          <img
+            src="/images/elder_grandfather_assam.jpg"
+            alt="Elder from North East India"
+            className="h-20 w-20 sm:h-24 sm:w-24 rounded-2xl object-cover object-top shadow-sm ring-2 ring-primary/20 shrink-0"
+          />
+          <div className="text-left space-y-1">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/15 px-2.5 py-0.5 text-[10px] font-bold text-primary">
+              🌱 Made for North Eastern Elders
+            </span>
+            <p className="text-xs sm:text-sm font-bold text-foreground">
+              "Care that speaks our mother tongue and respects our memories."
+            </p>
+            <p className="text-[11px] text-muted-foreground">
+              Personalized for seniors across Assam, Meghalaya, Sikkim, Nagaland, and all 8 North East states.
+            </p>
+          </div>
+        </div>
+
         {activePatient && (
           <div className="mt-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-4 text-emerald-950 dark:text-emerald-200">
             <div>
