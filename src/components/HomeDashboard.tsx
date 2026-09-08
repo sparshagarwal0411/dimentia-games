@@ -24,6 +24,7 @@ import {
 import { Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { useApp } from "@/lib/app-state";
+import { useI18n } from "@/lib/i18n";
 import { needsCognitiveSupport, type ScreeningResult } from "@/lib/screening";
 import { getTournamentBoard, loadPlayerStats, totalPlays } from "@/lib/game-progress";
 import { GAMES, type GameId } from "@/lib/games-catalog";
@@ -46,6 +47,7 @@ export function HomeDashboard({
   onSelectGame?: (id: GameId) => void;
 }) {
   const { activePatient } = useApp();
+  const { t } = useI18n();
   const name = activePatient?.name || "Friend";
   const tested = Boolean(result);
   const isYes = needsCognitiveSupport(result?.tier);
@@ -103,15 +105,15 @@ export function HomeDashboard({
               )}
               <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-1 text-[11px] font-bold text-emerald-600 dark:text-emerald-400">
                 <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-                Continuous On-Device Shield
+                {t("dash.shield")}
               </span>
             </div>
 
             <h1 className="mt-3 text-3xl sm:text-4xl font-black tracking-tight text-foreground">
-              Your Cognitive Health Overview
+              {t("dash.overview")}
             </h1>
             <p className="mt-2 max-w-2xl text-sm sm:text-base text-muted-foreground leading-relaxed">
-              Real-time snapshot combining neuropsychological screening, daily adaptive cognitive games, and non-intrusive on-device telemetry.
+              {t("dash.overviewDesc")}
             </p>
           </div>
 
@@ -125,11 +127,11 @@ export function HomeDashboard({
               }}
               className="tap rounded-full px-6 py-3 font-bold shadow-soft hover:shadow-lift transition-all group"
             >
-              <span>{tested ? "Retake 3-Part Assessment" : "Start Full Assessment"}</span>
+              <span>{tested ? t("dash.retake") : t("dash.startFull")}</span>
               <ArrowRight className="h-4 w-4 ml-1.5 transition-transform group-hover:translate-x-1" />
             </Button>
             <p className="text-xs text-muted-foreground flex items-center gap-1">
-              <Clock className="h-3.5 w-3.5" /> ~5 mins · Cognitive, Speech & Behavior
+              <Clock className="h-3.5 w-3.5" /> {t("dash.mins")}
             </p>
           </div>
         </div>
@@ -140,29 +142,29 @@ export function HomeDashboard({
         {/* Streak */}
         <div className="rounded-2xl border border-border/80 bg-card p-4 sm:p-5 shadow-soft hover:shadow-lift transition-all">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Day Streak</span>
+            <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">{t("dash.streak")}</span>
             <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-amber-500/15 text-amber-600 dark:text-amber-400">
               <Flame className="h-4 w-4 fill-current animate-pulse" />
             </div>
           </div>
           <p className="mt-2 text-2xl sm:text-3xl font-black text-foreground">
-            {stats.streak} <span className="text-sm font-semibold text-muted-foreground">days</span>
+            {stats.streak} <span className="text-sm font-semibold text-muted-foreground">{t("dash.streakDays")}</span>
           </p>
           <p className="mt-1 text-xs text-muted-foreground">
-            {stats.streak > 0 ? "Daily habit active! Keep it up" : "Play today to ignite your streak"}
+            {stats.streak > 0 ? t("dash.streakActive") : t("dash.streakInactive")}
           </p>
         </div>
 
         {/* Total XP & Level */}
         <div className="rounded-2xl border border-border/80 bg-card p-4 sm:p-5 shadow-soft hover:shadow-lift transition-all">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Level & XP</span>
+            <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">{t("dash.levelXp")}</span>
             <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-teal-500/15 text-teal-600 dark:text-teal-400">
               <Zap className="h-4 w-4 fill-current" />
             </div>
           </div>
           <div className="mt-2 flex items-baseline gap-2">
-            <p className="text-2xl sm:text-3xl font-black text-foreground">Lvl {playerLevel}</p>
+            <p className="text-2xl sm:text-3xl font-black text-foreground">{t("dash.lvl")} {playerLevel}</p>
             <span className="text-xs font-bold text-muted-foreground">{stats.xp} XP</span>
           </div>
           <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-muted">
@@ -176,29 +178,29 @@ export function HomeDashboard({
         {/* Sessions Completed */}
         <div className="rounded-2xl border border-border/80 bg-card p-4 sm:p-5 shadow-soft hover:shadow-lift transition-all">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Practice Sessions</span>
+            <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">{t("dash.practice")}</span>
             <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-indigo-500/15 text-indigo-600 dark:text-indigo-400">
               <Brain className="h-4 w-4" />
             </div>
           </div>
           <p className="mt-2 text-2xl sm:text-3xl font-black text-foreground">
-            {totalPlays(stats)} <span className="text-sm font-semibold text-muted-foreground">rounds</span>
+            {totalPlays(stats)} <span className="text-sm font-semibold text-muted-foreground">{t("dash.rounds")}</span>
           </p>
           <p className="mt-1 text-xs text-muted-foreground">
-            9 targeted cognitive games
+            {t("dash.practiceDesc")}
           </p>
         </div>
 
         {/* Tournament Position */}
         <div className="rounded-2xl border border-border/80 bg-card p-4 sm:p-5 shadow-soft hover:shadow-lift transition-all">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Community Rank</span>
+            <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">{t("dash.community")}</span>
             <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-rose-500/15 text-rose-600 dark:text-rose-400">
               <Trophy className="h-4 w-4" />
             </div>
           </div>
           <p className="mt-2 text-2xl sm:text-3xl font-black text-foreground">
-            #{board.yourRank} <span className="text-sm font-semibold text-muted-foreground">({board.yourPoints} pts)</span>
+            #{board.yourRank} <span className="text-sm font-semibold text-muted-foreground">({board.yourPoints} {t("dash.pts")})</span>
           </p>
           <p className="mt-1 text-xs text-muted-foreground truncate" title={board.theme}>
             {board.theme}

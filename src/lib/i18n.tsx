@@ -230,6 +230,26 @@ const en: Dict = {
   "footer.rights": "SmritiMitra · Built with clinical respect for North East India",
   "footer.helplineTitle": "24/7 Tele-MANAS Emergency Helpline",
   "footer.helplineDesc": "Govt of India Toll-Free Mental Health & Neurological Support: Call 14416",
+
+  // Dashboard
+  "dash.streak": "Day Streak",
+  "dash.streakDays": "days",
+  "dash.streakActive": "Daily habit active! Keep it up",
+  "dash.streakInactive": "Play today to ignite your streak",
+  "dash.levelXp": "Level & XP",
+  "dash.lvl": "Lvl",
+  "dash.practice": "Practice Sessions",
+  "dash.rounds": "rounds",
+  "dash.practiceDesc": "9 targeted cognitive games",
+  "dash.community": "Community Rank",
+  "dash.pts": "pts",
+  "dash.communityDesc": "Colour & calm week",
+  "dash.overview": "Your Cognitive Health Overview",
+  "dash.overviewDesc": "Real-time snapshot combining neuropsychological screening, daily adaptive cognitive games, and non-intrusive on-device telemetry.",
+  "dash.retake": "Retake 3-Part Assessment",
+  "dash.startFull": "Start Full Assessment",
+  "dash.mins": "~5 mins · Cognitive, Speech & Behavior",
+  "dash.shield": "Continuous On-Device Shield",
 };
 
 const hi: Dict = {
@@ -451,6 +471,26 @@ const hi: Dict = {
   "footer.rights": "न्यूरोट्रैक पूर्वोत्तर · पूर्वोत्तर भारत के प्रति सम्मान के साथ निर्मित",
   "footer.helplineTitle": "२४/७ टेली-मानस आपातकालीन हेल्पलाइन",
   "footer.helplineDesc": "भारत सरकार की निःशुल्क मानसिक स्वास्थ्य एवं न्यूरो सहायता: डायल करें १४४१६",
+
+  // Dashboard
+  "dash.streak": "दिन की स्ट्रीक",
+  "dash.streakDays": "दिन",
+  "dash.streakActive": "दैनिक आदत सक्रिय! इसे बनाए रखें",
+  "dash.streakInactive": "अपनी स्ट्रीक शुरू करने के लिए आज ही खेलें",
+  "dash.levelXp": "स्तर और अनुभव",
+  "dash.lvl": "स्तर",
+  "dash.practice": "अभ्यास सत्र",
+  "dash.rounds": "दौर",
+  "dash.practiceDesc": "९ लक्षित संज्ञानात्मक खेल",
+  "dash.community": "समुदाय में स्थान",
+  "dash.pts": "अंक",
+  "dash.communityDesc": "रंग और शांत सप्ताह",
+  "dash.overview": "आपका संज्ञानात्मक स्वास्थ्य अवलोकन",
+  "dash.overviewDesc": "न्यूरोसाइकोलॉजिकल स्क्रीनिंग, दैनिक अनुकूली संज्ञानात्मक खेल और ऑन-डिवाइस टेलीमेट्री का संयोजन।",
+  "dash.retake": "३-भाग का मूल्यांकन दोबारा लें",
+  "dash.startFull": "पूर्ण मूल्यांकन शुरू करें",
+  "dash.mins": "~५ मिनट · संज्ञानात्मक, वाक् और व्यवहार",
+  "dash.shield": "सतत ऑन-डिवाइस ढाल",
 };
 
 const as: Dict = {
@@ -672,6 +712,26 @@ const as: Dict = {
   "footer.rights": "নিউৰোট্ৰেক উত্তৰ-পূব · শ্ৰদ্ধা আৰু নিষ্ঠাৰে নিৰ্মিত",
   "footer.helplineTitle": "২৪/৭ টেলি-মানস জৰুৰীকালীন হেল্পলাইন",
   "footer.helplineDesc": "ভাৰত চৰকাৰৰ বিনামূলীয়া মানসিক স্বাস্থ্য আৰু স্নায়ু সাহায্য: কল কৰক ১৪৪১৬",
+
+  // Dashboard
+  "dash.streak": "দিনৰ ষ্ট্ৰীক",
+  "dash.streakDays": "দিন",
+  "dash.streakActive": "দৈনিক অভ্যাস সক্ৰিয়! আগুৱাই যাওক",
+  "dash.streakInactive": "আপোনাৰ ষ্ট্ৰীক আৰম্ভ কৰিবলৈ আজি খেলক",
+  "dash.levelXp": "স্তৰ আৰু অভিজ্ঞতা",
+  "dash.lvl": "স্তৰ",
+  "dash.practice": "অনুশীলন সত্ৰ",
+  "dash.rounds": "ৰাউণ্ড",
+  "dash.practiceDesc": "৯টা জ্ঞানীয় খেল",
+  "dash.community": "সম্প্ৰদায়ৰ স্থান",
+  "dash.pts": "পইণ্ট",
+  "dash.communityDesc": "ৰং আৰু শান্ত সপ্তাহ",
+  "dash.overview": "আপোনাৰ জ্ঞানীয় স্বাস্থ্যৰ অৱলোকন",
+  "dash.overviewDesc": "স্নায়ু-মানসিক স্ক্ৰীনিং, দৈনিক জ্ঞানীয় খেল আৰু সঁজুলিৰ নিৰীক্ষণৰ সংমিশ্ৰণ।",
+  "dash.retake": "৩-অংশৰ মূল্যাংকন পুনৰ লওক",
+  "dash.startFull": "সম্পূৰ্ণ মূল্যাংকন আৰম্ভ কৰক",
+  "dash.mins": "~৫ মিনিট · জ্ঞানীয়, কথা আৰু ব্যৱহাৰ",
+  "dash.shield": "নিৰন্তৰ ডিভাইচত সুৰক্ষা",
 };
 
 const DICTS: Record<LanguageCode, Dict> = { en, hi, as };
