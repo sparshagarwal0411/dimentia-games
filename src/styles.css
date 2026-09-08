@@ -644,48 +644,6 @@
   -webkit-backdrop-filter: blur(12px);
 }
 
-.leadership-banner {
-  --lead-bg: var(--background);
-  --lead-panel: var(--card);
-  --lead-text: var(--foreground);
-  --lead-muted: var(--muted-foreground);
-  --lead-accent: var(--clay);
-  --lead-green: var(--leaf);
-  background: var(--lead-bg);
-  border-color: var(--lead-accent);
-}
-
-.leadership-banner-stripe {
-  background: linear-gradient(110deg, color-mix(in oklab, var(--lead-accent) 78%, var(--lead-bg)), var(--lead-panel) 48%, color-mix(in oklab, var(--lead-green) 76%, var(--lead-bg)));
-  opacity: 0.92;
-}
-
-.leadership-banner-panel {
-  background: color-mix(in oklab, var(--lead-panel) 94%, transparent);
-}
-
-.leadership-text { color: var(--lead-text); }
-.leadership-muted { color: var(--lead-muted); }
-.leadership-accent { color: var(--lead-accent); }
-.leadership-badge { background: var(--lead-accent); color: var(--primary-foreground); }
-.leadership-chip { background: color-mix(in oklab, var(--lead-panel) 88%, transparent); color: var(--lead-text); --tw-ring-color: var(--border); }
-.leadership-watermark { border-color: color-mix(in oklab, var(--lead-text) 8%, transparent); }
-.leadership-watermark-line { background: color-mix(in oklab, var(--lead-text) 7%, transparent); }
-
-.dark .leadership-banner {
-  --lead-bg: oklch(0.19 0.028 210);
-  --lead-panel: oklch(0.24 0.032 208);
-  --lead-accent: oklch(0.78 0.13 76);
-  --lead-green: oklch(0.7 0.11 152);
-}
-
-.high-contrast .leadership-banner,
-.extra-high-contrast .leadership-banner {
-  --lead-bg: var(--background);
-  --lead-panel: var(--card);
-  --lead-accent: var(--primary);
-  --lead-green: var(--primary);
-}
 
 .hero-grid {
   z-index: -2;
