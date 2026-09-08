@@ -25,6 +25,7 @@ import { SiteFooter, SiteHeader } from "@/components/layout/SiteChrome";
 import { soundEffects } from "@/lib/audio-effects";
 import { speak } from "@/lib/speech";
 import { useI18n } from "@/lib/i18n";
+import { useApp } from "@/lib/app-state";
 import { GAMES, type GameMeta } from "@/lib/games-catalog";
 
 /* ------------------------- 8 NER States Cultural Data ------------------------- */
@@ -220,6 +221,7 @@ export function LandingPage({
   onResume?: (() => void) | undefined;
 }) {
   const { t } = useI18n();
+  const { session } = useApp();
 
   // Carousel State
   const [reviewIndex, setReviewIndex] = useState(0);
@@ -439,35 +441,16 @@ export function LandingPage({
                 className="w-full sm:w-auto rounded-md px-7 py-5 sm:py-6 text-sm sm:text-base font-bold shadow-lift hover:-translate-y-0.5 transition-all gap-2"
                 onClick={() => {
                   soundEffects.playSuccess();
-                  onStart();
+                  if (session && onResume) {
+                    onResume();
+                  } else {
+                    onStart();
+                  }
                 }}
               >
-                <span>{t("hero.ctaPrimary")}</span>
+                <span>{session ? "Go to Dashboard" : t("nav.start")}</span>
                 <ArrowRight className="h-5 w-5" />
               </Button>
-
-              {onResume ? (
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="w-full sm:w-auto rounded-md px-6 py-5 sm:py-6 text-sm sm:text-base font-bold hover:bg-muted"
-                  onClick={() => {
-                    soundEffects.playClick();
-                    onResume();
-                  }}
-                >
-                  {t("hero.ctaResume")}
-                </Button>
-              ) : (
-                <a
-                  href="#interactive-demo"
-                  onClick={() => soundEffects.playClick()}
-                  className="w-full sm:w-auto inline-flex items-center justify-center rounded-md border border-border/80 bg-card/80 px-6 py-3 text-sm font-bold text-foreground hover:bg-muted transition-all"
-                >
-                  <Play className="h-4 w-4 mr-2 text-primary" />
-                  {t("hero.ctaDemo")}
-                </a>
-              )}
             </div>
 
             {/* Micro Feature Badges */}
