@@ -565,8 +565,8 @@ export function LandingPage({
               {demoStep === "memory" && (
                 <div className="w-full space-y-3">
                   <div className="flex items-center justify-between text-xs">
-                    <span className="text-muted-foreground font-medium">Match the pairs! Flip 2 cards</span>
-                    <span className="font-bold text-primary">✨ {memScore} pts · {memPairs}/{MEMORY_PAIRS.length} pairs</span>
+                    <span className="text-muted-foreground font-medium">{t("demo.matchPairs")}</span>
+                    <span className="font-bold text-primary">✨ {memScore} {t("demo.pts")} · {memPairs}/{MEMORY_PAIRS.length} {t("demo.pairs")}</span>
                   </div>
                   <div className="grid grid-cols-4 gap-2">
                     {memCards.map((card) => (
@@ -589,7 +589,7 @@ export function LandingPage({
                   </div>
                   {memPairs === MEMORY_PAIRS.length && (
                     <div className="rounded-xl bg-emerald-500/10 border border-emerald-500/30 p-2.5 text-center text-xs font-bold text-emerald-700 dark:text-emerald-300 animate-in fade-in">
-                      🎉 Perfect! All pairs matched! Score: {memScore} pts
+                      {t("demo.perfectMatch")}{memScore} {t("demo.pts")}
                     </div>
                   )}
                 </div>
@@ -601,17 +601,17 @@ export function LandingPage({
                   {stroopDone ? (
                     <div className="rounded-2xl border border-primary/30 bg-primary/10 p-5 space-y-2 animate-in fade-in">
                       <p className="text-2xl">🧠</p>
-                      <p className="text-sm font-bold text-foreground">Attention Test Complete!</p>
-                      <p className="text-xl font-extrabold text-primary">{stroopScore} / {STROOP_WORDS.length * 20} pts</p>
-                      <p className="text-[11px] text-muted-foreground">Stroop tests cognitive inhibitory control — a key dementia marker.</p>
+                      <p className="text-sm font-bold text-foreground">{t("demo.attentionComplete")}</p>
+                      <p className="text-xl font-extrabold text-primary">{stroopScore} / {STROOP_WORDS.length * 20} {t("demo.pts")}</p>
+                      <p className="text-[11px] text-muted-foreground">{t("demo.stroopDesc")}</p>
                     </div>
                   ) : (
                     <>
                       <div className="flex items-center justify-between text-xs">
-                        <span className="text-muted-foreground">Round {stroopIdx + 1} of {STROOP_WORDS.length}</span>
-                        <span className="font-bold text-primary">⚡ {stroopScore} pts</span>
+                        <span className="text-muted-foreground">{t("demo.round")} {stroopIdx + 1} {t("demo.of")} {STROOP_WORDS.length}</span>
+                        <span className="font-bold text-primary">⚡ {stroopScore} {t("demo.pts")}</span>
                       </div>
-                      <p className="text-[11px] text-muted-foreground">What COLOR is the ink? (ignore the word!)</p>
+                      <p className="text-[11px] text-muted-foreground">{t("demo.whatColor")}</p>
                       <div className={`py-3 text-4xl font-extrabold tracking-widest ${stroopCurrent.inkColor} transition-all`}>
                         {stroopCurrent.word}
                       </div>
@@ -636,7 +636,7 @@ export function LandingPage({
                       </div>
                       {stroopFeedback && (
                         <p className={`text-xs font-bold animate-in fade-in ${ stroopFeedback === "correct" ? "text-emerald-600" : "text-rose-600"}`}>
-                          {stroopFeedback === "correct" ? "✓ Correct! +20 pts" : `✗ It was ${stroopCurrent.correct}`}
+                          {stroopFeedback === "correct" ? t("demo.correct20") : `${t("demo.itWas")} ${stroopCurrent.correct}`}
                         </p>
                       )}
                     </>
@@ -650,19 +650,19 @@ export function LandingPage({
                   {voiceDone ? (
                     <div className="rounded-2xl border border-primary/30 bg-primary/10 p-5 space-y-2 text-center animate-in fade-in">
                       <p className="text-2xl">🗣️</p>
-                      <p className="text-sm font-bold text-foreground">NE Culture Quiz Done!</p>
-                      <p className="text-xl font-extrabold text-primary">{voiceScore} / {VOICE_QUIZ.length * 25} pts</p>
-                      <p className="text-[11px] text-muted-foreground">Regional memory recall is a core cognitive biomarker.</p>
+                      <p className="text-sm font-bold text-foreground">{t("demo.quizDone")}</p>
+                      <p className="text-xl font-extrabold text-primary">{voiceScore} / {VOICE_QUIZ.length * 25} {t("demo.pts")}</p>
+                      <p className="text-[11px] text-muted-foreground">{t("demo.quizDesc")}</p>
                     </div>
                   ) : (
                     <>
                       <div className="flex items-center justify-between text-xs">
-                        <span className="text-muted-foreground">Q {voiceQIdx + 1} of {VOICE_QUIZ.length}</span>
+                        <span className="text-muted-foreground">{t("demo.q")} {voiceQIdx + 1} {t("demo.of")} {VOICE_QUIZ.length}</span>
                         <div className="flex items-center gap-2">
                           <button type="button" onClick={() => speak(voiceCurrent.question, "en-IN")} className="flex items-center gap-1 rounded-full border border-border/80 bg-muted px-2 py-0.5 text-[10px] font-bold hover:bg-muted/80">
-                            <Volume2 className="h-3 w-3 text-primary" /> Hear
+                            <Volume2 className="h-3 w-3 text-primary" /> {t("demo.hear")}
                           </button>
-                          <span className="font-bold text-primary">🌿 {voiceScore} pts</span>
+                          <span className="font-bold text-primary">🌿 {voiceScore} {t("demo.pts")}</span>
                         </div>
                       </div>
                       <div className="rounded-xl border border-border bg-muted/40 p-3">
@@ -689,7 +689,7 @@ export function LandingPage({
                       </div>
                       {voiceFeedback && (
                         <p className={`text-xs font-bold text-center animate-in fade-in ${ voiceFeedback === "correct" ? "text-emerald-600" : "text-rose-600"}`}>
-                          {voiceFeedback === "correct" ? "✓ Correct! +25 pts" : `✗ Answer: ${voiceCurrent.answer}`}
+                          {voiceFeedback === "correct" ? t("demo.correct25") : `${t("demo.answerIs")} ${voiceCurrent.answer}`}
                         </p>
                       )}
                     </>
@@ -701,7 +701,7 @@ export function LandingPage({
             {/* Quick Action Footer */}
             <div className="mt-4 border-t border-border pt-3 flex items-center justify-between">
               <span className="text-[11px] text-muted-foreground">
-                No sign-in needed to explore
+                {t("demo.noSignIn")}
               </span>
               <Button
                 size="sm"
@@ -711,7 +711,7 @@ export function LandingPage({
                   onStart();
                 }}
               >
-                Start Free Screening →
+                {t("demo.startFree")}
               </Button>
             </div>
           </div>
