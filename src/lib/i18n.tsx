@@ -5,6 +5,7 @@ export const LANGUAGES = [
   { code: "en", label: "English", native: "English" },
   { code: "hi", label: "Hindi", native: "हिन्दी" },
   { code: "as", label: "Assamese", native: "অসমীয়া" },
+  { code: "mni", label: "Manipuri", native: "ꯃꯤꯇꯩꯂꯣꯟ" },
 ] as const;
 
 export type LanguageCode = (typeof LANGUAGES)[number]["code"];
@@ -791,12 +792,15 @@ const as: Dict = {
   "dash.shield": "নিৰন্তৰ ডিভাইচত সুৰক্ষা",
 };
 
-const DICTS: Record<LanguageCode, Dict> = { en, hi, as };
+const mni: Dict = { ...en };
+
+const DICTS: Record<LanguageCode, Dict> = { en, hi, as, mni };
 
 export const SPEECH_LOCALES: Record<LanguageCode, string> = {
   en: "en-IN",
   hi: "hi-IN",
   as: "as-IN",
+  mni: "mni-IN",
 };
 
 type I18nValue = {
