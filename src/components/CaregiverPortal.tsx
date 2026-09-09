@@ -137,7 +137,7 @@ export function CaregiverPortal({ onOpenRegister }: { onOpenRegister?: () => voi
   }
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-6 space-y-8 text-slate-100">
+    <div className="family-portal mx-auto max-w-6xl px-4 py-6 space-y-8 text-foreground">
       {/* Header Banner */}
       <div className="rounded-3xl border border-slate-800 bg-slate-900 p-6 shadow-2xl sm:p-8">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b border-slate-800 pb-6">

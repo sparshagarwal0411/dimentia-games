@@ -219,6 +219,24 @@
   color: #f9fafb !important;
 }
 
+.family-portal .bg-slate-900,
+.family-portal .bg-slate-900\/60,
+.family-portal .bg-slate-950,
+.family-portal .bg-slate-800 {
+  background-color: var(--card);
+}
+
+.family-portal .border-slate-800,
+.family-portal .border-slate-700 {
+  border-color: var(--border);
+}
+
+.family-portal .text-white { color: var(--foreground); }
+.family-portal .text-slate-100,
+.family-portal .text-slate-300 { color: var(--foreground); }
+.family-portal .text-slate-400,
+.family-portal .text-slate-500 { color: var(--muted-foreground); }
+
 .extra-high-contrast {
   --background: #000000 !important;
   --foreground: #ffffff !important;

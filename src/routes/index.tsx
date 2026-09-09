@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
-import { Brain, Phone, Play, Stethoscope } from "lucide-react";
+import { Brain, Phone, Play, Stethoscope, Bell, X } from "lucide-react";
 
 import { useApp } from "@/lib/app-state";
 import { persistAssessment, type ScreeningResult } from "@/lib/screening";
@@ -269,10 +269,47 @@ function AppShell({
   patientName?: string | undefined;
   navigation?: ReactNode;
 }) {
+  const [familyReminderOpen, setFamilyReminderOpen] = useState(false);
+
+  useEffect(() => {
+    const today = new Date().toISOString().slice(0, 10);
+    const reminderKey = "neurotrack.familyReminderDate";
+    if (window.localStorage.getItem(reminderKey) === today) return;
+
+    window.localStorage.setItem(reminderKey, today);
+    setFamilyReminderOpen(true);
+    if ("Notification" in window && Notification.permission === "granted") {
+      new Notification("Family check-in reminder", {
+        body: "Take a moment to connect with your family member or caregiver today.",
+      });
+    }
+  }, []);
+
   return (
     <div className="flex min-h-screen flex-col overflow-x-clip bg-background text-foreground transition-colors duration-300">
       <OfflineBanner />
       <SiteHeader simple onLogoClick={onHome} subtitle={patientName || undefined} navigation={navigation} />
+      {familyReminderOpen && (
+        <div className="fixed inset-x-3 top-[4.75rem] z-30 mx-auto flex max-w-md items-start gap-3 rounded-2xl border border-primary/20 bg-card p-4 shadow-lift sm:right-6 sm:left-auto sm:top-20">
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+            <Bell className="h-4 w-4" />
+          </div>
+          <div className="min-w-0 flex-1">
+            <p className="text-sm font-bold text-foreground">Daily family check-in</p>
+            <p className="mt-0.5 text-xs leading-relaxed text-muted-foreground">
+              Take a moment to connect with your family member or caregiver today.
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={() => setFamilyReminderOpen(false)}
+            className="rounded-lg p-1 text-muted-foreground hover:bg-muted hover:text-foreground"
+            aria-label="Dismiss family reminder"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+      )}
       <main className="flex-1 pb-24 sm:pb-12">{children}</main>
       <SiteFooter onStart={onHome} />
     </div>

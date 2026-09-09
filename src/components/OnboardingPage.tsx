@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ArrowLeft, ArrowRight, ShieldCheck } from "lucide-react";
+import { ArrowLeft, ArrowRight, ShieldCheck, Camera } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useApp, type PatientRole } from "@/lib/app-state";
 import { useI18n } from "@/lib/i18n";
@@ -29,6 +29,8 @@ export function OnboardingPage({
   const [caregiverName, setCaregiverName] = useState("");
   const [caregiverPhone, setCaregiverPhone] = useState("");
   const [clinicalNotes, setClinicalNotes] = useState("");
+  const [patientPhoto, setPatientPhoto] = useState("");
+  const [caregiverPhoto, setCaregiverPhoto] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -37,10 +39,20 @@ export function OnboardingPage({
     setDistrict(NE_DISTRICTS[next]?.[0] || "");
   };
 
+  const readPhoto = (file: File, setPhoto: (value: string) => void) => {
+    const reader = new FileReader();
+    reader.onload = () => setPhoto(typeof reader.result === "string" ? reader.result : "");
+    reader.readAsDataURL(file);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim()) {
       setError("Please enter the person’s full name.");
+      return;
+    }
+    if (!patientPhoto || !caregiverPhoto) {
+      setError("Please add both the patient photo and a family member or caregiver photo.");
       return;
     }
     setError(null);
@@ -56,6 +68,8 @@ export function OnboardingPage({
         district,
         caregiver_name: caregiverName.trim() || undefined,
         caregiver_phone: caregiverPhone.trim() || undefined,
+        patient_photo: patientPhoto,
+        caregiver_photo: caregiverPhoto,
         clinical_notes: clinicalNotes.trim() || undefined,
         role,
         elder_mode: true,
@@ -265,6 +279,39 @@ export function OnboardingPage({
                 className={`${fieldClass} mt-1.5`}
               />
             </label>
+          </div>
+
+          <div className="grid gap-4 sm:grid-cols-2">
+            {[
+              { label: "Patient photo", value: patientPhoto, setPhoto: setPatientPhoto },
+              { label: "Family member / caregiver photo", value: caregiverPhoto, setPhoto: setCaregiverPhoto },
+            ].map((photo) => (
+              <label key={photo.label} className="cursor-pointer rounded-2xl border border-dashed border-primary/40 bg-primary/5 p-4 transition-colors hover:bg-primary/10">
+                <span className="flex items-center gap-2 text-xs font-bold text-foreground">
+                  <Camera className="h-4 w-4 text-primary" /> {photo.label} *
+                </span>
+                <span className="mt-3 flex items-center gap-3">
+                  {photo.value ? (
+                    <img src={photo.value} alt="Selected preview" className="h-16 w-16 rounded-xl object-cover" />
+                  ) : (
+                    <span className="flex h-16 w-16 items-center justify-center rounded-xl bg-card text-muted-foreground">
+                      <Camera className="h-5 w-5" />
+                    </span>
+                  )}
+                  <span className="text-xs text-muted-foreground">Choose a clear face photo</span>
+                </span>
+                <input
+                  type="file"
+                  accept="image/*"
+                  required={!photo.value}
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) readPhoto(file, photo.setPhoto);
+                  }}
+                  className="sr-only"
+                />
+              </label>
+            ))}
           </div>
 
           <label className="block text-xs sm:text-sm font-medium text-foreground">

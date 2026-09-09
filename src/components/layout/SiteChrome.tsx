@@ -422,7 +422,7 @@ export function SiteFooter({ onStart }: { onStart?: () => void }) {
               <img src="/logo.png" alt="" className="h-full w-full object-cover" />
             </div>
             <div>
-              <p className="font-display text-base font-bold text-foreground leading-tight">{t("app.name")}</p>
+              className="mx-auto flex w-fit max-w-full items-center gap-1 border-l border-border/70 pl-2"
               <p className="text-[11px] text-muted-foreground">{t("app.tagline")}</p>
             </div>
           </div>
