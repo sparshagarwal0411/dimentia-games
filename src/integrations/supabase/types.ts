@@ -365,6 +365,8 @@ export type Database = {
           language: string
           last_screening: Json | null
           name: string
+          patient_photo: string
+          caregiver_photo: string
           phone: string
           region: string
           role: string

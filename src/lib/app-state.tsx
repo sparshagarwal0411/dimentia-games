@@ -23,6 +23,8 @@ export type Patient = {
   caregiver_name?: string;
   caregiver_phone?: string;
   clinical_notes?: string;
+  patient_photo?: string;
+  caregiver_photo?: string;
   role: PatientRole;
   last_screening?: ScreeningResult;
   elder_mode: boolean;
@@ -190,6 +192,8 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
           caregiver_name: item.caregiver_name || "",
           caregiver_phone: item.caregiver_phone || "",
           clinical_notes: item.clinical_notes || "",
+          patient_photo: item.patient_photo || "",
+          caregiver_photo: item.caregiver_photo || "",
           role: item.role === "caregiver" ? "caregiver" : "self",
           last_screening: item.last_screening || undefined,
           elder_mode: item.elder_mode ?? true,
@@ -239,6 +243,8 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
             caregiver_name: data.caregiver_name ?? "",
             caregiver_phone: data.caregiver_phone ?? "",
             clinical_notes: data.clinical_notes ?? "",
+            patient_photo: data.patient_photo ?? "",
+            caregiver_photo: data.caregiver_photo ?? "",
             role: data.role,
             elder_mode: data.elder_mode,
             base_difficulty: data.base_difficulty,
@@ -301,6 +307,7 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
         "name", "age", "sex", "phone", "language", "region", "district",
         "caregiver_name", "caregiver_phone", "clinical_notes", "role",
         "elder_mode", "base_difficulty", "last_screening",
+        "patient_photo", "caregiver_photo",
       ];
       for (const key of allowed) {
         if (key in updates) supabaseUpdates[key] = (updates as any)[key];

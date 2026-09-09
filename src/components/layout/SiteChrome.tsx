@@ -89,14 +89,14 @@ export function SiteHeader({
               window.location.assign("/");
             }
           }}
-          className="flex min-w-0 flex-1 items-center gap-2 text-left group sm:flex-none sm:gap-3"
+          className={`flex min-w-0 items-center gap-2 text-left group ${navigation ? "shrink-0 sm:flex-none" : "flex-1 sm:flex-none"} sm:gap-3`}
         >
           <div className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-primary text-primary-foreground shadow-soft transition-transform group-hover:scale-105 sm:h-10 sm:w-10">
             <img src="/logo.png" alt="" className="h-full w-full object-cover" />
           </div>
           <div className="min-w-0">
             <div className="flex items-center gap-1.5">
-              <p className="font-display truncate text-[15px] font-bold leading-none text-foreground sm:text-lg">
+              <p className={`font-display truncate text-[15px] font-bold leading-none text-foreground sm:text-lg ${navigation ? "hidden sm:inline" : ""}`}>
                 {t("app.name")}
               </p>
               <span className="hidden rounded-full bg-primary/10 px-1.5 py-0.5 text-[10px] font-bold text-primary sm:inline">
@@ -150,9 +150,15 @@ export function SiteHeader({
           </nav>
         )}
 
+        {navigation ? (
+          <div className="min-w-0 flex-1 overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            {navigation}
+          </div>
+        ) : null}
+
         {/* Action Controls */}
         <div className="ml-auto flex shrink-0 items-center gap-1.5 sm:gap-2">
-          <label className="relative inline-flex items-center">
+          <label className={`relative inline-flex items-center ${navigation ? "hidden md:inline-flex" : ""}`}>
             <Languages className="pointer-events-none absolute left-2.5 hidden h-3.5 w-3.5 text-muted-foreground sm:block" />
             <select
               value={lang}
@@ -175,6 +181,7 @@ export function SiteHeader({
             <AvatarMenu
               initials={initials}
               userName={userName}
+              photo={activePatient?.patient_photo}
               onDashboard={handleStart}
               onA11y={() => { soundEffects.playClick(); openA11yPanel(); }}
               onSignOut={() => void signOut()}
@@ -207,12 +214,6 @@ export function SiteHeader({
           )}
         </div>
       </div>
-
-      {navigation ? (
-        <div className="mx-auto w-full max-w-6xl overflow-x-auto px-3 pb-2 sm:px-6 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-          {navigation}
-        </div>
-      ) : null}
 
       {/* Mobile Drawer Menu */}
       {!simple && mobileMenuOpen && (
@@ -310,6 +311,7 @@ export function SiteHeader({
 function AvatarMenu({
   initials,
   userName,
+  photo,
   onDashboard,
   onA11y,
   onSignOut,
@@ -317,6 +319,7 @@ function AvatarMenu({
 }: {
   initials: string;
   userName: string;
+  photo?: string | undefined;
   onDashboard?: () => void;
   onA11y?: () => void;
   onSignOut?: () => void;
@@ -341,8 +344,8 @@ function AvatarMenu({
         className="flex items-center gap-1.5 rounded-full border border-border/80 bg-card px-2 py-1 shadow-sm hover:bg-muted transition-all"
         aria-label="Profile menu"
       >
-        <span className="flex h-7 w-7 items-center justify-center rounded-full bg-primary text-[11px] font-bold text-primary-foreground shrink-0">
-          {initials || <User className="h-3.5 w-3.5" />}
+        <span className="flex h-7 w-7 items-center justify-center overflow-hidden rounded-full bg-primary text-[11px] font-bold text-primary-foreground shrink-0">
+          {photo ? <img src={photo} alt="" className="h-full w-full object-cover" /> : initials || <User className="h-3.5 w-3.5" />}
         </span>
         <span className="hidden sm:inline max-w-[90px] truncate text-xs font-semibold text-foreground">
           {userName.split(" ")[0]}

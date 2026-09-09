@@ -181,10 +181,10 @@ function Platform({
   );
 
   const navItems = [
-    { id: "home" as const, label: "Home", icon: Brain, badge: null },
-    { id: "games" as const, label: "Games", icon: Play, badge: "9" },
-    { id: "doctors" as const, label: "Doctors", icon: Phone, badge: "24/7" },
-    { id: "family" as const, label: "Family", icon: Stethoscope, badge: "Live" },
+    { id: "home" as const, label: "Home", icon: Brain },
+    { id: "games" as const, label: "Games", icon: Play },
+    { id: "doctors" as const, label: "Doctors", icon: Phone },
+    { id: "family" as const, label: "Family", icon: Stethoscope },
   ];
 
   return (
@@ -193,7 +193,7 @@ function Platform({
       onHome={onHome}
       navigation={(
         <nav
-          className="flex w-max min-w-full items-center gap-1 rounded-full border border-border/70 bg-muted/50 p-1"
+          className="mx-auto flex w-fit max-w-full items-center gap-0.5 rounded-full bg-muted/70 p-0.5"
           aria-label="Dashboard sections"
         >
           {navItems.map((item) => {
@@ -208,23 +208,15 @@ function Platform({
                   setTab(item.id);
                   setSelectedGame(null);
                 }}
-                className={`flex flex-1 items-center justify-center gap-1.5 rounded-full px-2.5 py-1.5 text-xs font-semibold transition-all duration-200 sm:flex-none sm:px-3.5 sm:text-sm ${
+                className={`flex items-center justify-center gap-1.5 rounded-full px-2.5 py-1.5 text-xs font-semibold transition-colors sm:px-3 ${
                   active
-                    ? "bg-card text-foreground shadow-sm ring-1 ring-primary/15"
-                    : "text-muted-foreground hover:bg-background/50 hover:text-foreground"
+                    ? "bg-card text-foreground shadow-sm"
+                    : "text-muted-foreground hover:text-foreground"
                 }`}
+                aria-current={active ? "page" : undefined}
               >
                 <Icon className={`h-4 w-4 shrink-0 ${active ? "text-primary" : ""}`} />
-                <span>{item.label}</span>
-                {item.badge ? (
-                  <span
-                    className={`hidden rounded-full px-1.5 text-[10px] font-bold sm:inline ${
-                      active ? "bg-primary/15 text-primary" : "bg-muted-foreground/10 text-muted-foreground"
-                    }`}
-                  >
-                    {item.badge}
-                  </span>
-                ) : null}
+                <span className="sr-only sm:not-sr-only sm:inline">{item.label}</span>
               </button>
             );
           })}
