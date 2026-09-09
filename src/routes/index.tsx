@@ -181,7 +181,7 @@ function Platform({
   );
 
   const navItems = [
-    { id: "home" as const, label: "Home", icon: Brain },
+    { id: "home" as const, label: "Dashboard", icon: Brain },
     { id: "games" as const, label: "Games", icon: Play },
     { id: "doctors" as const, label: "Doctors", icon: Stethoscope },
     { id: "family" as const, label: "Family", icon: Phone },
@@ -208,11 +208,10 @@ function Platform({
                   setTab(item.id);
                   setSelectedGame(null);
                 }}
-                className={`flex items-center justify-center gap-1.5 rounded-full px-2.5 py-1.5 text-xs font-semibold transition-colors sm:px-3 ${
-                  active
-                    ? "bg-card text-foreground shadow-sm"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
+                className={`flex items-center justify-center gap-1.5 rounded-full px-2.5 py-1.5 text-xs font-semibold transition-colors sm:px-3 ${active
+                  ? "bg-card text-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground"
+                  }`}
                 aria-current={active ? "page" : undefined}
               >
                 <Icon className={`h-4 w-4 shrink-0 ${active ? "text-primary" : ""}`} />
