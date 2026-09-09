@@ -366,7 +366,7 @@ export function LandingPage({
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground transition-colors duration-300 selection:bg-primary/20 selection:text-primary">
+    <div className="min-h-screen overflow-x-clip bg-background pb-24 text-foreground transition-colors duration-300 selection:bg-primary/20 selection:text-primary">
       {/* Dynamic Header with Profile & Resume support */}
       <SiteHeader onStart={onResume || onStart} ctaLabel={onResume ? t("nav.resume") : t("nav.start")} />
 

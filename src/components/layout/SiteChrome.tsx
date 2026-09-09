@@ -72,10 +72,11 @@ export function SiteHeader({
   };
 
   const resolvedCta = ctaLabel || (activePatient || session ? t("nav.resume") : t("nav.start"));
+  const shortCta = ctaLabel || (activePatient || session ? t("nav.resumeShort") : t("nav.startShort"));
 
   return (
-    <header className="glass-surface sticky top-0 z-40 border-b transition-colors duration-300">
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-2 px-3 py-2.5 sm:gap-4 sm:px-6 sm:py-3">
+    <header className="glass-surface sticky top-0 z-40 overflow-x-clip border-b transition-colors duration-300">
+      <div className="mx-auto flex max-w-6xl min-w-0 items-center gap-2 px-3 py-2 sm:gap-4 sm:px-6 sm:py-2.5">
         {/* Brand / Logo */}
         <button
           type="button"
@@ -88,27 +89,25 @@ export function SiteHeader({
               window.location.assign("/");
             }
           }}
-          className="flex items-center gap-2 sm:gap-3 text-left group shrink-0"
+          className="flex min-w-0 flex-1 items-center gap-2 text-left group sm:flex-none sm:gap-3"
         >
-          <div className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center overflow-hidden rounded-xl bg-primary text-primary-foreground shadow-soft transition-transform group-hover:scale-105">
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-primary text-primary-foreground shadow-soft transition-transform group-hover:scale-105 sm:h-10 sm:w-10">
             <img src="/logo.png" alt="" className="h-full w-full object-cover" />
           </div>
-          <div>
-            <div className="flex items-center gap-1 sm:gap-1.5">
-              <p className="font-display text-base sm:text-lg font-bold leading-none text-foreground">
+          <div className="min-w-0">
+            <div className="flex items-center gap-1.5">
+              <p className="font-display truncate text-[15px] font-bold leading-none text-foreground sm:text-lg">
                 {t("app.name")}
               </p>
-              <span className="rounded-full bg-primary/10 px-1.5 py-0.5 text-[9px] sm:text-[10px] font-bold text-primary">
+              <span className="hidden rounded-full bg-primary/10 px-1.5 py-0.5 text-[10px] font-bold text-primary sm:inline">
                 {t("app.badge")}
               </span>
             </div>
-            <p className="hidden sm:block mt-0.5 text-[11px] font-medium tracking-wide text-muted-foreground">
+            <p className="mt-0.5 hidden truncate text-[11px] font-medium tracking-wide text-muted-foreground md:block">
               {subtitle || t("app.tagline")}
             </p>
           </div>
         </button>
-
-        {navigation}
 
         {/* Desktop Navigation */}
         {!simple && (
@@ -152,32 +151,26 @@ export function SiteHeader({
         )}
 
         {/* Action Controls */}
-        <div className="flex items-center gap-1.5 sm:gap-2">
-          {/* Language Dropdown */}
-          <div className="relative flex items-center">
-            <Languages className="pointer-events-none absolute left-2.5 h-3.5 w-3.5 text-muted-foreground z-10" />
+        <div className="ml-auto flex shrink-0 items-center gap-1.5 sm:gap-2">
+          <label className="relative inline-flex items-center">
+            <Languages className="pointer-events-none absolute left-2.5 hidden h-3.5 w-3.5 text-muted-foreground sm:block" />
             <select
               value={lang}
               onChange={(e) => {
                 soundEffects.playClick();
                 setLang(e.target.value as typeof lang);
               }}
-              className="h-8 appearance-none rounded-full border border-border/80 bg-muted/50 pl-7 pr-6 text-[11px] font-bold text-foreground hover:bg-muted transition-colors focus:outline-none focus:ring-2 focus:ring-ring/50 sm:h-9 sm:text-xs"
+              className="h-8 w-[3.35rem] appearance-none rounded-full border border-border/80 bg-muted/50 px-2 text-center text-[11px] font-bold text-foreground transition-colors hover:bg-muted focus:outline-none focus:ring-2 focus:ring-ring/50 sm:h-9 sm:w-auto sm:pl-7 sm:pr-6 sm:text-left sm:text-xs"
               aria-label="Select language"
             >
               {LANGUAGES.map((item) => (
                 <option key={item.code} value={item.code}>
-                  {item.native} ({item.code.toUpperCase()})
+                  {item.code.toUpperCase()}
                 </option>
               ))}
             </select>
-            {/* Custom chevron */}
-            <svg className="pointer-events-none absolute right-2 h-3 w-3 text-muted-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-            </svg>
-          </div>
+          </label>
 
-          {/* Avatar Dropdown (shown when logged in) */}
           {(session || activePatient) ? (
             <AvatarMenu
               initials={initials}
@@ -193,12 +186,12 @@ export function SiteHeader({
               size="sm"
               className="h-8 rounded-full px-3 font-bold shadow-soft transition-all hover:shadow-lift sm:h-9 sm:px-5"
             >
-              <Sparkles className="h-3.5 w-3.5 sm:mr-1" />
-              <span className="truncate text-xs sm:text-sm">{resolvedCta}</span>
+              <Sparkles className="h-3.5 w-3.5 shrink-0 sm:mr-1" />
+              <span className="text-xs sm:hidden">{shortCta}</span>
+              <span className="hidden text-sm sm:inline">{resolvedCta}</span>
             </Button>
           ) : null}
 
-          {/* Mobile Hamburger Menu Toggle */}
           {!simple && (
             <button
               type="button"
@@ -206,15 +199,20 @@ export function SiteHeader({
                 soundEffects.playClick();
                 setMobileMenuOpen((prev) => !prev);
               }}
-              className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full border border-border/80 bg-card text-foreground lg:hidden hover:bg-muted transition-colors"
+              className="flex h-8 w-8 items-center justify-center rounded-full border border-border/80 bg-card text-foreground transition-colors hover:bg-muted lg:hidden sm:h-9 sm:w-9"
               aria-label={mobileMenuOpen ? t("nav.close") : t("nav.menu")}
             >
               {mobileMenuOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
             </button>
           )}
         </div>
-
       </div>
+
+      {navigation ? (
+        <div className="mx-auto w-full max-w-6xl overflow-x-auto px-3 pb-2 sm:px-6 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          {navigation}
+        </div>
+      ) : null}
 
       {/* Mobile Drawer Menu */}
       {!simple && mobileMenuOpen && (
@@ -280,7 +278,7 @@ export function SiteHeader({
             <span className="text-[11px] text-muted-foreground">{t("app.tagline")}</span>
           </div>
 
-          <div className="mt-3 flex items-center gap-1.5 border-t border-border pt-3 sm:hidden">
+          <div className="mt-3 flex flex-wrap items-center gap-1.5 border-t border-border pt-3">
             <span className="mr-1 text-xs font-semibold text-muted-foreground">Language</span>
             {LANGUAGES.map((item) => (
               <button
@@ -298,7 +296,7 @@ export function SiteHeader({
                 title={item.native}
                 aria-label={`Switch to ${item.label}`}
               >
-                {item.code.toUpperCase()}
+                {item.native}
               </button>
             ))}
           </div>

@@ -336,6 +336,7 @@
   html {
     font-size: calc(16px * var(--text-scale));
     scroll-behavior: smooth;
+    overflow-x: clip;
   }
 
   body {
@@ -343,6 +344,7 @@
     color: var(--color-foreground);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
+    overflow-x: clip;
   }
 
   h1,

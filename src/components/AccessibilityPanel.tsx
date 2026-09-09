@@ -14,7 +14,9 @@ import {
   Volume2,
   VolumeX,
   Zap,
+  ArrowUp,
 } from "lucide-react";
+import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
@@ -34,6 +36,15 @@ const handleToggleRowKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
 export function AccessibilityPanel() {
   const { prefs, setPref, resetPrefs, a11yPanelOpen, setA11yPanelOpen } = useApp();
   const { t, locale } = useI18n();
+
+  const [showScrollTop, setShowScrollTop] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setShowScrollTop(window.scrollY > 280);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   const announce = (text: string) => {
     if (prefs.voice_guidance && !prefs.reduce_sounds) speak(text, locale, prefs.slow_mode);
@@ -68,21 +79,33 @@ export function AccessibilityPanel() {
 
   return (
     <>
-      {/* Floating Accessibility Action Button */}
-      <button
-        type="button"
-        id="floating-accessibility-btn"
-        aria-label="Open accessibility settings and controls"
-        title="Accessibility Settings"
-        onClick={() => {
-          setA11yPanelOpen(true);
-          announce("Accessibility controls opened");
-        }}
-        className="fixed bottom-5 right-5 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lift transition-all hover:scale-105 hover:shadow-2xl focus-visible:outline-4 focus-visible:outline-ring"
-      >
-        <Accessibility className="h-7 w-7" />
-        <span className="sr-only">Accessibility Settings</span>
-      </button>
+      <div className="fixed bottom-[max(1.1rem,env(safe-area-inset-bottom))] left-4 z-50 flex flex-col items-center gap-2.5">
+        <button
+          type="button"
+          aria-label="Scroll to top"
+          title="Scroll to top"
+          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          className={`flex h-12 w-12 items-center justify-center rounded-full border border-border/80 bg-card text-foreground shadow-lift transition-all duration-200 hover:scale-105 focus-visible:outline-4 focus-visible:outline-ring ${
+            showScrollTop ? "opacity-100 translate-y-0" : "pointer-events-none opacity-0 translate-y-2"
+          }`}
+        >
+          <ArrowUp className="h-5 w-5" />
+        </button>
+        <button
+          type="button"
+          id="floating-accessibility-btn"
+          aria-label="Open accessibility settings and controls"
+          title="Accessibility Settings"
+          onClick={() => {
+            setA11yPanelOpen(true);
+            announce("Accessibility controls opened");
+          }}
+          className="flex h-12 w-12 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lift transition-transform duration-200 hover:scale-105 focus-visible:outline-4 focus-visible:outline-ring sm:h-14 sm:w-14"
+        >
+          <Accessibility className="h-6 w-6 sm:h-7 sm:w-7" />
+          <span className="sr-only">Accessibility Settings</span>
+        </button>
+      </div>
 
       {/* Accessibility Settings Sheet Modal */}
       <Sheet open={a11yPanelOpen} onOpenChange={setA11yPanelOpen}>

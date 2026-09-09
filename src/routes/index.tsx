@@ -1,9 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
-import { Accessibility, Brain, LogOut, Phone, Play, Stethoscope, User } from "lucide-react";
+import { Brain, Phone, Play, Stethoscope } from "lucide-react";
 
 import { useApp } from "@/lib/app-state";
-import { useI18n, LANGUAGES } from "@/lib/i18n";
 import { persistAssessment, type ScreeningResult } from "@/lib/screening";
 import { AssessmentPage } from "@/components/AssessmentPage";
 import { AuthGate } from "@/components/AuthGate";
@@ -194,7 +193,7 @@ function Platform({
       onHome={onHome}
       navigation={(
         <nav
-          className="flex items-center gap-1 rounded-full border border-border/80 bg-muted/60 p-1 shadow-sm backdrop-blur-md"
+          className="flex w-max min-w-full items-center gap-1 rounded-full border border-border/70 bg-muted/50 p-1"
           aria-label="Dashboard sections"
         >
           {navItems.map((item) => {
@@ -209,25 +208,23 @@ function Platform({
                   setTab(item.id);
                   setSelectedGame(null);
                 }}
-                className={`relative flex shrink-0 items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs sm:text-sm font-semibold transition-all duration-200 ${
+                className={`flex flex-1 items-center justify-center gap-1.5 rounded-full px-2.5 py-1.5 text-xs font-semibold transition-all duration-200 sm:flex-none sm:px-3.5 sm:text-sm ${
                   active
-                    ? "bg-card text-foreground shadow-sm scale-100 ring-1 ring-primary/20 font-bold"
-                    : "text-muted-foreground hover:text-foreground hover:bg-background/50"
+                    ? "bg-card text-foreground shadow-sm ring-1 ring-primary/15"
+                    : "text-muted-foreground hover:bg-background/50 hover:text-foreground"
                 }`}
               >
-                <Icon className={`h-4 w-4 transition-colors ${active ? "text-primary" : "text-muted-foreground"}`} />
+                <Icon className={`h-4 w-4 shrink-0 ${active ? "text-primary" : ""}`} />
                 <span>{item.label}</span>
-                {item.badge && (
+                {item.badge ? (
                   <span
-                    className={`ml-0.5 rounded-full px-1.5 py-0.2 text-[9px] sm:text-[10px] font-bold ${
-                      active
-                        ? "bg-primary/15 text-primary"
-                        : "bg-muted-foreground/15 text-muted-foreground"
+                    className={`hidden rounded-full px-1.5 text-[10px] font-bold sm:inline ${
+                      active ? "bg-primary/15 text-primary" : "bg-muted-foreground/10 text-muted-foreground"
                     }`}
                   >
                     {item.badge}
                   </span>
-                )}
+                ) : null}
               </button>
             );
           })}
@@ -280,98 +277,11 @@ function AppShell({
   patientName?: string | undefined;
   navigation?: ReactNode;
 }) {
-  const { session, signOut, openA11yPanel } = useApp();
-  const { lang, setLang, t } = useI18n();
-  const userName = session?.user?.user_metadata?.["full_name"] || session?.user?.email || "";
-  const initials = userName
-    ? userName
-        .split(" ")
-        .slice(0, 2)
-        .map((w: string) => w[0])
-        .join("")
-        .toUpperCase()
-    : "";
-
   return (
-    <div className="flex min-h-screen flex-col bg-background text-foreground transition-colors duration-300">
+    <div className="flex min-h-screen flex-col overflow-x-clip bg-background text-foreground transition-colors duration-300">
       <OfflineBanner />
       <SiteHeader simple onLogoClick={onHome} subtitle={patientName || undefined} navigation={navigation} />
-      <header className="hidden">
-        <div className="mx-auto flex max-w-6xl items-center justify-between gap-2 px-3 py-2.5 sm:gap-4 sm:px-6 sm:py-3">
-          <button type="button" onClick={onHome} className="flex items-center gap-2 sm:gap-3 text-left">
-            <div className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center overflow-hidden rounded-xl bg-primary text-primary-foreground shadow-soft">
-              <img src="/logo.png" alt="" className="h-full w-full object-cover" />
-            </div>
-            <div>
-              <p className="font-display text-base sm:text-lg font-bold leading-none">{t("app.name")}</p>
-              <p className="mt-0.5 text-[10px] sm:text-[11px] text-muted-foreground">{patientName || t("nav.dashboard")}</p>
-            </div>
-          </button>
-
-          <div className="flex items-center gap-1.5 sm:gap-2">
-            {/* Quick Language Toggle */}
-            <div className="flex items-center rounded-full border border-border/80 bg-muted/50 p-0.5">
-              {LANGUAGES.map((item) => (
-                <button
-                  key={item.code}
-                  type="button"
-                  onClick={() => {
-                    soundEffects.playClick();
-                    setLang(item.code);
-                  }}
-                  className={`rounded-full px-2 py-1 text-[11px] sm:text-xs font-bold transition-all ${
-                    lang === item.code
-                      ? "bg-card text-foreground shadow-sm scale-100"
-                      : "text-muted-foreground hover:text-foreground hover:bg-background/40"
-                  }`}
-                  title={item.native}
-                >
-                  {item.code.toUpperCase()}
-                </button>
-              ))}
-            </div>
-
-            {/* Accessibility Toggle */}
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={() => {
-                soundEffects.playClick();
-                openA11yPanel();
-              }}
-              className="flex items-center gap-1 rounded-full border-border/80 px-2 sm:px-3 h-8 sm:h-9 text-xs font-semibold text-foreground hover:bg-muted"
-              title={t("a11y.title")}
-            >
-              <Accessibility className="h-4 w-4 text-primary shrink-0" />
-            </Button>
-
-            {session && (
-              <>
-                {/* User avatar */}
-                <div
-                  className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-500/20 border border-emerald-500/30 text-xs font-bold text-emerald-600 dark:text-emerald-400"
-                  title={userName}
-                >
-                  {initials || <User className="h-4 w-4" />}
-                </div>
-                {/* Sign out */}
-                <button
-                  type="button"
-                  onClick={() => void signOut()}
-                  title={t("nav.signOut")}
-                  className="flex items-center gap-1.5 rounded-full border border-border/70 px-2.5 sm:px-3 py-1.5 text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
-                >
-                  <LogOut className="h-3.5 w-3.5" />
-                  <span className="hidden sm:inline">{t("nav.signOut")}</span>
-                </button>
-              </>
-            )}
-          </div>
-        </div>
-        {navigation}
-      </header>
-      <main className="flex-1 pb-12">{children}</main>
+      <main className="flex-1 pb-24 sm:pb-12">{children}</main>
       <SiteFooter onStart={onHome} />
     </div>
   );
