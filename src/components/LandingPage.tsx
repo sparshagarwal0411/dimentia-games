@@ -718,6 +718,32 @@ export function LandingPage({
         </div>
       </section>
 
+            {/* Public health partners and initiatives */}
+      <section className="government-marquee border-y border-border/70 py-12 sm:py-14">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6">
+          <div className="government-heading text-center">
+            <p className="text-xl font-semibold tracking-tight sm:text-2xl">Proudly Supported By</p>
+            <span className="mx-auto mt-2 block h-0.5 w-56 bg-gradient-to-r from-primary via-cyan-400 to-blue-500" />
+          </div>
+          <div className="mt-10 overflow-hidden" aria-label="Government ministries and public health initiatives">
+            <div className="government-marquee-track">
+              {[...GOVERNMENT_SHOUTOUTS, ...GOVERNMENT_SHOUTOUTS].map((item, index) => (
+                <div key={`${item.institution}-${index}`} className="government-shoutout">
+                  <img src={item.image} alt={`${item.institution} emblem`} />
+                  <div>
+                    <strong>{item.wordmark}</strong>
+                    <p>{item.institution}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+          <p className="government-marquee-note mt-8 text-center text-[10px]">
+            SmritiMitra is an independent project inspired by public digital-health and community-care goals.
+          </p>
+        </div>
+      </section>
+
       {/* ========================================================================= */}
       {/* 2. WHO SMRITIMITRA IS FOR — ROOTED IN NORTH EASTERN HOMES & FAMILIES        */}
       {/* ========================================================================= */}
@@ -831,32 +857,7 @@ export function LandingPage({
           </div>
         </div>
       </section>
-
-      {/* Public health partners and initiatives */}
-      <section className="government-marquee border-y border-border/70 py-12 sm:py-14">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6">
-          <div className="government-heading text-center">
-            <p className="text-xl font-semibold tracking-tight sm:text-2xl">Proudly Supported By</p>
-            <span className="mx-auto mt-2 block h-0.5 w-56 bg-gradient-to-r from-primary via-cyan-400 to-blue-500" />
-          </div>
-          <div className="mt-10 overflow-hidden" aria-label="Government ministries and public health initiatives">
-            <div className="government-marquee-track">
-              {[...GOVERNMENT_SHOUTOUTS, ...GOVERNMENT_SHOUTOUTS].map((item, index) => (
-                <div key={`${item.institution}-${index}`} className="government-shoutout">
-                  <img src={item.image} alt={`${item.institution} emblem`} />
-                  <div>
-                    <strong>{item.wordmark}</strong>
-                    <p>{item.institution}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-          <p className="government-marquee-note mt-8 text-center text-[10px]">
-            SmritiMitra is an independent project inspired by public digital-health and community-care goals.
-          </p>
-        </div>
-      </section>
+  
 
       {/* ========================================================================= */}
       {/* 3. INTERACTIVE 8 NER STATES CULTURAL EXPLORER                             */}

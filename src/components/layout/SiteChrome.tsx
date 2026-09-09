@@ -111,7 +111,7 @@ export function SiteHeader({
 
         {/* Desktop Navigation */}
         {!simple && (
-          <nav className="hidden items-center gap-5 text-sm font-semibold text-muted-foreground lg:flex">
+          <nav className="hidden flex-1 items-center justify-center gap-5 text-sm font-semibold text-muted-foreground lg:flex">
             <a
               href="#interactive-demo"
               onClick={(e) => handleNavClick(e, "interactive-demo")}
@@ -119,13 +119,6 @@ export function SiteHeader({
             >
               {t("nav.demo")}
             </a>
-            <Link
-              to="/features"
-              onClick={() => soundEffects.playClick()}
-              className="hover:text-foreground transition-colors"
-            >
-              {t("nav.features")}
-            </Link>
             <a
               href="#regional-culture"
               onClick={(e) => handleNavClick(e, "regional-culture")}
@@ -227,17 +220,6 @@ export function SiteHeader({
               <span>{t("nav.demo")}</span>
               <span className="text-xs text-primary font-bold">Try Now →</span>
             </a>
-            <Link
-              to="/features"
-              onClick={() => {
-                soundEffects.playClick();
-                setMobileMenuOpen(false);
-              }}
-              className="flex items-center justify-between rounded-xl p-2.5 hover:bg-muted/70 transition-colors"
-            >
-              <span>{t("nav.features")}</span>
-              <span className="text-xs text-muted-foreground">3 Biomarkers</span>
-            </Link>
             <a
               href="#regional-culture"
               onClick={(e) => handleNavClick(e, "regional-culture")}
