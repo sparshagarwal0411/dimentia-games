@@ -50,6 +50,19 @@ export function GamesHub({
   const [activeCategory, setActiveCategory] = useState<string>("All");
   const [searchQuery, setSearchQuery] = useState<string>("");
 
+  const filteredGames = useMemo(() => {
+    return GAMES.filter((g) => {
+      const matchesCategory = activeCategory === "All" || g.category === activeCategory;
+      const matchesSearch =
+        !searchQuery.trim() ||
+        g.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        g.desc.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        g.skill.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        g.badge.toLowerCase().includes(searchQuery.toLowerCase());
+      return matchesCategory && matchesSearch;
+    });
+  }, [activeCategory, searchQuery]);
+
   const stats = loadPlayerStats(activePatient?.id ?? "guest");
   const board = getTournamentBoard(activePatient?.id ?? "guest", activePatient?.name || "You");
   const exit = () => onSelect(null);
@@ -65,19 +78,6 @@ export function GamesHub({
   if (selectedGame === "emotion-recognition") return <EmotionGame onExit={exit} />;
 
   const categories = ["All", "Memory", "Attention", "Recall", "Logic", "Language", "Social"];
-
-  const filteredGames = useMemo(() => {
-    return GAMES.filter((g) => {
-      const matchesCategory = activeCategory === "All" || g.category === activeCategory;
-      const matchesSearch =
-        !searchQuery.trim() ||
-        g.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        g.desc.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        g.skill.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        g.badge.toLowerCase().includes(searchQuery.toLowerCase());
-      return matchesCategory && matchesSearch;
-    });
-  }, [activeCategory, searchQuery]);
 
   const handleSelectGame = (id: GameId) => {
     soundEffects.playClick();
