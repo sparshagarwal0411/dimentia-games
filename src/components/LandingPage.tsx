@@ -284,7 +284,7 @@ export function LandingPage({
     { word: "GREEN", inkColor: "text-rose-500", correct: "Red" },
     { word: "BLUE", inkColor: "text-emerald-500", correct: "Green" },
     { word: "YELLOW", inkColor: "text-purple-500", correct: "Purple" },
-    { word: "PURPLE", inkColor: "text-amber-500", correct: "Orange" },
+    { word: "PURPLE", inkColor: "text-orange-500", correct: "Orange" },
   ];
   const [stroopIdx, setStroopIdx] = useState(0);
   const [stroopScore, setStroopScore] = useState(0);

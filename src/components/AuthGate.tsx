@@ -12,9 +12,10 @@ import { SiteHeader, SiteFooter } from "@/components/layout/SiteChrome";
 
 interface AuthGateProps {
   onCancel?: () => void;
+  onContinueAsGuest?: () => void;
 }
 
-export function AuthGate({ onCancel }: AuthGateProps) {
+export function AuthGate({ onCancel, onContinueAsGuest }: AuthGateProps) {
   const { signInWithGoogle, authLoading } = useApp();
   const { t } = useI18n();
   const [signing, setSigning] = useState(false);
@@ -126,6 +127,28 @@ export function AuthGate({ onCancel }: AuthGateProps) {
               )}
               <span>{signing ? t("auth.buttonRedirecting") : t("auth.buttonGoogle")}</span>
             </button>
+
+            {/* Guest play option */}
+            {onContinueAsGuest && (
+              <div className="mt-3">
+                <div className="relative my-3 text-center">
+                  <div className="absolute inset-0 flex items-center">
+                    <div className="w-full border-t border-border" />
+                  </div>
+                  <span className="relative bg-card px-2 text-[11px] uppercase tracking-wider text-muted-foreground font-semibold">
+                    or
+                  </span>
+                </div>
+                <button
+                  type="button"
+                  onClick={onContinueAsGuest}
+                  className="flex w-full items-center justify-center gap-2 rounded-2xl border border-primary/30 bg-primary/10 text-primary px-5 py-3 text-sm font-bold shadow-sm transition-all hover:bg-primary/15 hover:border-primary/50 active:scale-[0.98]"
+                >
+                  <Brain className="h-4 w-4" />
+                  Continue as Guest (Instant Play)
+                </button>
+              </div>
+            )}
 
             {/* Back link */}
             {onCancel && (

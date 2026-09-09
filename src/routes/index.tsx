@@ -74,15 +74,28 @@ function Index() {
     }
   }, [session, pendingStage]);
 
+  const [isGuest, setIsGuest] = useState(() => {
+    return typeof window !== "undefined" && window.localStorage.getItem("neurotrack.guest_mode") === "true";
+  });
+
   const setJourney = (next: Stage) => {
-    // Require auth before proceeding past landing
-    if (!session && next !== "landing" && next !== "auth") {
+    // If not authenticated and not in guest mode, ask for auth
+    if (!session && !isGuest && next !== "landing" && next !== "auth") {
       setPendingStage(next);
       setStage("auth");
       return;
     }
     setStage(next);
     window.localStorage.setItem(STAGE_KEY, next);
+  };
+
+  const handleContinueAsGuest = () => {
+    setIsGuest(true);
+    window.localStorage.setItem("neurotrack.guest_mode", "true");
+    const target = pendingStage || "dashboard";
+    setStage(target);
+    window.localStorage.setItem(STAGE_KEY, target);
+    setPendingStage(null);
   };
 
   if (authLoading || patientsLoading || !ready) {
@@ -93,6 +106,7 @@ function Index() {
     return (
       <AuthGate
         onCancel={() => setStage("landing")}
+        onContinueAsGuest={handleContinueAsGuest}
       />
     );
   }
