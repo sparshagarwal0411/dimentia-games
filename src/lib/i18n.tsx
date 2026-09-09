@@ -21,7 +21,7 @@ const en: Dict = {
   "nav.states": "NE States",
   "nav.privacy": "Privacy Policy",
   "nav.stories": "Stories & Reviews",
-  "nav.home": "Home",
+  "nav.home": "Dashboard",
   "nav.play": "Games Hub",
   "nav.day": "My Day",
   "nav.talk": "Talk",

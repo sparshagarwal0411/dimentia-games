@@ -183,8 +183,8 @@ function Platform({
   const navItems = [
     { id: "home" as const, label: "Home", icon: Brain },
     { id: "games" as const, label: "Games", icon: Play },
-    { id: "doctors" as const, label: "Doctors", icon: Phone },
-    { id: "family" as const, label: "Family", icon: Stethoscope },
+    { id: "doctors" as const, label: "Doctors", icon: Stethoscope },
+    { id: "family" as const, label: "Family", icon: Phone },
   ];
 
   return (

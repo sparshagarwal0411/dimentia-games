@@ -11,6 +11,9 @@ import {
   User,
   LogOut,
   Settings,
+  Pencil,
+  UserPlus,
+  Camera,
   ChevronDown,
   Languages,
 } from "lucide-react";
@@ -21,6 +24,7 @@ import { useApp } from "@/lib/app-state";
 import { useI18n, LANGUAGES } from "@/lib/i18n";
 import { LegalModal, type LegalTab } from "@/components/LegalModal";
 import { soundEffects } from "@/lib/audio-effects";
+import { PatientRegistrationModal } from "@/components/PatientRegistrationModal";
 
 export function SiteHeader({
   onStart,
@@ -175,6 +179,7 @@ export function SiteHeader({
               initials={initials}
               userName={userName}
               photo={activePatient?.patient_photo}
+              activePatient={activePatient}
               onDashboard={handleStart}
               onA11y={() => { soundEffects.playClick(); openA11yPanel(); }}
               onSignOut={() => void signOut()}
@@ -294,6 +299,7 @@ function AvatarMenu({
   initials,
   userName,
   photo,
+  activePatient,
   onDashboard,
   onA11y,
   onSignOut,
@@ -302,12 +308,24 @@ function AvatarMenu({
   initials: string;
   userName: string;
   photo?: string | undefined;
+  activePatient: ReturnType<typeof useApp>["activePatient"];
   onDashboard?: () => void;
   onA11y?: () => void;
   onSignOut?: () => void;
   hasSession?: boolean;
 }) {
+  const { updatePatient } = useApp();
   const [open, setOpen] = useState(false);
+  const [editOpen, setEditOpen] = useState(false);
+  const [addMemberOpen, setAddMemberOpen] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [name, setName] = useState(activePatient?.name || "");
+  const [age, setAge] = useState(activePatient?.age || 68);
+  const [phone, setPhone] = useState(activePatient?.phone || "");
+  const [caregiverName, setCaregiverName] = useState(activePatient?.caregiver_name || "");
+  const [caregiverPhone, setCaregiverPhone] = useState(activePatient?.caregiver_phone || "");
+  const [patientPhoto, setPatientPhoto] = useState(activePatient?.patient_photo || "");
+  const [caregiverPhoto, setCaregiverPhoto] = useState(activePatient?.caregiver_photo || "");
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -317,6 +335,51 @@ function AvatarMenu({
     document.addEventListener("mousedown", close);
     return () => document.removeEventListener("mousedown", close);
   }, []);
+
+  useEffect(() => {
+    setName(activePatient?.name || "");
+    setAge(activePatient?.age || 68);
+    setPhone(activePatient?.phone || "");
+    setCaregiverName(activePatient?.caregiver_name || "");
+    setCaregiverPhone(activePatient?.caregiver_phone || "");
+    setPatientPhoto(activePatient?.patient_photo || "");
+    setCaregiverPhoto(activePatient?.caregiver_photo || "");
+  }, [activePatient]);
+
+  const readPhoto = (file: File, setPhoto: (value: string) => void) => {
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onload = () => {
+      const canvas = document.createElement("canvas");
+      const max = 360;
+      const scale = Math.min(1, max / Math.max(img.width, img.height));
+      canvas.width = Math.max(1, Math.round(img.width * scale));
+      canvas.height = Math.max(1, Math.round(img.height * scale));
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return;
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      URL.revokeObjectURL(url);
+      setPhoto(canvas.toDataURL("image/jpeg", 0.72));
+    };
+    img.src = url;
+  };
+
+  const saveProfile = async (event: React.FormEvent) => {
+    event.preventDefault();
+    if (!activePatient || !name.trim()) return;
+    setSaving(true);
+    await updatePatient(activePatient.id, {
+      name: name.trim(),
+      age: Number(age) || activePatient.age,
+      phone: phone.trim(),
+      caregiver_name: caregiverName.trim(),
+      caregiver_phone: caregiverPhone.trim(),
+      patient_photo: patientPhoto,
+      caregiver_photo: caregiverPhoto,
+    });
+    setSaving(false);
+    setEditOpen(false);
+  };
 
   return (
     <div ref={ref} className="relative">
@@ -336,14 +399,12 @@ function AvatarMenu({
       </button>
 
       {open && (
-        <div className="glass-surface absolute right-0 top-full mt-2 w-52 rounded-2xl border z-50 overflow-hidden animate-in fade-in-0 zoom-in-95 duration-150">
-          {/* User info header */}
+        <div className="glass-surface absolute right-0 top-full mt-2 w-56 rounded-2xl border z-50 overflow-hidden animate-in fade-in-0 zoom-in-95 duration-150">
           <div className="border-b border-border px-4 py-3">
             <p className="text-xs font-bold text-foreground truncate">{userName || "Patient"}</p>
-            <p className="text-[11px] text-muted-foreground">SmritiMitra Account</p>
+            <p className="text-[11px] text-muted-foreground">SmritiMitra account</p>
           </div>
 
-          {/* Menu items */}
           <div className="py-1.5">
             <button
               type="button"
@@ -353,6 +414,26 @@ function AvatarMenu({
               <Brain className="h-4 w-4 text-primary" />
               Go to Dashboard
             </button>
+            {activePatient && (
+              <button
+                type="button"
+                onClick={() => { setOpen(false); setEditOpen(true); }}
+                className="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm font-medium text-foreground hover:bg-muted transition-colors"
+              >
+                <User className="h-4 w-4 text-primary" />
+                Profile
+              </button>
+            )}
+            {activePatient && (
+              <button
+                type="button"
+                onClick={() => { setOpen(false); setAddMemberOpen(true); }}
+                className="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm font-medium text-foreground hover:bg-muted transition-colors"
+              >
+                <UserPlus className="h-4 w-4 text-primary" />
+                Add family member
+              </button>
+            )}
             <button
               type="button"
               onClick={() => { setOpen(false); onA11y?.(); }}
@@ -377,6 +458,125 @@ function AvatarMenu({
           )}
         </div>
       )}
+
+      {editOpen && activePatient && (
+        <div className="fixed inset-0 z-[60] flex items-end justify-center overflow-y-auto bg-black/50 p-0 backdrop-blur-sm sm:items-center sm:p-4">
+          <form
+            onSubmit={saveProfile}
+            className="relative my-0 w-full max-w-lg rounded-t-3xl border border-border bg-card p-5 shadow-lift sm:my-8 sm:rounded-3xl sm:p-6"
+          >
+            <button
+              type="button"
+              onClick={() => setEditOpen(false)}
+              className="absolute right-4 top-4 rounded-lg p-1 text-muted-foreground hover:bg-muted hover:text-foreground"
+              aria-label="Close profile"
+            >
+              <X className="h-4 w-4" />
+            </button>
+            <h2 className="pr-8 text-xl font-bold text-foreground">Profile</h2>
+            <p className="mt-1 text-xs text-muted-foreground">
+              Edit names and add photos for the patient and one family member / caretaker.
+            </p>
+
+            <div className="mt-5 grid gap-3 sm:grid-cols-2">
+              {[
+                { label: "Patient photo", hint: "Tap to add or change", value: patientPhoto, setPhoto: setPatientPhoto },
+                { label: "Family member photo", hint: "Caretaker or relative", value: caregiverPhoto, setPhoto: setCaregiverPhoto },
+              ].map((item) => (
+                <label
+                  key={item.label}
+                  className="cursor-pointer rounded-2xl border border-dashed border-primary/40 bg-primary/5 p-3 transition-colors hover:bg-primary/10"
+                >
+                  <span className="flex items-center gap-2 text-xs font-bold text-foreground">
+                    <Camera className="h-4 w-4 text-primary" />
+                    {item.label}
+                  </span>
+                  <span className="mt-2 flex items-center gap-3">
+                    {item.value ? (
+                      <img src={item.value} alt="" className="h-16 w-16 rounded-xl object-cover" />
+                    ) : (
+                      <span className="flex h-16 w-16 items-center justify-center rounded-xl bg-card text-muted-foreground">
+                        <Camera className="h-5 w-5" />
+                      </span>
+                    )}
+                    <span className="text-[11px] leading-snug text-muted-foreground">{item.hint}</span>
+                  </span>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    capture="user"
+                    onChange={(event) => {
+                      const file = event.target.files?.[0];
+                      if (file) readPhoto(file, item.setPhoto);
+                    }}
+                    className="sr-only"
+                  />
+                </label>
+              ))}
+            </div>
+
+            <div className="mt-5 grid gap-3 sm:grid-cols-2">
+              <label className="text-xs font-semibold text-foreground">
+                Patient name
+                <input
+                  value={name}
+                  onChange={(event) => setName(event.target.value)}
+                  className="mt-1.5 w-full rounded-xl border border-input bg-background px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-ring"
+                  required
+                />
+              </label>
+              <label className="text-xs font-semibold text-foreground">
+                Age
+                <input
+                  type="number"
+                  min={40}
+                  max={110}
+                  value={age}
+                  onChange={(event) => setAge(Number(event.target.value))}
+                  className="mt-1.5 w-full rounded-xl border border-input bg-background px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-ring"
+                />
+              </label>
+              <label className="text-xs font-semibold text-foreground sm:col-span-2">
+                Patient phone
+                <input
+                  type="tel"
+                  value={phone}
+                  onChange={(event) => setPhone(event.target.value)}
+                  className="mt-1.5 w-full rounded-xl border border-input bg-background px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-ring"
+                />
+              </label>
+              <label className="text-xs font-semibold text-foreground">
+                Family member name
+                <input
+                  value={caregiverName}
+                  onChange={(event) => setCaregiverName(event.target.value)}
+                  className="mt-1.5 w-full rounded-xl border border-input bg-background px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-ring"
+                />
+              </label>
+              <label className="text-xs font-semibold text-foreground">
+                Family member phone
+                <input
+                  type="tel"
+                  value={caregiverPhone}
+                  onChange={(event) => setCaregiverPhone(event.target.value)}
+                  className="mt-1.5 w-full rounded-xl border border-input bg-background px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-ring"
+                />
+              </label>
+            </div>
+
+            <div className="mt-6 flex justify-end gap-2 border-t border-border pt-4">
+              <Button type="button" variant="outline" onClick={() => setEditOpen(false)}>
+                Cancel
+              </Button>
+              <Button type="submit" disabled={saving}>
+                {saving ? "Saving..." : "Save profile"}
+              </Button>
+            </div>
+          </form>
+        </div>
+      )}
+
+      <PatientRegistrationModal open={addMemberOpen} onClose={() => setAddMemberOpen(false)} />
     </div>
   );
 }
@@ -404,7 +604,7 @@ export function SiteFooter({ onStart }: { onStart?: () => void }) {
               <img src="/logo.png" alt="" className="h-full w-full object-cover" />
             </div>
             <div>
-              className="mx-auto flex w-fit max-w-full items-center gap-1 border-l border-border/70 pl-2"
+              <p className="font-display text-base font-bold text-foreground leading-tight">{t("app.name")}</p>
               <p className="text-[11px] text-muted-foreground">{t("app.tagline")}</p>
             </div>
           </div>
