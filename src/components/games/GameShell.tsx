@@ -14,6 +14,9 @@ import {
   Award,
   Clock,
   ArrowRight,
+  Heart,
+  HeartCrack,
+  Skull,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -46,6 +49,7 @@ type Props = {
   title: string;
   instruction: string;
   totalRounds?: number;
+  maxLives?: number;
   categoryName?: string;
   onExit?: (() => void) | undefined;
   children: (props: GameProps) => React.ReactNode;
@@ -56,6 +60,7 @@ export function GameShell({
   title,
   instruction,
   totalRounds = 5,
+  maxLives = 3,
   categoryName,
   onExit,
   children,
@@ -66,6 +71,8 @@ export function GameShell({
   const [round, setRound] = useState(0);
   const [results, setResults] = useState<RoundResult[]>([]);
   const [finished, setFinished] = useState(false);
+  const [failed, setFailed] = useState(false);
+  const [livesLeft, setLivesLeft] = useState(maxLives);
   const [recommendation, setRecommendation] = useState<Recommendation | null>(null);
   const [isMuted, setIsMuted] = useState(false);
   const savedRef = useRef(false);
@@ -112,6 +119,17 @@ export function GameShell({
     const next = [...results, result];
     setResults(next);
 
+    if (!result.correct) {
+      const newLives = livesLeft - 1;
+      setLivesLeft(newLives);
+      if (newLives <= 0) {
+        // Game over — ran out of lives
+        setFailed(true);
+        setFinished(true);
+        return;
+      }
+    }
+
     if (next.length >= totalRounds) {
       setFinished(true);
     } else {
@@ -127,6 +145,11 @@ export function GameShell({
     : 0;
   const mistakes = results.filter((r) => !r.correct).length;
   const scorePercent = Math.round(accuracy * 100);
+
+  // Derived XP based on pass/fail
+  const xpEarned = failed
+    ? Math.max(0, Math.round(scorePercent * 0.10))
+    : Math.max(10, Math.round(scorePercent * 0.35));
 
   // Save attempt and run adaptive calculation upon finish
   useEffect(() => {
@@ -170,8 +193,8 @@ export function GameShell({
       const next = recommendDifficulty(difficulty, history);
       setRecommendation(next);
 
-      // Record to local progress stats
-      recordGamePlay(activePatient?.id ?? "guest", gameId, scorePercent);
+      // Record to local progress stats — pass `!failed` so XP is penalised on failure
+      recordGamePlay(activePatient?.id ?? "guest", gameId, scorePercent, !failed);
 
       if (activePatient) {
         try {
@@ -200,17 +223,19 @@ export function GameShell({
           /* safe fallback for offline */
         }
       }
-      speakText(`Session complete. You scored ${scorePercent} percent.`);
+      speakText(failed ? `Game over. You scored ${scorePercent} percent.` : `Session complete. You scored ${scorePercent} percent.`);
     };
 
     void run();
-  }, [finished, accuracy, avgTime, mistakes, difficulty, activePatient, gameId, scorePercent, speakText]);
+  }, [finished, failed, accuracy, avgTime, mistakes, difficulty, activePatient, gameId, scorePercent, speakText]);
 
   const restart = () => {
     savedRef.current = false;
     setResults([]);
     setRound(0);
     setFinished(false);
+    setFailed(false);
+    setLivesLeft(maxLives);
     setRecommendation(null);
     if (recommendation) setDifficulty(recommendation.level);
   };
@@ -255,6 +280,20 @@ export function GameShell({
 
         {/* Live Round Progress Beads + Controls */}
         <div className="flex items-center justify-between sm:justify-end gap-3 border-t border-border/40 sm:border-t-0 pt-3 sm:pt-0">
+          {/* Lives (Hearts) */}
+          <div className="flex items-center gap-1 bg-rose-500/10 px-2.5 py-1.5 rounded-full border border-rose-500/30" title={`${livesLeft} of ${maxLives} lives remaining`}>
+            {Array.from({ length: maxLives }).map((_, idx) => (
+              <span key={idx} className={cn(
+                "transition-all duration-300",
+                idx < livesLeft
+                  ? "text-rose-500 scale-100"
+                  : "text-muted-foreground/30 scale-75 grayscale"
+              )}>
+                <Heart className={cn("h-4 w-4", idx < livesLeft ? "fill-rose-500" : "fill-none stroke-muted-foreground/40")} />
+              </span>
+            ))}
+          </div>
+
           {/* Round Beads */}
           <div className="flex items-center gap-1.5 bg-muted/60 px-3 py-1.5 rounded-full border border-border/60">
             {Array.from({ length: totalRounds }).map((_, idx) => {
@@ -333,8 +372,69 @@ export function GameShell({
             {children({ difficulty, onRound: handleRound, roundKey: round, speakText })}
           </div>
         </div>
+      ) : failed ? (
+        /* ── Game Over / Failure Screen ── */
+        <div className="rounded-3xl border border-rose-500/40 bg-gradient-to-b from-card via-card to-rose-500/5 p-6 sm:p-10 text-center shadow-lift animate-in zoom-in-95 duration-400">
+          <div className="relative inline-block mx-auto">
+            <div className="absolute -inset-4 rounded-full bg-rose-500/20 blur-xl animate-pulse pointer-events-none" />
+            <div className="relative flex h-24 w-24 items-center justify-center rounded-3xl bg-gradient-to-br from-rose-500 to-rose-700 text-white shadow-lift mx-auto">
+              <HeartCrack className="h-12 w-12" />
+            </div>
+          </div>
+
+          <h2 className="mt-5 text-3xl sm:text-4xl font-black tracking-tight text-foreground">
+            Out of Lives!
+          </h2>
+          <p className="mt-2 text-base text-muted-foreground max-w-md mx-auto">
+            You ran out of lives in <span className="font-bold text-foreground">{title}</span>. Keep practising — your brain is learning!
+          </p>
+
+          {/* Performance Triple Badges */}
+          <div className="mt-8 grid grid-cols-3 gap-3 sm:gap-4 max-w-lg mx-auto text-center">
+            <div className="rounded-2xl border border-border/70 bg-card/80 p-4 shadow-sm">
+              <p className="text-2xl sm:text-3xl font-black text-rose-500">{scorePercent}%</p>
+              <p className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground mt-1">Score</p>
+            </div>
+            <div className="rounded-2xl border border-border/70 bg-card/80 p-4 shadow-sm">
+              <p className="text-2xl sm:text-3xl font-black text-foreground">{results.length}/{totalRounds}</p>
+              <p className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground mt-1">Rounds Done</p>
+            </div>
+            <div className="rounded-2xl border border-border/70 bg-card/80 p-4 shadow-sm">
+              <div className="flex items-center justify-center gap-1 text-2xl sm:text-3xl font-black text-muted-foreground">
+                <Zap className="h-5 w-5" />
+                <span>+{xpEarned}</span>
+              </div>
+              <p className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground mt-1">XP (−75%)</p>
+            </div>
+          </div>
+
+          {/* Tip */}
+          <div className="mt-6 inline-flex items-center gap-2 rounded-2xl border border-rose-500/20 bg-rose-500/10 px-4 py-2.5 text-xs sm:text-sm font-semibold text-rose-600 dark:text-rose-400 max-w-lg mx-auto">
+            <Skull className="h-4 w-4 shrink-0" />
+            <span>Try again to earn full XP and climb the leaderboard!</span>
+          </div>
+
+          {/* Navigation Action Buttons */}
+          <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center max-w-md mx-auto">
+            <Button
+              size="lg"
+              onClick={restart}
+              className="tap flex-1 rounded-2xl font-bold shadow-soft gap-2 text-base bg-rose-600 hover:bg-rose-700 text-white"
+            >
+              <RotateCcw className="h-4 w-4" /> Try Again
+            </Button>
+            <Button
+              size="lg"
+              variant="outline"
+              onClick={onExit}
+              className="tap flex-1 rounded-2xl font-bold border-border/80 hover:bg-muted text-base"
+            >
+              All 9 Games
+            </Button>
+          </div>
+        </div>
       ) : (
-        /* Victory & Performance Breakdown Screen */
+        /* ── Victory / Performance Breakdown Screen ── */
         <div className="rounded-3xl border border-border/80 bg-gradient-to-b from-card via-card to-primary/5 p-6 sm:p-10 text-center shadow-lift animate-in zoom-in-95 duration-400">
           <div className="relative inline-block mx-auto">
             <div className="absolute -inset-4 rounded-full bg-primary/20 blur-xl animate-pulse pointer-events-none" />
@@ -363,7 +463,7 @@ export function GameShell({
             <div className="rounded-2xl border border-border/70 bg-card/80 p-4 shadow-sm">
               <div className="flex items-center justify-center gap-1 text-2xl sm:text-3xl font-black text-amber-500">
                 <Zap className="h-5 w-5 fill-current" />
-                <span>+{Math.max(10, Math.round(scorePercent * 0.35))}</span>
+                <span>+{xpEarned}</span>
               </div>
               <p className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground mt-1">XP Earned</p>
             </div>

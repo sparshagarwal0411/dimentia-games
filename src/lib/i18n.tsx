@@ -123,7 +123,7 @@ const en: Dict = {
 
   // Common UI
   "common.back": "Back",
-  "common.home": "Home",
+  "common.home": "Dashboard",
   "common.start": "Start",
   "common.next": "Next",
   "common.done": "Done",

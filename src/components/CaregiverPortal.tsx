@@ -28,6 +28,11 @@ type AlertItem = {
   title: string;
   time: string;
   acknowledged: boolean;
+  acknowledgedAt?: string;
+  /** Short label for what action the caregiver is confirming */
+  actionLabel: string;
+  /** Auto-note inserted into the log when acknowledged */
+  autoNote: string;
 };
 
 export function CaregiverPortal({ onOpenRegister }: { onOpenRegister?: () => void }) {
@@ -46,6 +51,8 @@ export function CaregiverPortal({ onOpenRegister }: { onOpenRegister?: () => voi
       title: "Daily Cognitive Baseline screening due for evaluation",
       time: "1 hour ago",
       acknowledged: false,
+      actionLabel: "Schedule Review",
+      autoNote: "Cognitive baseline review scheduled. Caregiver notified.",
     },
     {
       id: "a2",
@@ -54,6 +61,9 @@ export function CaregiverPortal({ onOpenRegister }: { onOpenRegister?: () => voi
       title: "Adaptive cultural memory training completed at 92% accuracy",
       time: "Today",
       acknowledged: true,
+      acknowledgedAt: "Earlier today",
+      actionLabel: "Mark Seen",
+      autoNote: "Memory training result reviewed by caregiver.",
     },
   ]);
 
@@ -75,9 +85,23 @@ export function CaregiverPortal({ onOpenRegister }: { onOpenRegister?: () => voi
   };
 
   const acknowledgeAlert = (id: string) => {
+    const now = new Date();
+    const timeStr = now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
     setAlerts((prev) =>
-      prev.map((a) => (a.id === id ? { ...a, acknowledged: true } : a)),
+      prev.map((a) =>
+        a.id === id
+          ? { ...a, acknowledged: true, acknowledgedAt: `Today at ${timeStr}` }
+          : a,
+      ),
     );
+    // Auto-insert a note into the caregiver log
+    const alert = alerts.find((a) => a.id === id);
+    if (alert) {
+      setNotesList((prev) => [
+        { text: `[Auto] ${alert.autoNote}`, time: `Today at ${timeStr}` },
+        ...prev,
+      ]);
+    }
   };
 
   const handleAddNote = (e: React.FormEvent) => {
@@ -300,13 +324,26 @@ export function CaregiverPortal({ onOpenRegister }: { onOpenRegister?: () => voi
                     size="sm"
                     variant="outline"
                     onClick={() => acknowledgeAlert(alert.id)}
-                    className="tap shrink-0 text-xs font-bold border-emerald-500/40 text-emerald-400 hover:bg-emerald-500/20"
+                    className={cn(
+                      "tap shrink-0 text-xs font-bold",
+                      alert.type === "high"
+                        ? "border-rose-500/50 text-rose-400 hover:bg-rose-500/20"
+                        : alert.type === "medium"
+                        ? "border-amber-500/50 text-amber-400 hover:bg-amber-500/20"
+                        : "border-emerald-500/40 text-emerald-400 hover:bg-emerald-500/20",
+                    )}
                   >
-                    Acknowledge
+                    {alert.actionLabel}
                   </Button>
                 ) : (
-                  <span className="text-[11px] font-bold text-slate-400 shrink-0 flex items-center gap-1">
-                    <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400" /> Logged
+                  <span className="text-[11px] font-bold text-slate-400 shrink-0 flex flex-col items-end gap-0.5">
+                    <span className="flex items-center gap-1">
+                      <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400" />
+                      {alert.actionLabel} · Done
+                    </span>
+                    {alert.acknowledgedAt && (
+                      <span className="text-[10px] text-slate-500 font-mono">{alert.acknowledgedAt}</span>
+                    )}
                   </span>
                 )}
               </div>

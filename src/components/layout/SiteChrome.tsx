@@ -49,11 +49,11 @@ export function SiteHeader({
   const userName = activePatient?.name || session?.user?.user_metadata?.["full_name"] || session?.user?.email || "";
   const initials = userName
     ? userName
-        .split(" ")
-        .slice(0, 2)
-        .map((w: string) => w[0])
-        .join("")
-        .toUpperCase()
+      .split(" ")
+      .slice(0, 2)
+      .map((w: string) => w[0])
+      .join("")
+      .toUpperCase()
     : "";
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, targetId: string) => {
@@ -277,11 +277,10 @@ export function SiteHeader({
                   soundEffects.playClick();
                   setLang(item.code);
                 }}
-                className={`rounded-full px-2.5 py-1 text-xs font-bold transition-all ${
-                  lang === item.code
+                className={`rounded-full px-2.5 py-1 text-xs font-bold transition-all ${lang === item.code
                     ? "bg-primary text-primary-foreground"
                     : "bg-muted text-muted-foreground hover:text-foreground"
-                }`}
+                  }`}
                 title={item.native}
                 aria-label={`Switch to ${item.label}`}
               >
@@ -432,7 +431,7 @@ function AvatarMenu({
                 className="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm font-medium text-foreground hover:bg-muted transition-colors"
               >
                 <UserPlus className="h-4 w-4 text-primary" />
-                Add family member
+                Add Patient
               </button>
             )}
             <button
