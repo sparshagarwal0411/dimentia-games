@@ -79,15 +79,14 @@ export function AccessibilityPanel() {
 
   return (
     <>
-      <div className="fixed bottom-[max(1.1rem,env(safe-area-inset-bottom))] left-4 z-50 flex flex-col items-center gap-2.5">
+      <div className="fixed bottom-[max(1.1rem,env(safe-area-inset-bottom))] right-4 z-50 flex flex-col items-center gap-2.5">
         <button
           type="button"
           aria-label="Scroll to top"
           title="Scroll to top"
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-          className={`flex h-12 w-12 items-center justify-center rounded-full border border-border/80 bg-card text-foreground shadow-lift transition-all duration-200 hover:scale-105 focus-visible:outline-4 focus-visible:outline-ring ${
-            showScrollTop ? "opacity-100 translate-y-0" : "pointer-events-none opacity-0 translate-y-2"
-          }`}
+          className={`flex h-12 w-12 items-center justify-center rounded-full border border-border/80 bg-card text-foreground shadow-lift transition-all duration-200 hover:scale-105 focus-visible:outline-4 focus-visible:outline-ring ${showScrollTop ? "opacity-100 translate-y-0" : "pointer-events-none opacity-0 translate-y-2"
+            }`}
         >
           <ArrowUp className="h-5 w-5" />
         </button>
