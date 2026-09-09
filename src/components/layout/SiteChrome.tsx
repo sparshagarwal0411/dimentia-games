@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState, type ReactNode } from "react";
+import { createPortal } from "react-dom";
 import { Button } from "@/components/ui/button";
 import { useApp } from "@/lib/app-state";
 import { useI18n, LANGUAGES } from "@/lib/i18n";
@@ -459,7 +460,7 @@ function AvatarMenu({
         </div>
       )}
 
-      {editOpen && activePatient && (
+      {editOpen && activePatient && createPortal(
         <div className="fixed inset-0 z-[60] flex items-end justify-center overflow-y-auto bg-black/50 p-0 backdrop-blur-sm sm:items-center sm:p-4">
           <form
             onSubmit={saveProfile}
@@ -573,10 +574,14 @@ function AvatarMenu({
               </Button>
             </div>
           </form>
-        </div>
+        </div>,
+        document.body
       )}
 
-      <PatientRegistrationModal open={addMemberOpen} onClose={() => setAddMemberOpen(false)} />
+      {createPortal(
+        <PatientRegistrationModal open={addMemberOpen} onClose={() => setAddMemberOpen(false)} />,
+        document.body
+      )}
     </div>
   );
 }

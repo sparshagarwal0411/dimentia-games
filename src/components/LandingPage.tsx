@@ -576,9 +576,9 @@ export function LandingPage({
                         onClick={() => handleMemCard(card.id)}
                         disabled={card.matched || memLocked}
                         className={`h-14 w-full rounded-xl border-2 text-2xl font-bold transition-all duration-300 select-none
-                          ${ card.matched
-                              ? "border-emerald-500/50 bg-emerald-500/15 scale-95 opacity-60"
-                              : card.flipped
+                          ${card.matched
+                            ? "border-emerald-500/50 bg-emerald-500/15 scale-95 opacity-60"
+                            : card.flipped
                               ? "border-primary bg-primary/10 scale-105 shadow-md"
                               : "border-border bg-muted/60 hover:border-primary hover:bg-primary/5"
                           }`}
@@ -623,9 +623,9 @@ export function LandingPage({
                             onClick={() => handleStroopAnswer(color)}
                             disabled={stroopFeedback !== null}
                             className={`rounded-xl border py-2 text-xs font-bold transition-all
-                              ${ stroopFeedback !== null && color === stroopCurrent.correct
-                                  ? "border-emerald-500 bg-emerald-500/20 text-emerald-700 scale-105"
-                                  : stroopFeedback === "wrong" && color !== stroopCurrent.correct
+                              ${stroopFeedback !== null && color === stroopCurrent.correct
+                                ? "border-emerald-500 bg-emerald-500/20 text-emerald-700 scale-105"
+                                : stroopFeedback === "wrong" && color !== stroopCurrent.correct
                                   ? "opacity-40"
                                   : "border-border bg-card hover:bg-muted hover:border-primary"
                               }`}
@@ -635,7 +635,7 @@ export function LandingPage({
                         ))}
                       </div>
                       {stroopFeedback && (
-                        <p className={`text-xs font-bold animate-in fade-in ${ stroopFeedback === "correct" ? "text-emerald-600" : "text-rose-600"}`}>
+                        <p className={`text-xs font-bold animate-in fade-in ${stroopFeedback === "correct" ? "text-emerald-600" : "text-rose-600"}`}>
                           {stroopFeedback === "correct" ? t("demo.correct20") : `${t("demo.itWas")} ${stroopCurrent.correct}`}
                         </p>
                       )}
@@ -676,9 +676,9 @@ export function LandingPage({
                             onClick={() => handleVoiceAnswer(opt)}
                             disabled={voiceFeedback !== null}
                             className={`rounded-xl border py-2.5 text-xs font-bold transition-all
-                              ${ voiceFeedback !== null && opt === voiceCurrent.answer
-                                  ? "border-emerald-500 bg-emerald-500/20 text-emerald-700 scale-105"
-                                  : voiceFeedback === "wrong" && opt !== voiceCurrent.answer
+                              ${voiceFeedback !== null && opt === voiceCurrent.answer
+                                ? "border-emerald-500 bg-emerald-500/20 text-emerald-700 scale-105"
+                                : voiceFeedback === "wrong" && opt !== voiceCurrent.answer
                                   ? "opacity-40"
                                   : "border-border bg-card hover:bg-muted hover:border-primary"
                               }`}
@@ -688,7 +688,7 @@ export function LandingPage({
                         ))}
                       </div>
                       {voiceFeedback && (
-                        <p className={`text-xs font-bold text-center animate-in fade-in ${ voiceFeedback === "correct" ? "text-emerald-600" : "text-rose-600"}`}>
+                        <p className={`text-xs font-bold text-center animate-in fade-in ${voiceFeedback === "correct" ? "text-emerald-600" : "text-rose-600"}`}>
                           {voiceFeedback === "correct" ? t("demo.correct25") : `${t("demo.answerIs")} ${voiceCurrent.answer}`}
                         </p>
                       )}
@@ -718,7 +718,7 @@ export function LandingPage({
         </div>
       </section>
 
-            {/* Public health partners and initiatives */}
+      {/* Public health partners and initiatives */}
       <section className="government-marquee border-y border-border/70 py-12 sm:py-14">
         <div className="mx-auto max-w-7xl px-4 sm:px-6">
           <div className="government-heading text-center">
@@ -857,7 +857,7 @@ export function LandingPage({
           </div>
         </div>
       </section>
-  
+
 
       {/* ========================================================================= */}
       {/* 3. INTERACTIVE 8 NER STATES CULTURAL EXPLORER                             */}
@@ -988,7 +988,7 @@ export function LandingPage({
           })()}
         </div>
       </section>
-      
+
       {/* ========================================================================= */}
       {/* 5. PRIVACY & HOW WE MONITOR SECTION                                       */}
       {/* ========================================================================= */}
@@ -1184,12 +1184,18 @@ export function LandingPage({
               className="rounded-full px-8 py-6 text-base font-bold shadow-lift hover:scale-105 transition-all gap-2"
               onClick={() => {
                 soundEffects.playSuccess();
-                onStart();
+
+                if (session && onResume) {
+                  onResume();
+                } else {
+                  onStart();
+                }
               }}
             >
-              <span>Get Started Now</span>
+              <span>{session ? "Go to Dashboard" : "Get Started Now"}</span>
               <ArrowRight className="h-5 w-5" />
             </Button>
+
           </div>
           <p className="text-xs text-muted-foreground">
             Screening is an assistive guide, not a formal medical diagnosis.
