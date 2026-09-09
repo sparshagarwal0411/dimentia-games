@@ -55,7 +55,7 @@ export function LoadingScreen({ onLoaded }: { onLoaded?: () => void }) {
           Smriti<span className="text-emerald-400">Mitra</span>
         </h1>
         <p className="mt-1 text-xs font-semibold uppercase tracking-[0.25em] text-slate-400">
-          A friend that helps preserve memories.
+          Bringing Joy to the Golden Years..
         </p>
 
         {/* Progress bar */}

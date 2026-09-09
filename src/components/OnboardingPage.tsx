@@ -87,7 +87,7 @@ export function OnboardingPage({
   return (
     <div className="flex min-h-screen flex-col bg-background text-foreground transition-colors duration-300">
       <SiteHeader simple onLogoClick={onBack} onStart={onBack} ctaLabel={t("common.back")} />
-      
+
       <main className="mx-auto max-w-3xl flex-1 px-4 py-8 sm:py-12 sm:px-6 w-full">
         <button
           type="button"
@@ -103,7 +103,7 @@ export function OnboardingPage({
             <img src="/logo.png" alt="SmritiMitra logo" className="h-14 w-14 rounded-2xl object-cover shadow-soft" />
             <div>
               <p className="font-display text-lg font-bold text-foreground">SmritiMitra</p>
-              <p className="text-xs text-muted-foreground">A friend that helps preserve memories.</p>
+              <p className="text-xs text-muted-foreground"> Bringing Joy to the Golden Years..</p>
             </div>
           </div>
           <p className="text-xs sm:text-sm font-bold uppercase tracking-[0.18em] text-primary">
@@ -174,9 +174,8 @@ export function OnboardingPage({
               ).map(([value, label]) => (
                 <label
                   key={value}
-                  className={`cursor-pointer rounded-xl border px-4 py-3 text-xs sm:text-sm transition-all ${
-                    role === value ? "border-primary bg-primary/10 font-bold text-foreground ring-1 ring-primary" : "border-border text-muted-foreground hover:bg-muted/50"
-                  }`}
+                  className={`cursor-pointer rounded-xl border px-4 py-3 text-xs sm:text-sm transition-all ${role === value ? "border-primary bg-primary/10 font-bold text-foreground ring-1 ring-primary" : "border-border text-muted-foreground hover:bg-muted/50"
+                    }`}
                 >
                   <input
                     type="radio"

@@ -15,7 +15,7 @@ type Dict = Record<string, string>;
 const en: Dict = {
   // App brand & Nav
   "app.name": "SmritiMitra",
-  "app.tagline": "A friend that helps preserve memories.",
+  "app.tagline": " Bringing Joy to the Golden Years..",
   "app.badge": "AI",
   "nav.demo": "Live Demo",
   "nav.states": "NE States",
@@ -276,7 +276,7 @@ const en: Dict = {
 const hi: Dict = {
   // App brand & Nav
   "app.name": "SmritiMitra",
-  "app.tagline": "A friend that helps preserve memories.",
+  "app.tagline": " Bringing Joy to the Golden Years..",
   "app.badge": "एआई",
   "nav.demo": "लाइव डेमो",
   "nav.features": "केयर सुइट",
@@ -538,7 +538,7 @@ const hi: Dict = {
 const as: Dict = {
   // App brand & Nav
   "app.name": "SmritiMitra",
-  "app.tagline": "A friend that helps preserve memories.",
+  "app.tagline": " Bringing Joy to the Golden Years..",
   "app.badge": "AI",
   "nav.demo": "লাইভ ডেমো",
   "nav.features": "কেয়াৰ চুইট",
