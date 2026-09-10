@@ -90,8 +90,8 @@ export function SiteHeader({
           }}
           className="flex items-center gap-2 sm:gap-3 text-left group shrink-0"
         >
-          <div className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center overflow-hidden rounded-xl bg-primary text-primary-foreground shadow-soft transition-transform group-hover:scale-105">
-            <img src="/logo.png" alt="" className="h-full w-full object-cover" />
+          <div className="flex h-9 w-9 sm:h-10 sm:w-10 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-primary text-primary-foreground shadow-soft transition-transform group-hover:scale-105">
+            <img src="/logo.png" alt="" className="h-full w-full object-contain p-0.5" />
           </div>
           <div>
             <div className="flex items-center gap-1 sm:gap-1.5">
@@ -417,8 +417,8 @@ export function SiteFooter({ onStart }: { onStart?: () => void }) {
         <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-8 sm:flex-row sm:items-center sm:justify-between sm:px-6">
           {/* Brand */}
           <div className="flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-xl bg-primary text-primary-foreground shadow-soft shrink-0">
-              <img src="/logo.png" alt="" className="h-full w-full object-cover" />
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-primary text-primary-foreground shadow-soft">
+              <img src="/logo.png" alt="" className="h-full w-full object-contain p-0.5" />
             </div>
             <div>
               <p className="font-display text-base font-bold text-foreground leading-tight">{t("app.name")}</p>

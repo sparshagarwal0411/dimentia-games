@@ -46,8 +46,8 @@ export function LoadingScreen({ onLoaded }: { onLoaded?: () => void }) {
         {/* Animated Brand Logo */}
         <div className="relative mb-6">
           <div className="absolute -inset-2 rounded-3xl bg-emerald-500/20 blur-xl animate-pulse" />
-          <div className="relative flex h-20 w-20 items-center justify-center overflow-hidden rounded-3xl border border-emerald-500/30 bg-slate-900 text-emerald-400 shadow-2xl">
-            <img src="/logo.png" alt="SmritiMitra logo" className="h-full w-full object-cover animate-bounce transition-transform duration-700" />
+          <div className="relative flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-3xl border border-emerald-500/30 bg-slate-900 text-emerald-400 shadow-2xl">
+            <img src="/logo.png" alt="SmritiMitra logo" className="h-full w-full object-contain p-1 animate-bounce transition-transform duration-700" />
           </div>
         </div>
 

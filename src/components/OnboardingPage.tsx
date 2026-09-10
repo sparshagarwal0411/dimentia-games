@@ -86,7 +86,9 @@ export function OnboardingPage({
 
         <div className="mt-4">
           <div className="mb-4 flex items-center gap-3">
-            <img src="/logo.png" alt="SmritiMitra logo" className="h-14 w-14 rounded-2xl object-cover shadow-soft" />
+            <div className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-primary text-primary-foreground shadow-soft">
+              <img src="/logo.png" alt="SmritiMitra logo" className="h-full w-full object-contain p-1" />
+            </div>
             <div>
               <p className="font-display text-lg font-bold text-foreground">SmritiMitra</p>
               <p className="text-xs text-muted-foreground">A friend that helps preserve memories.</p>

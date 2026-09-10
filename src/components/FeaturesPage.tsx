@@ -90,7 +90,9 @@ export function FeaturesPage() {
           <div className="relative mx-auto max-w-6xl px-4 sm:px-6">
             <div className="max-w-4xl">
               <div className="mb-8 flex items-center gap-3">
-                <img src="/logo.png" alt="SmritiMitra logo" className="h-16 w-16 rounded-2xl object-cover shadow-soft" />
+                <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-primary text-primary-foreground shadow-soft">
+                  <img src="/logo.png" alt="SmritiMitra logo" className="h-full w-full object-contain p-1" />
+                </div>
                 <div>
                   <p className="font-display text-xl font-bold text-foreground">SmritiMitra</p>
                   <p className="text-xs text-muted-foreground">A friend that helps preserve memories.</p>
