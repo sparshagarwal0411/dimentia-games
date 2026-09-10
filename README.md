@@ -2,6 +2,8 @@
 
 This repository contains **SmritiMitra**, a browser-based cognitive screening and memory-support platform designed for families and community clinics across North East India.
 
+Deployment-> https://dimentia-games.vercel.app/
+
 ## 1. Project Information
 
 * **Project Title:** `SmritiMitra`
