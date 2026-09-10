@@ -1,25 +1,13 @@
 import { useState } from "react";
-import { ArrowLeft, ArrowRight, ShieldCheck, Camera, Plus, Trash2, Users, UserPlus, Heart } from "lucide-react";
+import { ArrowLeft, ArrowRight, ShieldCheck, Camera } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useApp, type PatientRole, type FamilyMember } from "@/lib/app-state";
+import { useApp, type PatientRole } from "@/lib/app-state";
 import { useI18n } from "@/lib/i18n";
 import { NE_DISTRICTS } from "@/lib/regions";
 import { SiteHeader, SiteFooter } from "@/components/layout/SiteChrome";
 
 const fieldClass =
   "w-full rounded-xl border border-input bg-background px-3 py-3 text-sm text-foreground outline-none ring-offset-background transition-all focus:ring-2 focus:ring-ring";
-
-const RELATION_PRESETS = [
-  "Daughter",
-  "Son",
-  "Spouse",
-  "Primary Caregiver",
-  "Grandchild",
-  "Sister",
-  "Brother",
-  "Friend / Relative",
-  "Other",
-] as const;
 
 export function OnboardingPage({
   onBack,
@@ -42,17 +30,7 @@ export function OnboardingPage({
   const [caregiverPhone, setCaregiverPhone] = useState("");
   const [clinicalNotes, setClinicalNotes] = useState("");
   const [patientPhoto, setPatientPhoto] = useState("");
-
-  // Multiple Family Members state
-  const [familyMembers, setFamilyMembers] = useState<FamilyMember[]>([]);
-
-  // Draft form for adding family member
-  const [famName, setFamName] = useState("");
-  const [famRelation, setFamRelation] = useState<string>("Daughter");
-  const [famCustomRelation, setFamCustomRelation] = useState("");
-  const [famPhoto, setFamPhoto] = useState("");
-  const [famPhone, setFamPhone] = useState("");
-
+  const [caregiverPhoto, setCaregiverPhoto] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -67,81 +45,18 @@ export function OnboardingPage({
     reader.readAsDataURL(file);
   };
 
-  const handleAddFamilyMember = () => {
-    if (!famPhoto) {
-      setError("Please select/upload a photo for the family member.");
-      return;
-    }
-    const actualRelation = famRelation === "Other" ? (famCustomRelation.trim() || "Family Member") : famRelation;
-    const memberName = famName.trim() || actualRelation;
-
-    const newMember: FamilyMember = {
-      id: `fam_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`,
-      name: memberName,
-      relation: actualRelation,
-      photo: famPhoto,
-      phone: famPhone.trim() || undefined,
-    };
-
-    setFamilyMembers((prev) => [...prev, newMember]);
-    // Set caregiver name/phone if empty
-    if (!caregiverName && memberName) setCaregiverName(memberName);
-    if (!caregiverPhone && famPhone) setCaregiverPhone(famPhone);
-
-    // Reset draft form
-    setFamName("");
-    setFamRelation("Daughter");
-    setFamCustomRelation("");
-    setFamPhoto("");
-    setFamPhone("");
-    setError(null);
-  };
-
-  const handleRemoveFamilyMember = (id: string) => {
-    setFamilyMembers((prev) => prev.filter((m) => m.id !== id));
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim()) {
       setError("Please enter the person’s full name.");
       return;
     }
-
-    let finalFamilyMembers = [...familyMembers];
-
-    // If draft photo is pending, auto-add it
-    if (famPhoto) {
-      const actualRelation = famRelation === "Other" ? (famCustomRelation.trim() || "Family Member") : famRelation;
-      const memberName = famName.trim() || actualRelation;
-      const autoMember: FamilyMember = {
-        id: `fam_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`,
-        name: memberName,
-        relation: actualRelation,
-        photo: famPhoto,
-        phone: famPhone.trim() || undefined,
-      };
-      finalFamilyMembers.push(autoMember);
-    }
-
-    if (!patientPhoto) {
-      setError("Please upload a photo of the patient.");
+    if (!patientPhoto || !caregiverPhoto) {
+      setError("Please add both the patient photo and a family member or caregiver photo.");
       return;
     }
-
-    if (finalFamilyMembers.length === 0) {
-      setError("Please add at least one family member photo along with their relation/name.");
-      return;
-    }
-
     setError(null);
     setIsSubmitting(true);
-
-    const primaryCaregiver = finalFamilyMembers[0];
-    const caregiverPhotoUrl = primaryCaregiver?.photo || "";
-    const caregiverFullName = caregiverName.trim() || primaryCaregiver?.name || "";
-    const caregiverPhoneNum = caregiverPhone.trim() || primaryCaregiver?.phone || "";
-
     try {
       await registerPatient({
         name: name.trim(),
@@ -151,15 +66,14 @@ export function OnboardingPage({
         language: lang,
         region,
         district,
-        caregiver_name: caregiverFullName || undefined,
-        caregiver_phone: caregiverPhoneNum || undefined,
+        caregiver_name: caregiverName.trim() || undefined,
+        caregiver_phone: caregiverPhone.trim() || undefined,
         patient_photo: patientPhoto,
-        caregiver_photo: caregiverPhotoUrl,
-        family_members: finalFamilyMembers,
+        caregiver_photo: caregiverPhoto,
         clinical_notes: clinicalNotes.trim() || undefined,
         role,
         elder_mode: true,
- base_difficulty: 2,
+        base_difficulty: 2,
       });
       onComplete();
     } catch (err) {
@@ -346,198 +260,57 @@ export function OnboardingPage({
                 ))}
               </select>
             </label>
-          </div>
-
-          {/* Patient Photo Section */}
-          <div className="rounded-2xl border border-border/80 bg-muted/30 p-4 sm:p-5">
-            <h3 className="text-xs sm:text-sm font-bold text-foreground flex items-center gap-2">
-              <Camera className="h-4 w-4 text-primary" /> Patient Photo *
-            </h3>
-            <p className="mt-1 text-xs text-muted-foreground">
-              Upload a clear face photo of the patient for identification and cognitive recognition games.
-            </p>
-            <label className="mt-3 flex cursor-pointer items-center gap-4 rounded-xl border border-dashed border-primary/40 bg-primary/5 p-4 transition-colors hover:bg-primary/10">
-              {patientPhoto ? (
-                <img src={patientPhoto} alt="Patient preview" className="h-20 w-20 rounded-2xl object-cover ring-2 ring-primary/30" />
-              ) : (
-                <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-card border border-border text-muted-foreground">
-                  <Camera className="h-7 w-7 text-primary" />
-                </div>
-              )}
-              <div>
-                <p className="text-xs sm:text-sm font-bold text-foreground">
-                  {patientPhoto ? "Change Patient Photo" : "Upload Patient Photo"}
-                </p>
-                <p className="text-[11px] text-muted-foreground mt-0.5">Click to choose image file (JPG, PNG)</p>
-              </div>
+            <label className="block text-xs sm:text-sm font-medium text-foreground">
+              {t("onboarding.caregiverName")}
               <input
-                type="file"
-                accept="image/*"
-                onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  if (file) readPhoto(file, setPatientPhoto);
-                }}
-                className="sr-only"
+                value={caregiverName}
+                onChange={(e) => setCaregiverName(e.target.value)}
+                className={`${fieldClass} mt-1.5`}
+              />
+            </label>
+            <label className="block text-xs sm:text-sm font-medium text-foreground">
+              {t("onboarding.caregiverPhone")}
+              <input
+                type="tel"
+                value={caregiverPhone}
+                onChange={(e) => setCaregiverPhone(e.target.value)}
+                placeholder="+91 98000 00000"
+                className={`${fieldClass} mt-1.5`}
               />
             </label>
           </div>
 
-          {/* Multiple Family Members Section */}
-          <div className="rounded-2xl border border-primary/20 bg-gradient-to-b from-primary/5 via-card to-card p-4 sm:p-6 space-y-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                  <Users className="h-4 w-4 text-primary" /> Family Members & Caregivers *
-                </h3>
-                <p className="text-xs text-muted-foreground mt-0.5">
-                  Upload photos and relationships of family members (e.g. Son, Daughter, Spouse, Caregiver). You can add multiple family members.
-                </p>
-              </div>
-              {familyMembers.length > 0 && (
-                <span className="rounded-full bg-primary/15 px-2.5 py-0.5 text-xs font-bold text-primary">
-                  {familyMembers.length} Added
+          <div className="grid gap-4 sm:grid-cols-2">
+            {[
+              { label: "Patient photo", value: patientPhoto, setPhoto: setPatientPhoto },
+              { label: "Family member / caregiver photo", value: caregiverPhoto, setPhoto: setCaregiverPhoto },
+            ].map((photo) => (
+              <label key={photo.label} className="cursor-pointer rounded-2xl border border-dashed border-primary/40 bg-primary/5 p-4 transition-colors hover:bg-primary/10">
+                <span className="flex items-center gap-2 text-xs font-bold text-foreground">
+                  <Camera className="h-4 w-4 text-primary" /> {photo.label} *
                 </span>
-              )}
-            </div>
-
-            {/* List of added family members */}
-            {familyMembers.length > 0 && (
-              <div className="grid gap-3 sm:grid-cols-2 pt-2">
-                {familyMembers.map((member) => (
-                  <div
-                    key={member.id}
-                    className="relative flex items-center gap-3 rounded-2xl border border-border bg-card p-3 shadow-xs hover:border-primary/40 transition-colors"
-                  >
-                    <img
-                      src={member.photo}
-                      alt={member.name}
-                      className="h-14 w-14 rounded-xl object-cover ring-2 ring-primary/20 shrink-0"
-                    />
-                    <div className="min-w-0 flex-1">
-                      <p className="text-xs font-bold text-foreground truncate">{member.name}</p>
-                      <span className="inline-block mt-0.5 rounded-md bg-secondary px-2 py-0.5 text-[10px] font-semibold text-secondary-foreground">
-                        {member.relation}
-                      </span>
-                      {member.phone && (
-                        <p className="text-[10px] text-muted-foreground mt-0.5">{member.phone}</p>
-                      )}
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => handleRemoveFamilyMember(member.id)}
-                      className="p-1.5 text-muted-foreground hover:text-destructive transition-colors rounded-lg hover:bg-destructive/10"
-                      title="Remove family member"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </button>
-                  </div>
-                ))}
-              </div>
-            )}
-
-            {/* Form to add a new family member */}
-            <div className="mt-3 rounded-2xl border border-dashed border-border bg-card p-4 space-y-4">
-              <p className="text-xs font-bold uppercase tracking-wider text-primary flex items-center gap-1.5">
-                <UserPlus className="h-3.5 w-3.5" /> Add Family Member Details
-              </p>
-
-              <div className="grid gap-3 sm:grid-cols-2">
-                <label className="cursor-pointer rounded-xl border border-dashed border-primary/40 bg-primary/5 p-3 flex items-center gap-3 hover:bg-primary/10 transition-colors">
-                  {famPhoto ? (
-                    <img src={famPhoto} alt="Family member preview" className="h-14 w-14 rounded-xl object-cover shrink-0 ring-2 ring-primary/30" />
+                <span className="mt-3 flex items-center gap-3">
+                  {photo.value ? (
+                    <img src={photo.value} alt="Selected preview" className="h-16 w-16 rounded-xl object-cover" />
                   ) : (
-                    <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-card border border-border text-muted-foreground shrink-0">
-                      <Camera className="h-5 w-5 text-primary" />
-                    </div>
+                    <span className="flex h-16 w-16 items-center justify-center rounded-xl bg-card text-muted-foreground">
+                      <Camera className="h-5 w-5" />
+                    </span>
                   )}
-                  <div>
-                    <p className="text-xs font-bold text-foreground">
-                      {famPhoto ? "Change Photo" : "Upload Photo *"}
-                    </p>
-                    <p className="text-[10px] text-muted-foreground">Family member face image</p>
-                  </div>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => {
-                      const file = e.target.files?.[0];
-                      if (file) readPhoto(file, setFamPhoto);
-                    }}
-                    className="sr-only"
-                  />
-                </label>
-
-                <div>
-                  <label className="block text-xs font-medium text-foreground mb-1">
-                    Relationship to Patient *
-                  </label>
-                  <select
-                    value={famRelation}
-                    onChange={(e) => setFamRelation(e.target.value)}
-                    className={fieldClass}
-                  >
-                    {RELATION_PRESETS.map((rel) => (
-                      <option key={rel} value={rel}>{rel}</option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-
-              {famRelation === "Other" && (
-                <div>
-                  <label className="block text-xs font-medium text-foreground mb-1">
-                    Specify Custom Relationship
-                  </label>
-                  <input
-                    type="text"
-                    value={famCustomRelation}
-                    onChange={(e) => setFamCustomRelation(e.target.value)}
-                    placeholder="e.g. Uncle, Neighbor, Guardian..."
-                    className={fieldClass}
-                  />
-                </div>
-              )}
-
-              <div className="grid gap-3 sm:grid-cols-2">
-                <div>
-                  <label className="block text-xs font-medium text-foreground mb-1">
-                    Full Name (Optional)
-                  </label>
-                  <input
-                    type="text"
-                    value={famName}
-                    onChange={(e) => setFamName(e.target.value)}
-                    placeholder="e.g., Priyam Sharma"
-                    className={fieldClass}
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-medium text-foreground mb-1">
-                    Phone Number (Optional)
-                  </label>
-                  <input
-                    type="tel"
-                    value={famPhone}
-                    onChange={(e) => setFamPhone(e.target.value)}
-                    placeholder="+91 94350 00000"
-                    className={fieldClass}
-                  />
-                </div>
-              </div>
-
-              <div className="flex justify-end pt-1">
-                <Button
-                  type="button"
-                  onClick={handleAddFamilyMember}
-                  variant="outline"
-                  className="rounded-full text-xs font-bold border-primary/40 text-primary hover:bg-primary hover:text-white transition-all gap-1.5"
-                >
-                  <Plus className="h-3.5 w-3.5" />
-                  Add This Family Member
-                </Button>
-              </div>
-            </div>
+                  <span className="text-xs text-muted-foreground">Choose a clear face photo</span>
+                </span>
+                <input
+                  type="file"
+                  accept="image/*"
+                  required={!photo.value}
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) readPhoto(file, photo.setPhoto);
+                  }}
+                  className="sr-only"
+                />
+              </label>
+            ))}
           </div>
 
           <label className="block text-xs sm:text-sm font-medium text-foreground">
@@ -574,5 +347,4 @@ export function OnboardingPage({
     </div>
   );
 }
-
 

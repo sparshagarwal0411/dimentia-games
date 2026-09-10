@@ -10,15 +10,6 @@ import { soundEffects } from "@/lib/audio-effects";
 
 export type PatientRole = "self" | "caregiver";
 
-export type FamilyMember = {
-  id: string;
-  name: string;
-  relation: string;
-  photo: string;
-  phone?: string;
-  notes?: string;
-};
-
 export type Patient = {
   id: string;
   caregiver_id?: string;
@@ -34,7 +25,6 @@ export type Patient = {
   clinical_notes?: string;
   patient_photo?: string;
   caregiver_photo?: string;
-  family_members?: FamilyMember[];
   role: PatientRole;
   last_screening?: ScreeningResult;
   elder_mode: boolean;
@@ -204,7 +194,6 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
           clinical_notes: item.clinical_notes || "",
           patient_photo: item.patient_photo || "",
           caregiver_photo: item.caregiver_photo || "",
-          family_members: Array.isArray(item.family_members) ? item.family_members : [],
           role: item.role === "caregiver" ? "caregiver" : "self",
           last_screening: item.last_screening || undefined,
           elder_mode: item.elder_mode ?? true,
@@ -256,7 +245,6 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
             clinical_notes: data.clinical_notes ?? "",
             patient_photo: data.patient_photo ?? "",
             caregiver_photo: data.caregiver_photo ?? "",
-            family_members: (data.family_members as any) ?? [],
             role: data.role,
             elder_mode: data.elder_mode,
             base_difficulty: data.base_difficulty,
@@ -319,7 +307,7 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
         "name", "age", "sex", "phone", "language", "region", "district",
         "caregiver_name", "caregiver_phone", "clinical_notes", "role",
         "elder_mode", "base_difficulty", "last_screening",
-        "patient_photo", "caregiver_photo", "family_members",
+        "patient_photo", "caregiver_photo",
       ];
       for (const key of allowed) {
         if (key in updates) supabaseUpdates[key] = (updates as any)[key];

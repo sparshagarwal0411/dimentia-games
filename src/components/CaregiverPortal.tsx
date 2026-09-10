@@ -249,27 +249,8 @@ export function CaregiverPortal({ onOpenRegister }: { onOpenRegister?: () => voi
                   )}
                 >
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      {p.patient_photo ? (
-                        <img src={p.patient_photo} alt={p.name} className="h-10 w-10 rounded-xl object-cover ring-2 ring-emerald-500/40" />
-                      ) : (
-                        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-800 border border-slate-700 text-emerald-400 font-bold">
-                          <User className="h-5 w-5" />
-                        </div>
-                      )}
-                      {p.family_members && p.family_members.length > 0 && (
-                        <div className="flex -space-x-2 overflow-hidden">
-                          {p.family_members.slice(0, 3).map((fm, idx) => (
-                            <img
-                              key={fm.id || idx}
-                              src={fm.photo}
-                              alt={fm.name}
-                              className="inline-block h-7 w-7 rounded-full ring-2 ring-slate-900 object-cover"
-                              title={`${fm.name} (${fm.relation})`}
-                            />
-                          ))}
-                        </div>
-                      )}
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-800 border border-slate-700 text-emerald-400 font-bold">
+                      <User className="h-5 w-5" />
                     </div>
                     <span className="rounded-full bg-emerald-500/10 border border-emerald-500/30 px-2.5 py-0.5 text-[10px] font-bold text-emerald-400">
                       Active Telemetry
@@ -279,58 +260,17 @@ export function CaregiverPortal({ onOpenRegister }: { onOpenRegister?: () => voi
                   <p className="text-xs text-slate-400">
                     {p.age} yrs · {p.sex} · {p.district}, {p.region}
                   </p>
-                  {p.family_members && p.family_members.length > 0 ? (
-                    <p className="text-[11px] text-emerald-400 mt-1.5 font-medium">
-                      👨‍👩‍👧‍👦 {p.family_members.length} Family Member{p.family_members.length > 1 ? "s" : ""} Linked
-                    </p>
-                  ) : p.caregiver_phone ? (
+                  {p.caregiver_phone && (
                     <p className="text-[11px] text-slate-500 mt-1 font-mono">
                       Kin: {p.caregiver_phone}
                     </p>
-                  ) : null}
+                  )}
                 </button>
               );
             })}
           </div>
         )}
       </div>
-
-      {/* Active Patient Family Circle Showcase */}
-      {activePatient && activePatient.family_members && activePatient.family_members.length > 0 && (
-        <div className="rounded-3xl border border-emerald-500/30 bg-slate-900 p-6 shadow-2xl space-y-4">
-          <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-            <div className="flex items-center gap-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-400">
-                <Users className="h-5 w-5" />
-              </div>
-              <div>
-                <h2 className="text-lg font-bold text-white">{activePatient.name}’s Family Circle</h2>
-                <p className="text-xs text-slate-400">Linked family members for recognition exercises & emergency care</p>
-              </div>
-            </div>
-            <span className="rounded-full bg-emerald-500/20 border border-emerald-500/40 px-3 py-1 text-xs font-bold text-emerald-300">
-              {activePatient.family_members.length} Members
-            </span>
-          </div>
-
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {activePatient.family_members.map((fm) => (
-              <div key={fm.id} className="flex items-center gap-3 rounded-2xl border border-slate-800 bg-slate-950 p-3.5 shadow-md hover:border-emerald-500/40 transition-colors">
-                <img src={fm.photo} alt={fm.name} className="h-14 w-14 rounded-xl object-cover ring-2 ring-emerald-500/30 shrink-0" />
-                <div className="min-w-0 flex-1">
-                  <p className="text-sm font-bold text-white truncate">{fm.name}</p>
-                  <span className="inline-block mt-0.5 rounded-md bg-emerald-500/15 px-2 py-0.5 text-[10px] font-semibold text-emerald-400 border border-emerald-500/30">
-                    {fm.relation}
-                  </span>
-                  {fm.phone && (
-                    <p className="text-[11px] text-slate-400 mt-1 font-mono truncate">{fm.phone}</p>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
 
       {/* Alerts & Notes Grid */}
       <div className="grid gap-8 lg:grid-cols-3">
