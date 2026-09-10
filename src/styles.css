@@ -553,16 +553,31 @@
   gap: 2.5rem;
   width: max-content;
   align-items: center;
-  animation: governmentScroll 34s linear infinite;
+  animation: governmentScroll 24s linear infinite;
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+.government-marquee-track:hover,
+.government-marquee-track.is-paused {
+  animation-play-state: paused !important;
 }
 
 .government-shoutout {
   display: flex;
-  min-width: 340px;
+  min-width: 320px;
   align-items: center;
   justify-content: center;
   gap: 1.25rem;
-  padding-inline: 1.25rem;
+  padding: 0.75rem 1.25rem;
+  border-radius: 1rem;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.government-shoutout:hover {
+  background: color-mix(in oklch, var(--gov-text) 6%, transparent);
+  transform: translateY(-2px) scale(1.02);
 }
 
 .government-shoutout img {
@@ -648,14 +663,8 @@
 }
 
 @keyframes governmentScroll {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .government-marquee-track {
-    animation: none;
-  }
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
 }
 
 .glass-card {

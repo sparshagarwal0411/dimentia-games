@@ -12,6 +12,7 @@ import {
   HeartHandshake,
   Mic,
   Palette,
+  Pause,
   Play,
   RotateCcw,
   ShieldCheck,
@@ -225,6 +226,7 @@ export function LandingPage({
 
   // Carousel State
   const [reviewIndex, setReviewIndex] = useState(0);
+  const [isMarqueePaused, setIsMarqueePaused] = useState(false);
 
   // Regional State Selector
   const [selectedState, setSelectedState] = useState(0);
@@ -719,16 +721,47 @@ export function LandingPage({
       </section>
 
       {/* Public health partners and initiatives */}
-      <section className="government-marquee border-y border-border/70 py-12 sm:py-14">
+      <section className="government-marquee relative border-y border-border/70 py-12 sm:py-14">
         <div className="mx-auto max-w-7xl px-4 sm:px-6">
-          <div className="government-heading text-center">
-            <p className="text-xl font-semibold tracking-tight sm:text-2xl">Proudly Supported By</p>
+          <div className="government-heading flex flex-col items-center justify-center text-center">
+            <div className="flex items-center gap-3">
+              <span className="inline-block h-2.5 w-2.5 rounded-full bg-emerald-500 animate-pulse" />
+              <p className="text-xl font-bold tracking-tight sm:text-2xl">Proudly Supported By</p>
+              <button
+                type="button"
+                onClick={() => setIsMarqueePaused(!isMarqueePaused)}
+                className="ml-2 inline-flex items-center gap-1 rounded-full border border-border/60 bg-background/60 px-2.5 py-1 text-[11px] font-semibold text-muted-foreground transition-all hover:bg-background hover:text-foreground shadow-xs"
+                title={isMarqueePaused ? "Resume Auto-scroll" : "Pause Auto-scroll"}
+              >
+                {isMarqueePaused ? (
+                  <>
+                    <Play className="h-3 w-3 fill-current text-emerald-500" />
+                    <span>Play</span>
+                  </>
+                ) : (
+                  <>
+                    <Pause className="h-3 w-3 fill-current text-amber-500" />
+                    <span>Pause</span>
+                  </>
+                )}
+              </button>
+            </div>
             <span className="mx-auto mt-2 block h-0.5 w-56 bg-gradient-to-r from-primary via-cyan-400 to-blue-500" />
           </div>
-          <div className="mt-10 overflow-hidden" aria-label="Government ministries and public health initiatives">
-            <div className="government-marquee-track">
-              {[...GOVERNMENT_SHOUTOUTS, ...GOVERNMENT_SHOUTOUTS].map((item, index) => (
-                <div key={`${item.institution}-${index}`} className="government-shoutout">
+
+          <div className="relative mt-10 overflow-hidden" aria-label="Government ministries and public health initiatives">
+            {/* Gradient Edge Masks for soft fade entrance and exit */}
+            <div className="pointer-events-none absolute left-0 top-0 bottom-0 z-10 w-16 sm:w-32 bg-gradient-to-r from-[var(--gov-bg)] to-transparent" />
+            <div className="pointer-events-none absolute right-0 top-0 bottom-0 z-10 w-16 sm:w-32 bg-gradient-to-l from-[var(--gov-bg)] to-transparent" />
+
+            <div className={`government-marquee-track ${isMarqueePaused ? "is-paused" : ""}`}>
+              {[
+                ...GOVERNMENT_SHOUTOUTS,
+                ...GOVERNMENT_SHOUTOUTS,
+                ...GOVERNMENT_SHOUTOUTS,
+                ...GOVERNMENT_SHOUTOUTS,
+              ].map((item, index) => (
+                <div key={`${item.institution}-${index}`} className="government-shoutout group">
                   <img src={item.image} alt={`${item.institution} emblem`} />
                   <div>
                     <strong>{item.wordmark}</strong>
@@ -738,7 +771,8 @@ export function LandingPage({
               ))}
             </div>
           </div>
-          <p className="government-marquee-note mt-8 text-center text-[10px]">
+
+          <p className="government-marquee-note mt-8 text-center text-[11px] font-medium opacity-80">
             SmritiMitra is an independent project inspired by public digital-health and community-care goals.
           </p>
         </div>
