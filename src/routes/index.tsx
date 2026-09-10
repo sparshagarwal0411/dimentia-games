@@ -1,9 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
-import { Accessibility, Brain, LogOut, Phone, Play, Stethoscope, User } from "lucide-react";
+import { Brain, Phone, Play, Stethoscope, Bell, X } from "lucide-react";
 
 import { useApp } from "@/lib/app-state";
-import { useI18n, LANGUAGES } from "@/lib/i18n";
 import { persistAssessment, type ScreeningResult } from "@/lib/screening";
 import { AssessmentPage } from "@/components/AssessmentPage";
 import { AuthGate } from "@/components/AuthGate";
@@ -74,15 +73,28 @@ function Index() {
     }
   }, [session, pendingStage]);
 
+  const [isGuest, setIsGuest] = useState(() => {
+    return typeof window !== "undefined" && window.localStorage.getItem("neurotrack.guest_mode") === "true";
+  });
+
   const setJourney = (next: Stage) => {
-    // Require auth before proceeding past landing
-    if (!session && next !== "landing" && next !== "auth") {
+    // If not authenticated and not in guest mode, ask for auth
+    if (!session && !isGuest && next !== "landing" && next !== "auth") {
       setPendingStage(next);
       setStage("auth");
       return;
     }
     setStage(next);
     window.localStorage.setItem(STAGE_KEY, next);
+  };
+
+  const handleContinueAsGuest = () => {
+    setIsGuest(true);
+    window.localStorage.setItem("neurotrack.guest_mode", "true");
+    const target = pendingStage || "dashboard";
+    setStage(target);
+    window.localStorage.setItem(STAGE_KEY, target);
+    setPendingStage(null);
   };
 
   if (authLoading || patientsLoading || !ready) {
@@ -93,6 +105,7 @@ function Index() {
     return (
       <AuthGate
         onCancel={() => setStage("landing")}
+        onContinueAsGuest={handleContinueAsGuest}
       />
     );
   }
@@ -168,10 +181,10 @@ function Platform({
   );
 
   const navItems = [
-    { id: "home" as const, label: "Home", icon: Brain, badge: null },
-    { id: "games" as const, label: "Games", icon: Play, badge: "9" },
-    { id: "doctors" as const, label: "Doctors", icon: Phone, badge: "24/7" },
-    { id: "family" as const, label: "Family", icon: Stethoscope, badge: "Live" },
+    { id: "home" as const, label: "Dashboard", icon: Brain },
+    { id: "games" as const, label: "Games", icon: Play },
+    { id: "doctors" as const, label: "Doctors", icon: Stethoscope },
+    { id: "family" as const, label: "Family", icon: Phone },
   ];
 
   return (
@@ -180,7 +193,7 @@ function Platform({
       onHome={onHome}
       navigation={(
         <nav
-          className="flex items-center gap-1 rounded-full border border-border/80 bg-muted/60 p-1 shadow-sm backdrop-blur-md"
+          className="mx-auto flex w-fit max-w-full items-center gap-0.5 rounded-full bg-muted/70 p-0.5"
           aria-label="Dashboard sections"
         >
           {navItems.map((item) => {
@@ -195,25 +208,14 @@ function Platform({
                   setTab(item.id);
                   setSelectedGame(null);
                 }}
-                className={`relative flex shrink-0 items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs sm:text-sm font-semibold transition-all duration-200 ${
-                  active
-                    ? "bg-card text-foreground shadow-sm scale-100 ring-1 ring-primary/20 font-bold"
-                    : "text-muted-foreground hover:text-foreground hover:bg-background/50"
-                }`}
+                className={`flex items-center justify-center gap-1.5 rounded-full px-2.5 py-1.5 text-xs font-semibold transition-colors sm:px-3 ${active
+                  ? "bg-card text-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground"
+                  }`}
+                aria-current={active ? "page" : undefined}
               >
-                <Icon className={`h-4 w-4 transition-colors ${active ? "text-primary" : "text-muted-foreground"}`} />
-                <span>{item.label}</span>
-                {item.badge && (
-                  <span
-                    className={`ml-0.5 rounded-full px-1.5 py-0.2 text-[9px] sm:text-[10px] font-bold ${
-                      active
-                        ? "bg-primary/15 text-primary"
-                        : "bg-muted-foreground/15 text-muted-foreground"
-                    }`}
-                  >
-                    {item.badge}
-                  </span>
-                )}
+                <Icon className={`h-4 w-4 shrink-0 ${active ? "text-primary" : ""}`} />
+                <span className="sr-only sm:not-sr-only sm:inline">{item.label}</span>
               </button>
             );
           })}
@@ -266,98 +268,48 @@ function AppShell({
   patientName?: string | undefined;
   navigation?: ReactNode;
 }) {
-  const { session, signOut, openA11yPanel } = useApp();
-  const { lang, setLang, t } = useI18n();
-  const userName = session?.user?.user_metadata?.["full_name"] || session?.user?.email || "";
-  const initials = userName
-    ? userName
-        .split(" ")
-        .slice(0, 2)
-        .map((w: string) => w[0])
-        .join("")
-        .toUpperCase()
-    : "";
+  const [familyReminderOpen, setFamilyReminderOpen] = useState(false);
+
+  useEffect(() => {
+    const today = new Date().toISOString().slice(0, 10);
+    const reminderKey = "neurotrack.familyReminderDate";
+    if (window.localStorage.getItem(reminderKey) === today) return;
+
+    window.localStorage.setItem(reminderKey, today);
+    setFamilyReminderOpen(true);
+    if ("Notification" in window && Notification.permission === "granted") {
+      new Notification("Family check-in reminder", {
+        body: "Take a moment to connect with your family member or caregiver today.",
+      });
+    }
+  }, []);
 
   return (
-    <div className="flex min-h-screen flex-col bg-background text-foreground transition-colors duration-300">
+    <div className="flex min-h-screen flex-col overflow-x-clip bg-background text-foreground transition-colors duration-300">
       <OfflineBanner />
-      <SiteHeader simple onLogoClick={onHome} subtitle={patientName || undefined} navigation={navigation} />
-      <header className="hidden">
-        <div className="mx-auto flex max-w-6xl items-center justify-between gap-2 px-3 py-2.5 sm:gap-4 sm:px-6 sm:py-3">
-          <button type="button" onClick={onHome} className="flex items-center gap-2 sm:gap-3 text-left">
-            <div className="flex h-9 w-9 sm:h-10 sm:w-10 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-primary text-primary-foreground shadow-soft">
-              <img src="/logo.png" alt="" className="h-full w-full object-contain p-0.5" />
-            </div>
-            <div>
-              <p className="font-display text-base sm:text-lg font-bold leading-none">{t("app.name")}</p>
-              <p className="mt-0.5 text-[10px] sm:text-[11px] text-muted-foreground">{patientName || t("nav.dashboard")}</p>
-            </div>
-          </button>
-
-          <div className="flex items-center gap-1.5 sm:gap-2">
-            {/* Quick Language Toggle */}
-            <div className="flex items-center rounded-full border border-border/80 bg-muted/50 p-0.5">
-              {LANGUAGES.map((item) => (
-                <button
-                  key={item.code}
-                  type="button"
-                  onClick={() => {
-                    soundEffects.playClick();
-                    setLang(item.code);
-                  }}
-                  className={`rounded-full px-2 py-1 text-[11px] sm:text-xs font-bold transition-all ${
-                    lang === item.code
-                      ? "bg-card text-foreground shadow-sm scale-100"
-                      : "text-muted-foreground hover:text-foreground hover:bg-background/40"
-                  }`}
-                  title={item.native}
-                >
-                  {item.code.toUpperCase()}
-                </button>
-              ))}
-            </div>
-
-            {/* Accessibility Toggle */}
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={() => {
-                soundEffects.playClick();
-                openA11yPanel();
-              }}
-              className="flex items-center gap-1 rounded-full border-border/80 px-2 sm:px-3 h-8 sm:h-9 text-xs font-semibold text-foreground hover:bg-muted"
-              title={t("a11y.title")}
-            >
-              <Accessibility className="h-4 w-4 text-primary shrink-0" />
-            </Button>
-
-            {session && (
-              <>
-                {/* User avatar */}
-                <div
-                  className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-500/20 border border-emerald-500/30 text-xs font-bold text-emerald-600 dark:text-emerald-400"
-                  title={userName}
-                >
-                  {initials || <User className="h-4 w-4" />}
-                </div>
-                {/* Sign out */}
-                <button
-                  type="button"
-                  onClick={() => void signOut()}
-                  title={t("nav.signOut")}
-                  className="flex items-center gap-1.5 rounded-full border border-border/70 px-2.5 sm:px-3 py-1.5 text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
-                >
-                  <LogOut className="h-3.5 w-3.5" />
-                  <span className="hidden sm:inline">{t("nav.signOut")}</span>
-                </button>
-              </>
-            )}
+      <SiteHeader simple onLogoClick={onHome} subtitle={patientName || ""} navigation={navigation} />
+      {familyReminderOpen && (
+        <div className="fixed inset-x-3 top-[4.75rem] z-30 mx-auto flex max-w-md items-start gap-3 rounded-2xl border border-primary/20 bg-card p-4 shadow-lift sm:right-6 sm:left-auto sm:top-20">
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+            <Bell className="h-4 w-4" />
           </div>
+          <div className="min-w-0 flex-1">
+            <p className="text-sm font-bold text-foreground">Daily family check-in</p>
+            <p className="mt-0.5 text-xs leading-relaxed text-muted-foreground">
+              Take a moment to connect with your family member or caregiver today.
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={() => setFamilyReminderOpen(false)}
+            className="rounded-lg p-1 text-muted-foreground hover:bg-muted hover:text-foreground"
+            aria-label="Dismiss family reminder"
+          >
+            <X className="h-4 w-4" />
+          </button>
         </div>
-        {navigation}
-      </header>
-      <main className="flex-1 pb-12">{children}</main>
+      )}
+      <main className="flex-1 pb-24 sm:pb-12">{children}</main>
       <SiteFooter onStart={onHome} />
     </div>
   );

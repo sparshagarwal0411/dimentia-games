@@ -44,11 +44,14 @@ function savePlayerStats(patientId: string, stats: PlayerStats) {
   window.localStorage.setItem(`${STATS_KEY}.${patientId}`, JSON.stringify(stats));
 }
 
-export function recordGamePlay(patientId: string, gameId: string, score: number): PlayerStats {
+export function recordGamePlay(patientId: string, gameId: string, score: number, passed = true): PlayerStats {
   const stats = loadPlayerStats(patientId);
   const today = dayKey();
   const prev = stats.games[gameId];
-  const xpGain = Math.max(8, Math.round(score * 0.35));
+  // Passed: 35% of score as XP. Failed (lives ran out): only 10% for trying.
+  const xpGain = passed
+    ? Math.max(8, Math.round(score * 0.35))
+    : Math.max(0, Math.round(score * 0.10));
 
   let streak = stats.streak;
   if (stats.lastPlayDay !== today) {

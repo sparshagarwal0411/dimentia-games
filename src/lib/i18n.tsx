@@ -15,14 +15,13 @@ type Dict = Record<string, string>;
 const en: Dict = {
   // App brand & Nav
   "app.name": "SmritiMitra",
-  "app.tagline": "A friend that helps preserve memories.",
+  "app.tagline": " Bringing Joy to the Golden Years..",
   "app.badge": "AI",
   "nav.demo": "Live Demo",
-  "nav.features": "Care Suite",
-  "nav.states": "8 States",
-  "nav.privacy": "Privacy & AI",
-  "nav.stories": "Stories",
-  "nav.home": "Home",
+  "nav.states": "NE States",
+  "nav.privacy": "Privacy Policy",
+  "nav.stories": "Stories & Reviews",
+  "nav.home": "Dashboard",
   "nav.play": "Games Hub",
   "nav.day": "My Day",
   "nav.talk": "Talk",
@@ -33,6 +32,8 @@ const en: Dict = {
   "nav.signOut": "Sign Out",
   "nav.start": "Start Onboarding",
   "nav.resume": "Open Dashboard",
+  "nav.startShort": "Start",
+  "nav.resumeShort": "Open",
   "nav.emergency": "Emergency Helplines (14416)",
   "nav.menu": "Menu",
   "nav.close": "Close",
@@ -122,7 +123,7 @@ const en: Dict = {
 
   // Common UI
   "common.back": "Back",
-  "common.home": "Home",
+  "common.home": "Dashboard",
   "common.start": "Start",
   "common.next": "Next",
   "common.done": "Done",
@@ -275,7 +276,7 @@ const en: Dict = {
 const hi: Dict = {
   // App brand & Nav
   "app.name": "SmritiMitra",
-  "app.tagline": "A friend that helps preserve memories.",
+  "app.tagline": " Bringing Joy to the Golden Years..",
   "app.badge": "एआई",
   "nav.demo": "लाइव डेमो",
   "nav.features": "केयर सुइट",
@@ -293,6 +294,8 @@ const hi: Dict = {
   "nav.signOut": "साइन आउट",
   "nav.start": "शुरू करें",
   "nav.resume": "डैशबोर्ड खोलें",
+  "nav.startShort": "शुरू",
+  "nav.resumeShort": "खोलें",
   "nav.emergency": "आपातकालीन हेल्पलाइन (१४४१६)",
   "nav.menu": "मेनू",
   "nav.close": "बंद करें",
@@ -535,7 +538,7 @@ const hi: Dict = {
 const as: Dict = {
   // App brand & Nav
   "app.name": "SmritiMitra",
-  "app.tagline": "A friend that helps preserve memories.",
+  "app.tagline": " Bringing Joy to the Golden Years..",
   "app.badge": "AI",
   "nav.demo": "লাইভ ডেমো",
   "nav.features": "কেয়াৰ চুইট",
@@ -553,6 +556,8 @@ const as: Dict = {
   "nav.signOut": "চাইন আউট",
   "nav.start": "আৰম্ভ কৰক",
   "nav.resume": "ডেশ্বব'ৰ্ড খোলক",
+  "nav.startShort": "আৰম্ভ",
+  "nav.resumeShort": "খোলক",
   "nav.emergency": "জৰুৰীকালীন হেল্পলাইন (১৪৪১৬)",
   "nav.menu": "মেনু",
   "nav.close": "বন্ধ কৰক",

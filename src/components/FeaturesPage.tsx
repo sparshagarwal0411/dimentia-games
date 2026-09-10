@@ -95,7 +95,7 @@ export function FeaturesPage() {
                 </div>
                 <div>
                   <p className="font-display text-xl font-bold text-foreground">SmritiMitra</p>
-                  <p className="text-xs text-muted-foreground">A friend that helps preserve memories.</p>
+                  <p className="text-xs text-muted-foreground"> Bringing Joy to the Golden Years..</p>
                 </div>
               </div>
               <p className="flex items-center gap-3 text-xs font-bold uppercase tracking-[0.24em] text-primary">

@@ -12,7 +12,6 @@ import {
   HeartHandshake,
   Mic,
   Palette,
-  Play,
   RotateCcw,
   ShieldCheck,
   Smartphone,
@@ -225,6 +224,7 @@ export function LandingPage({
 
   // Carousel State
   const [reviewIndex, setReviewIndex] = useState(0);
+  const [isMarqueePaused, setIsMarqueePaused] = useState(false);
 
   // Regional State Selector
   const [selectedState, setSelectedState] = useState(0);
@@ -284,7 +284,7 @@ export function LandingPage({
     { word: "GREEN", inkColor: "text-rose-500", correct: "Red" },
     { word: "BLUE", inkColor: "text-emerald-500", correct: "Green" },
     { word: "YELLOW", inkColor: "text-purple-500", correct: "Purple" },
-    { word: "PURPLE", inkColor: "text-amber-500", correct: "Orange" },
+    { word: "PURPLE", inkColor: "text-orange-500", correct: "Orange" },
   ];
   const [stroopIdx, setStroopIdx] = useState(0);
   const [stroopScore, setStroopScore] = useState(0);
@@ -366,7 +366,7 @@ export function LandingPage({
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground transition-colors duration-300 selection:bg-primary/20 selection:text-primary">
+    <div className="min-h-screen overflow-x-clip bg-background pb-24 text-foreground transition-colors duration-300 selection:bg-primary/20 selection:text-primary">
       {/* Dynamic Header with Profile & Resume support */}
       <SiteHeader onStart={onResume || onStart} ctaLabel={onResume ? t("nav.resume") : t("nav.start")} />
 
@@ -576,9 +576,9 @@ export function LandingPage({
                         onClick={() => handleMemCard(card.id)}
                         disabled={card.matched || memLocked}
                         className={`h-14 w-full rounded-xl border-2 text-2xl font-bold transition-all duration-300 select-none
-                          ${ card.matched
-                              ? "border-emerald-500/50 bg-emerald-500/15 scale-95 opacity-60"
-                              : card.flipped
+                          ${card.matched
+                            ? "border-emerald-500/50 bg-emerald-500/15 scale-95 opacity-60"
+                            : card.flipped
                               ? "border-primary bg-primary/10 scale-105 shadow-md"
                               : "border-border bg-muted/60 hover:border-primary hover:bg-primary/5"
                           }`}
@@ -623,9 +623,9 @@ export function LandingPage({
                             onClick={() => handleStroopAnswer(color)}
                             disabled={stroopFeedback !== null}
                             className={`rounded-xl border py-2 text-xs font-bold transition-all
-                              ${ stroopFeedback !== null && color === stroopCurrent.correct
-                                  ? "border-emerald-500 bg-emerald-500/20 text-emerald-700 scale-105"
-                                  : stroopFeedback === "wrong" && color !== stroopCurrent.correct
+                              ${stroopFeedback !== null && color === stroopCurrent.correct
+                                ? "border-emerald-500 bg-emerald-500/20 text-emerald-700 scale-105"
+                                : stroopFeedback === "wrong" && color !== stroopCurrent.correct
                                   ? "opacity-40"
                                   : "border-border bg-card hover:bg-muted hover:border-primary"
                               }`}
@@ -635,7 +635,7 @@ export function LandingPage({
                         ))}
                       </div>
                       {stroopFeedback && (
-                        <p className={`text-xs font-bold animate-in fade-in ${ stroopFeedback === "correct" ? "text-emerald-600" : "text-rose-600"}`}>
+                        <p className={`text-xs font-bold animate-in fade-in ${stroopFeedback === "correct" ? "text-emerald-600" : "text-rose-600"}`}>
                           {stroopFeedback === "correct" ? t("demo.correct20") : `${t("demo.itWas")} ${stroopCurrent.correct}`}
                         </p>
                       )}
@@ -676,9 +676,9 @@ export function LandingPage({
                             onClick={() => handleVoiceAnswer(opt)}
                             disabled={voiceFeedback !== null}
                             className={`rounded-xl border py-2.5 text-xs font-bold transition-all
-                              ${ voiceFeedback !== null && opt === voiceCurrent.answer
-                                  ? "border-emerald-500 bg-emerald-500/20 text-emerald-700 scale-105"
-                                  : voiceFeedback === "wrong" && opt !== voiceCurrent.answer
+                              ${voiceFeedback !== null && opt === voiceCurrent.answer
+                                ? "border-emerald-500 bg-emerald-500/20 text-emerald-700 scale-105"
+                                : voiceFeedback === "wrong" && opt !== voiceCurrent.answer
                                   ? "opacity-40"
                                   : "border-border bg-card hover:bg-muted hover:border-primary"
                               }`}
@@ -688,7 +688,7 @@ export function LandingPage({
                         ))}
                       </div>
                       {voiceFeedback && (
-                        <p className={`text-xs font-bold text-center animate-in fade-in ${ voiceFeedback === "correct" ? "text-emerald-600" : "text-rose-600"}`}>
+                        <p className={`text-xs font-bold text-center animate-in fade-in ${voiceFeedback === "correct" ? "text-emerald-600" : "text-rose-600"}`}>
                           {voiceFeedback === "correct" ? t("demo.correct25") : `${t("demo.answerIs")} ${voiceCurrent.answer}`}
                         </p>
                       )}
@@ -715,6 +715,46 @@ export function LandingPage({
               </Button>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Public health partners and initiatives */}
+      <section className="government-marquee relative border-y border-border/70 py-12 sm:py-14">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6">
+          <div className="government-heading flex flex-col items-center justify-center text-center">
+            <div className="flex items-center gap-3">
+              <span className="inline-block h-2.5 w-2.5 rounded-full bg-emerald-500 animate-pulse" />
+              <p className="text-xl font-bold tracking-tight sm:text-2xl">Proudly Supported By</p>
+            </div>
+            <span className="mx-auto mt-2 block h-0.5 w-56 bg-gradient-to-r from-primary via-cyan-400 to-blue-500" />
+          </div>
+
+          <div className="relative mt-10 overflow-hidden" aria-label="Government ministries and public health initiatives">
+            {/* Gradient Edge Masks for soft fade entrance and exit */}
+            <div className="pointer-events-none absolute left-0 top-0 bottom-0 z-10 w-16 sm:w-32 bg-gradient-to-r from-[var(--gov-bg)] to-transparent" />
+            <div className="pointer-events-none absolute right-0 top-0 bottom-0 z-10 w-16 sm:w-32 bg-gradient-to-l from-[var(--gov-bg)] to-transparent" />
+
+            <div className={`government-marquee-track ${isMarqueePaused ? "is-paused" : ""}`}>
+              {[
+                ...GOVERNMENT_SHOUTOUTS,
+                ...GOVERNMENT_SHOUTOUTS,
+                ...GOVERNMENT_SHOUTOUTS,
+                ...GOVERNMENT_SHOUTOUTS,
+              ].map((item, index) => (
+                <div key={`${item.institution}-${index}`} className="government-shoutout group">
+                  <img src={item.image} alt={`${item.institution} emblem`} />
+                  <div>
+                    <strong>{item.wordmark}</strong>
+                    <p>{item.institution}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <p className="government-marquee-note mt-8 text-center text-[11px] font-medium opacity-80">
+            SmritiMitra is an independent project inspired by public digital-health and community-care goals.
+          </p>
         </div>
       </section>
 
@@ -832,31 +872,6 @@ export function LandingPage({
         </div>
       </section>
 
-      {/* Public health partners and initiatives */}
-      <section className="government-marquee border-y border-border/70 py-12 sm:py-14">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6">
-          <div className="government-heading text-center">
-            <p className="text-xl font-semibold tracking-tight sm:text-2xl">Proudly Supported By</p>
-            <span className="mx-auto mt-2 block h-0.5 w-56 bg-gradient-to-r from-primary via-cyan-400 to-blue-500" />
-          </div>
-          <div className="mt-10 overflow-hidden" aria-label="Government ministries and public health initiatives">
-            <div className="government-marquee-track">
-              {[...GOVERNMENT_SHOUTOUTS, ...GOVERNMENT_SHOUTOUTS].map((item, index) => (
-                <div key={`${item.institution}-${index}`} className="government-shoutout">
-                  <img src={item.image} alt={`${item.institution} emblem`} />
-                  <div>
-                    <strong>{item.wordmark}</strong>
-                    <p>{item.institution}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-          <p className="government-marquee-note mt-8 text-center text-[10px]">
-            SmritiMitra is an independent project inspired by public digital-health and community-care goals.
-          </p>
-        </div>
-      </section>
 
       {/* ========================================================================= */}
       {/* 3. INTERACTIVE 8 NER STATES CULTURAL EXPLORER                             */}
@@ -987,7 +1002,7 @@ export function LandingPage({
           })()}
         </div>
       </section>
-      
+
       {/* ========================================================================= */}
       {/* 5. PRIVACY & HOW WE MONITOR SECTION                                       */}
       {/* ========================================================================= */}
@@ -1183,12 +1198,18 @@ export function LandingPage({
               className="rounded-full px-8 py-6 text-base font-bold shadow-lift hover:scale-105 transition-all gap-2"
               onClick={() => {
                 soundEffects.playSuccess();
-                onStart();
+
+                if (session && onResume) {
+                  onResume();
+                } else {
+                  onStart();
+                }
               }}
             >
-              <span>Get Started Now</span>
+              <span>{session ? "Go to Dashboard" : "Get Started Now"}</span>
               <ArrowRight className="h-5 w-5" />
             </Button>
+
           </div>
           <p className="text-xs text-muted-foreground">
             Screening is an assistive guide, not a formal medical diagnosis.
