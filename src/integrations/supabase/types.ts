@@ -361,6 +361,7 @@ export type Database = {
           created_at: string
           district: string
           elder_mode: boolean
+          family_members: Json | null
           id: string
           language: string
           last_screening: Json | null
@@ -383,6 +384,7 @@ export type Database = {
           created_at?: string
           district?: string
           elder_mode?: boolean
+          family_members?: Json | null
           id?: string
           language?: string
           last_screening?: Json | null
@@ -405,13 +407,13 @@ export type Database = {
           created_at?: string
           district?: string
           elder_mode?: boolean
+          family_members?: Json | null
           id?: string
           language?: string
           last_screening?: Json | null
           name?: string
           patient_photo?: string
           caregiver_photo?: string
-          phone?: string
           phone?: string
           region?: string
           role?: string
