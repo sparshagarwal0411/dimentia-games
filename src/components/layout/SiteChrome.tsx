@@ -168,7 +168,7 @@ export function SiteHeader({
                 soundEffects.playClick();
                 setLang(e.target.value as typeof lang);
               }}
-              className="h-8 w-[3.35rem] appearance-none rounded-full border border-border/80 bg-muted/50 px-2 text-center text-[11px] font-bold text-foreground transition-colors hover:bg-muted focus:outline-none focus:ring-2 focus:ring-ring/50 sm:h-9 sm:w-auto sm:pl-7 sm:pr-6 sm:text-left sm:text-xs"
+              className="h-8 w-[3.35rem] appearance-none rounded-full border border-border/80 bg-muted/50 px-2 text-center text-[11px] font-bold text-foreground transition-colors hover:bg-muted focus:outline-none focus:ring-2 focus:ring-ring/50 sm:h-9 sm:w-auto sm:pl-7 sm:pr-7 sm:text-left sm:text-xs"
               aria-label="Select language"
             >
               {LANGUAGES.map((item) => (
@@ -177,6 +177,7 @@ export function SiteHeader({
                 </option>
               ))}
             </select>
+            <ChevronDown className="pointer-events-none absolute right-2.5 hidden h-3.5 w-3.5 text-muted-foreground sm:block" />
           </label>
 
           {(session || activePatient) ? (
