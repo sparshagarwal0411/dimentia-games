@@ -16,12 +16,16 @@ import {
   Camera,
   ChevronDown,
   Languages,
+  Plus,
+  Trash2,
+  Users,
+  UserCheck,
 } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { Button } from "@/components/ui/button";
-import { useApp } from "@/lib/app-state";
+import { useApp, type FamilyMember } from "@/lib/app-state";
 import { useI18n, LANGUAGES } from "@/lib/i18n";
 import { LegalModal, type LegalTab } from "@/components/LegalModal";
 import { soundEffects } from "@/lib/audio-effects";
@@ -314,7 +318,7 @@ function AvatarMenu({
   onSignOut?: () => void;
   hasSession?: boolean;
 }) {
-  const { updatePatient } = useApp();
+  const { updatePatient, signOut } = useApp();
   const [open, setOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const [addMemberOpen, setAddMemberOpen] = useState(false);
@@ -322,11 +326,31 @@ function AvatarMenu({
   const [name, setName] = useState(activePatient?.name || "");
   const [age, setAge] = useState(activePatient?.age || 68);
   const [phone, setPhone] = useState(activePatient?.phone || "");
-  const [caregiverName, setCaregiverName] = useState(activePatient?.caregiver_name || "");
-  const [caregiverPhone, setCaregiverPhone] = useState(activePatient?.caregiver_phone || "");
   const [patientPhoto, setPatientPhoto] = useState(activePatient?.patient_photo || "");
-  const [caregiverPhoto, setCaregiverPhoto] = useState(activePatient?.caregiver_photo || "");
+  
+  const [familyMembers, setFamilyMembers] = useState<FamilyMember[]>(
+    activePatient?.family_members && activePatient.family_members.length > 0
+      ? activePatient.family_members
+      : activePatient?.caregiver_name || activePatient?.caregiver_photo
+      ? [{ id: "fam-1", name: activePatient.caregiver_name || "", relation: "Caregiver", photo: activePatient.caregiver_photo || "", phone: activePatient.caregiver_phone || "" }]
+      : [{ id: "fam-1", name: "", relation: "Son", photo: "", phone: "" }]
+  );
+
   const ref = useRef<HTMLDivElement>(null);
+
+  const RELATION_OPTIONS = [
+    "Son",
+    "Daughter",
+    "Spouse",
+    "Grandchild",
+    "Brother",
+    "Sister",
+    "Mother",
+    "Father",
+    "Caregiver",
+    "Friend",
+    "Other",
+  ];
 
   useEffect(() => {
     const close = (e: MouseEvent) => {
@@ -340,13 +364,25 @@ function AvatarMenu({
     setName(activePatient?.name || "");
     setAge(activePatient?.age || 68);
     setPhone(activePatient?.phone || "");
-    setCaregiverName(activePatient?.caregiver_name || "");
-    setCaregiverPhone(activePatient?.caregiver_phone || "");
     setPatientPhoto(activePatient?.patient_photo || "");
-    setCaregiverPhoto(activePatient?.caregiver_photo || "");
+    if (activePatient?.family_members && activePatient.family_members.length > 0) {
+      setFamilyMembers(activePatient.family_members);
+    } else if (activePatient?.caregiver_name || activePatient?.caregiver_photo) {
+      setFamilyMembers([
+        {
+          id: "fam-1",
+          name: activePatient.caregiver_name || "",
+          relation: "Caregiver",
+          photo: activePatient.caregiver_photo || "",
+          phone: activePatient.caregiver_phone || "",
+        },
+      ]);
+    } else {
+      setFamilyMembers([{ id: "fam-1", name: "", relation: "Son", photo: "", phone: "" }]);
+    }
   }, [activePatient]);
 
-  const readPhoto = (file: File, setPhoto: (value: string) => void) => {
+  const readPhoto = (file: File, callback: (value: string) => void) => {
     const img = new Image();
     const url = URL.createObjectURL(file);
     img.onload = () => {
@@ -359,23 +395,58 @@ function AvatarMenu({
       if (!ctx) return;
       ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
       URL.revokeObjectURL(url);
-      setPhoto(canvas.toDataURL("image/jpeg", 0.72));
+      callback(canvas.toDataURL("image/jpeg", 0.72));
     };
     img.src = url;
+  };
+
+  const addFamilyMember = () => {
+    setFamilyMembers((prev) => [
+      ...prev,
+      {
+        id: `fam-${Date.now()}_${Math.random().toString(36).slice(2, 6)}`,
+        name: "",
+        relation: prev.length === 1 ? "Daughter" : "Spouse",
+        photo: "",
+        phone: "",
+      },
+    ]);
+  };
+
+  const removeFamilyMember = (id: string) => {
+    if (familyMembers.length <= 1) return;
+    setFamilyMembers((prev) => prev.filter((m) => m.id !== id));
+  };
+
+  const updateFamilyMember = (id: string, updates: Partial<FamilyMember>) => {
+    setFamilyMembers((prev) =>
+      prev.map((m) => (m.id === id ? { ...m, ...updates } : m))
+    );
+  };
+
+  const handleLogout = async () => {
+    setOpen(false);
+    if (onSignOut) {
+      onSignOut();
+    } else {
+      await signOut();
+    }
   };
 
   const saveProfile = async (event: React.FormEvent) => {
     event.preventDefault();
     if (!activePatient || !name.trim()) return;
     setSaving(true);
+    const primaryFam = familyMembers[0];
     await updatePatient(activePatient.id, {
       name: name.trim(),
       age: Number(age) || activePatient.age,
       phone: phone.trim(),
-      caregiver_name: caregiverName.trim(),
-      caregiver_phone: caregiverPhone.trim(),
       patient_photo: patientPhoto,
-      caregiver_photo: caregiverPhoto,
+      caregiver_name: primaryFam?.name || "",
+      caregiver_phone: primaryFam?.phone || "",
+      caregiver_photo: primaryFam?.photo || "",
+      family_members: familyMembers,
     });
     setSaving(false);
     setEditOpen(false);
@@ -399,17 +470,17 @@ function AvatarMenu({
       </button>
 
       {open && (
-        <div className="glass-surface absolute right-0 top-full mt-2 w-56 rounded-2xl border z-50 overflow-hidden animate-in fade-in-0 zoom-in-95 duration-150">
-          <div className="border-b border-border px-4 py-3">
+        <div className="glass-surface absolute right-0 top-full mt-2 w-64 rounded-2xl border z-50 overflow-hidden shadow-lift animate-in fade-in-0 zoom-in-95 duration-150">
+          <div className="border-b border-border px-4 py-3 bg-muted/20">
             <p className="text-xs font-bold text-foreground truncate">{userName || "Patient"}</p>
-            <p className="text-[11px] text-muted-foreground">SmritiMitra account</p>
+            <p className="text-[11px] text-muted-foreground">SmritiMitra Account</p>
           </div>
 
           <div className="py-1.5">
             <button
               type="button"
               onClick={() => { setOpen(false); onDashboard?.(); }}
-              className="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm font-medium text-foreground hover:bg-muted transition-colors"
+              className="flex w-full items-center gap-2.5 px-4 py-2.5 text-xs font-semibold text-foreground hover:bg-muted transition-colors"
             >
               <Brain className="h-4 w-4 text-primary" />
               Go to Dashboard
@@ -418,52 +489,50 @@ function AvatarMenu({
               <button
                 type="button"
                 onClick={() => { setOpen(false); setEditOpen(true); }}
-                className="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm font-medium text-foreground hover:bg-muted transition-colors"
+                className="flex w-full items-center gap-2.5 px-4 py-2.5 text-xs font-semibold text-foreground hover:bg-muted transition-colors"
               >
                 <User className="h-4 w-4 text-primary" />
-                Profile
+                Edit Patient & Family Profile
               </button>
             )}
             {activePatient && (
               <button
                 type="button"
                 onClick={() => { setOpen(false); setAddMemberOpen(true); }}
-                className="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm font-medium text-foreground hover:bg-muted transition-colors"
+                className="flex w-full items-center gap-2.5 px-4 py-2.5 text-xs font-semibold text-foreground hover:bg-muted transition-colors"
               >
                 <UserPlus className="h-4 w-4 text-primary" />
-                Add Patient
+                Add New Patient Profile
               </button>
             )}
             <button
               type="button"
               onClick={() => { setOpen(false); onA11y?.(); }}
-              className="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm font-medium text-foreground hover:bg-muted transition-colors"
+              className="flex w-full items-center gap-2.5 px-4 py-2.5 text-xs font-semibold text-foreground hover:bg-muted transition-colors"
             >
               <Settings className="h-4 w-4 text-muted-foreground" />
               Settings & Accessibility
             </button>
           </div>
 
-          {hasSession && (
-            <div className="border-t border-border py-1.5">
-              <button
-                type="button"
-                onClick={() => { setOpen(false); onSignOut?.(); }}
-                className="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm font-medium text-rose-600 dark:text-rose-400 hover:bg-rose-500/10 transition-colors"
-              >
-                <LogOut className="h-4 w-4" />
-                Sign Out
-              </button>
-            </div>
-          )}
+          <div className="border-t border-border py-1.5 bg-rose-500/5">
+            <button
+              type="button"
+              onClick={handleLogout}
+              className="flex w-full items-center gap-2.5 px-4 py-2.5 text-xs font-bold text-rose-600 dark:text-rose-400 hover:bg-rose-500/15 transition-colors"
+            >
+              <LogOut className="h-4 w-4" />
+              Log Out / Switch Account
+            </button>
+          </div>
         </div>
       )}
 
       {editOpen && activePatient && createPortal(
-        <div className="fixed inset-0 z-[60] flex items-end justify-center overflow-y-auto bg-black/50 p-0 backdrop-blur-sm sm:items-center sm:p-4">
+        <div className="fixed inset-0 z-[60] flex items-end justify-center overflow-y-auto bg-black/60 p-0 backdrop-blur-sm sm:items-center sm:p-4">
           <form
             onSubmit={saveProfile}
-            className="relative my-0 w-full max-w-lg rounded-t-3xl border border-border bg-card p-5 shadow-lift sm:my-8 sm:rounded-3xl sm:p-6"
+            className="relative my-0 w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-t-3xl border border-border bg-card p-5 shadow-lift sm:my-8 sm:rounded-3xl sm:p-6"
           >
             <button
               type="button"
@@ -473,103 +542,195 @@ function AvatarMenu({
             >
               <X className="h-4 w-4" />
             </button>
-            <h2 className="pr-8 text-xl font-bold text-foreground">Profile</h2>
+            <h2 className="pr-8 text-xl font-bold text-foreground">Edit Patient & Family Profile</h2>
             <p className="mt-1 text-xs text-muted-foreground">
-              Edit names and add photos for the patient and one family member / caretaker.
+              Update senior details and manage family member photos & relations.
             </p>
 
-            <div className="mt-5 grid gap-3 sm:grid-cols-2">
-              {[
-                { label: "Patient photo", hint: "Tap to add or change", value: patientPhoto, setPhoto: setPatientPhoto },
-                { label: "Family member photo", hint: "Caretaker or relative", value: caregiverPhoto, setPhoto: setCaregiverPhoto },
-              ].map((item) => (
-                <label
-                  key={item.label}
-                  className="cursor-pointer rounded-2xl border border-dashed border-primary/40 bg-primary/5 p-3 transition-colors hover:bg-primary/10"
-                >
-                  <span className="flex items-center gap-2 text-xs font-bold text-foreground">
-                    <Camera className="h-4 w-4 text-primary" />
-                    {item.label}
-                  </span>
-                  <span className="mt-2 flex items-center gap-3">
-                    {item.value ? (
-                      <img src={item.value} alt="" className="h-16 w-16 rounded-xl object-cover" />
+            <div className="mt-5 space-y-4">
+              {/* Patient Basic Fields */}
+              <div className="grid gap-3 sm:grid-cols-3">
+                <label className="text-xs font-semibold text-foreground sm:col-span-2">
+                  Patient Full Name *
+                  <input
+                    value={name}
+                    onChange={(event) => setName(event.target.value)}
+                    className="mt-1 w-full rounded-xl border border-input bg-background px-3 py-2 text-xs outline-none focus:ring-2 focus:ring-ring"
+                    required
+                  />
+                </label>
+                <label className="text-xs font-semibold text-foreground">
+                  Age
+                  <input
+                    type="number"
+                    min={40}
+                    max={110}
+                    value={age}
+                    onChange={(event) => setAge(Number(event.target.value))}
+                    className="mt-1 w-full rounded-xl border border-input bg-background px-3 py-2 text-xs outline-none focus:ring-2 focus:ring-ring"
+                  />
+                </label>
+                <label className="text-xs font-semibold text-foreground sm:col-span-3">
+                  Patient Phone Number
+                  <input
+                    type="tel"
+                    value={phone}
+                    onChange={(event) => setPhone(event.target.value)}
+                    className="mt-1 w-full rounded-xl border border-input bg-background px-3 py-2 text-xs outline-none focus:ring-2 focus:ring-ring"
+                  />
+                </label>
+              </div>
+
+              {/* Patient Photo Upload */}
+              <div className="border-t border-border pt-4">
+                <p className="text-xs font-bold text-foreground flex items-center gap-1.5">
+                  <Camera className="h-4 w-4 text-primary" />
+                  Patient Portrait Photo
+                </p>
+                <label className="mt-2 block cursor-pointer rounded-2xl border border-dashed border-primary/40 bg-primary/5 p-3 transition-colors hover:bg-primary/10">
+                  <div className="flex items-center gap-3">
+                    {patientPhoto ? (
+                      <img src={patientPhoto} alt="Patient preview" className="h-14 w-14 rounded-xl object-cover ring-2 ring-primary/30" />
                     ) : (
-                      <span className="flex h-16 w-16 items-center justify-center rounded-xl bg-card text-muted-foreground">
-                        <Camera className="h-5 w-5" />
-                      </span>
+                      <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-card text-muted-foreground border">
+                        <Camera className="h-5 w-5 text-primary" />
+                      </div>
                     )}
-                    <span className="text-[11px] leading-snug text-muted-foreground">{item.hint}</span>
-                  </span>
+                    <div>
+                      <p className="text-xs font-bold text-foreground">
+                        {patientPhoto ? "Change patient photo" : "Upload patient photo"}
+                      </p>
+                      <p className="text-[11px] text-muted-foreground">Clear front face portrait</p>
+                    </div>
+                  </div>
                   <input
                     type="file"
                     accept="image/*"
-                    capture="user"
                     onChange={(event) => {
                       const file = event.target.files?.[0];
-                      if (file) readPhoto(file, item.setPhoto);
+                      if (file) readPhoto(file, setPatientPhoto);
                     }}
                     className="sr-only"
                   />
                 </label>
-              ))}
-            </div>
+              </div>
 
-            <div className="mt-5 grid gap-3 sm:grid-cols-2">
-              <label className="text-xs font-semibold text-foreground">
-                Patient name
-                <input
-                  value={name}
-                  onChange={(event) => setName(event.target.value)}
-                  className="mt-1.5 w-full rounded-xl border border-input bg-background px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-ring"
-                  required
-                />
-              </label>
-              <label className="text-xs font-semibold text-foreground">
-                Age
-                <input
-                  type="number"
-                  min={40}
-                  max={110}
-                  value={age}
-                  onChange={(event) => setAge(Number(event.target.value))}
-                  className="mt-1.5 w-full rounded-xl border border-input bg-background px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-ring"
-                />
-              </label>
-              <label className="text-xs font-semibold text-foreground sm:col-span-2">
-                Patient phone
-                <input
-                  type="tel"
-                  value={phone}
-                  onChange={(event) => setPhone(event.target.value)}
-                  className="mt-1.5 w-full rounded-xl border border-input bg-background px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-ring"
-                />
-              </label>
-              <label className="text-xs font-semibold text-foreground">
-                Family member name
-                <input
-                  value={caregiverName}
-                  onChange={(event) => setCaregiverName(event.target.value)}
-                  className="mt-1.5 w-full rounded-xl border border-input bg-background px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-ring"
-                />
-              </label>
-              <label className="text-xs font-semibold text-foreground">
-                Family member phone
-                <input
-                  type="tel"
-                  value={caregiverPhone}
-                  onChange={(event) => setCaregiverPhone(event.target.value)}
-                  className="mt-1.5 w-full rounded-xl border border-input bg-background px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-ring"
-                />
-              </label>
+              {/* Family Members Section */}
+              <div className="border-t border-border pt-4 space-y-3">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-xs font-bold text-foreground flex items-center gap-1.5">
+                      <Users className="h-4 w-4 text-primary" />
+                      Family Members & Relations ({familyMembers.length})
+                    </p>
+                    <p className="text-[11px] text-muted-foreground">
+                      Photos and relations used in recognition games and care logs
+                    </p>
+                  </div>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={addFamilyMember}
+                    className="rounded-full text-xs font-bold gap-1 text-primary border-primary/30"
+                  >
+                    <Plus className="h-3.5 w-3.5" />
+                    Add Member
+                  </Button>
+                </div>
+
+                <div className="space-y-3 max-h-72 overflow-y-auto pr-1">
+                  {familyMembers.map((member, idx) => (
+                    <div key={member.id} className="rounded-2xl border border-border bg-muted/20 p-3 space-y-2 text-xs">
+                      <div className="flex items-center justify-between">
+                        <span className="inline-flex items-center gap-1 font-bold text-primary bg-primary/10 px-2 py-0.5 rounded-full text-[10px]">
+                          <UserCheck className="h-3 w-3" />
+                          Family Member #{idx + 1}
+                        </span>
+                        {familyMembers.length > 1 && (
+                          <button
+                            type="button"
+                            onClick={() => removeFamilyMember(member.id)}
+                            className="text-destructive font-medium hover:underline flex items-center gap-1 text-[11px]"
+                          >
+                            <Trash2 className="h-3 w-3" />
+                            Remove
+                          </button>
+                        )}
+                      </div>
+
+                      <div className="grid gap-2 sm:grid-cols-3">
+                        <label className="font-semibold text-foreground">
+                          Relation
+                          <select
+                            value={member.relation}
+                            onChange={(e) => updateFamilyMember(member.id, { relation: e.target.value })}
+                            className="mt-1 w-full rounded-lg border border-input bg-background px-2 py-1.5 text-xs outline-none"
+                          >
+                            {RELATION_OPTIONS.map((opt) => (
+                              <option key={opt} value={opt}>{opt}</option>
+                            ))}
+                          </select>
+                        </label>
+                        <label className="font-semibold text-foreground">
+                          Full Name
+                          <input
+                            value={member.name}
+                            onChange={(e) => updateFamilyMember(member.id, { name: e.target.value })}
+                            placeholder="e.g. Son Rahul"
+                            className="mt-1 w-full rounded-lg border border-input bg-background px-2 py-1.5 text-xs outline-none"
+                          />
+                        </label>
+                        <label className="font-semibold text-foreground">
+                          Phone Number
+                          <input
+                            type="tel"
+                            value={member.phone || ""}
+                            onChange={(e) => updateFamilyMember(member.id, { phone: e.target.value })}
+                            placeholder="+91 98000 00000"
+                            className="mt-1 w-full rounded-lg border border-input bg-background px-2 py-1.5 text-xs outline-none"
+                          />
+                        </label>
+                      </div>
+
+                      <label className="block cursor-pointer rounded-xl border border-dashed border-primary/30 bg-card p-2 hover:bg-primary/5 transition-colors">
+                        <div className="flex items-center gap-2">
+                          {member.photo ? (
+                            <img src={member.photo} alt="" className="h-10 w-10 rounded-lg object-cover ring-1 ring-primary/20 shrink-0" />
+                          ) : (
+                            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-muted text-muted-foreground shrink-0">
+                              <Camera className="h-4 w-4 text-primary" />
+                            </div>
+                          )}
+                          <div>
+                            <p className="font-bold text-[11px] text-foreground">
+                              {member.photo ? `Change photo for ${member.relation}` : `Upload photo of ${member.relation}`}
+                            </p>
+                            <p className="text-[10px] text-muted-foreground">Used in recognition games</p>
+                          </div>
+                        </div>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            if (file) readPhoto(file, (photoData) => updateFamilyMember(member.id, { photo: photoData }));
+                          }}
+                          className="sr-only"
+                        />
+                      </label>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
 
             <div className="mt-6 flex justify-end gap-2 border-t border-border pt-4">
               <Button type="button" variant="outline" onClick={() => setEditOpen(false)}>
                 Cancel
               </Button>
-              <Button type="submit" disabled={saving}>
-                {saving ? "Saving..." : "Save profile"}
+              <Button type="submit" disabled={saving} className="rounded-full px-5 font-bold">
+                {saving ? "Saving..." : "Save Changes"}
               </Button>
             </div>
           </form>

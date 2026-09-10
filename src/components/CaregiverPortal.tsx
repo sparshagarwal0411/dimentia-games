@@ -260,11 +260,19 @@ export function CaregiverPortal({ onOpenRegister }: { onOpenRegister?: () => voi
                   <p className="text-xs text-slate-400">
                     {p.age} yrs · {p.sex} · {p.district}, {p.region}
                   </p>
-                  {p.caregiver_phone && (
+                  {p.family_members && p.family_members.length > 0 ? (
+                    <div className="mt-2.5 flex flex-wrap gap-1">
+                      {p.family_members.map((fm) => (
+                        <span key={fm.id} className="inline-flex items-center gap-1 rounded-md bg-slate-800 px-2 py-0.5 text-[10px] font-medium text-emerald-300 border border-slate-700">
+                          {fm.relation} {fm.name ? `(${fm.name})` : ""}
+                        </span>
+                      ))}
+                    </div>
+                  ) : p.caregiver_phone ? (
                     <p className="text-[11px] text-slate-500 mt-1 font-mono">
                       Kin: {p.caregiver_phone}
                     </p>
-                  )}
+                  ) : null}
                 </button>
               );
             })}

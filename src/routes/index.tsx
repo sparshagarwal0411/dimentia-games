@@ -287,7 +287,7 @@ function AppShell({
   return (
     <div className="flex min-h-screen flex-col overflow-x-clip bg-background text-foreground transition-colors duration-300">
       <OfflineBanner />
-      <SiteHeader simple onLogoClick={onHome} subtitle={patientName || undefined} navigation={navigation} />
+      <SiteHeader simple onLogoClick={onHome} subtitle={patientName || ""} navigation={navigation} />
       {familyReminderOpen && (
         <div className="fixed inset-x-3 top-[4.75rem] z-30 mx-auto flex max-w-md items-start gap-3 rounded-2xl border border-primary/20 bg-card p-4 shadow-lift sm:right-6 sm:left-auto sm:top-20">
           <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">

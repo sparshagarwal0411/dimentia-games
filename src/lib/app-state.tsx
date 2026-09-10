@@ -10,6 +10,14 @@ import { soundEffects } from "@/lib/audio-effects";
 
 export type PatientRole = "self" | "caregiver";
 
+export type FamilyMember = {
+  id: string;
+  name: string;
+  relation: string;
+  photo?: string;
+  phone?: string;
+};
+
 export type Patient = {
   id: string;
   caregiver_id?: string;
@@ -25,6 +33,7 @@ export type Patient = {
   clinical_notes?: string;
   patient_photo?: string;
   caregiver_photo?: string;
+  family_members?: FamilyMember[];
   role: PatientRole;
   last_screening?: ScreeningResult;
   elder_mode: boolean;
@@ -136,6 +145,8 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
     setActiveId(null);
     window.localStorage.removeItem(ACTIVE_KEY);
     window.localStorage.removeItem(PATIENTS_STORE_KEY);
+    window.localStorage.removeItem("neurotrack.stage");
+    window.localStorage.removeItem("neurotrack.guest_mode");
     await cacheSet("patients", []);
     try {
       await supabase.auth.signOut();
@@ -143,6 +154,7 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
       /* ignore */
     }
     setSession(null);
+    window.location.assign("/");
   };
 
   /* ------------------------------ offline ----------------------------- */
@@ -153,10 +165,27 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
 
   /* ------------------------------ patients ---------------------------- */
   const refreshPatients = useCallback(async () => {
-    const normalize = (item: Patient): Patient => ({
-      ...item,
-      role: item.role === "caregiver" ? "caregiver" : "self",
-    });
+    const normalize = (item: Patient): Patient => {
+      let fam = item.family_members || [];
+      if (!fam || fam.length === 0) {
+        if (item.caregiver_name || item.caregiver_photo) {
+          fam = [
+            {
+              id: "fam-1",
+              name: item.caregiver_name || "Caregiver",
+              relation: "Caregiver",
+              photo: item.caregiver_photo || "",
+              phone: item.caregiver_phone || "",
+            },
+          ];
+        }
+      }
+      return {
+        ...item,
+        family_members: fam,
+        role: item.role === "caregiver" ? "caregiver" : "self",
+      };
+    };
 
     // 1. Try local cache / LocalStorage first
     const cached = await cacheGet<Patient[]>("patients");
@@ -179,27 +208,44 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
         .order("created_at", { ascending: true });
 
       if (!error && data && data.length > 0) {
-        const merged: Patient[] = data.map((item: any) => ({
-          id: item.id,
-          caregiver_id: item.caregiver_id || "",
-          name: item.name || "Patient",
-          age: Number(item.age) || 65,
-          sex: item.sex || "Male",
-          phone: item.phone || "+91 9800000000",
-          language: item.language || "en",
-          region: item.region || "Assam",
-          district: item.district || "Kamrup Metropolitan",
-          caregiver_name: item.caregiver_name || "",
-          caregiver_phone: item.caregiver_phone || "",
-          clinical_notes: item.clinical_notes || "",
-          patient_photo: item.patient_photo || "",
-          caregiver_photo: item.caregiver_photo || "",
-          role: item.role === "caregiver" ? "caregiver" : "self",
-          last_screening: item.last_screening || undefined,
-          elder_mode: item.elder_mode ?? true,
-          base_difficulty: item.base_difficulty ?? 2,
-          created_at: item.created_at || new Date().toISOString(),
-        }));
+        const merged: Patient[] = data.map((item: any) => {
+          let fam = item.family_members || [];
+          if (!fam || fam.length === 0) {
+            if (item.caregiver_name || item.caregiver_photo) {
+              fam = [
+                {
+                  id: "fam-1",
+                  name: item.caregiver_name || "Caregiver",
+                  relation: "Caregiver",
+                  photo: item.caregiver_photo || "",
+                  phone: item.caregiver_phone || "",
+                },
+              ];
+            }
+          }
+          return {
+            id: item.id,
+            caregiver_id: item.caregiver_id || "",
+            name: item.name || "Patient",
+            age: Number(item.age) || 65,
+            sex: item.sex || "Male",
+            phone: item.phone || "+91 9800000000",
+            language: item.language || "en",
+            region: item.region || "Assam",
+            district: item.district || "Kamrup Metropolitan",
+            caregiver_name: item.caregiver_name || (fam[0]?.name ?? ""),
+            caregiver_phone: item.caregiver_phone || (fam[0]?.phone ?? ""),
+            clinical_notes: item.clinical_notes || "",
+            patient_photo: item.patient_photo || "",
+            caregiver_photo: item.caregiver_photo || (fam[0]?.photo ?? ""),
+            family_members: fam,
+            role: item.role === "caregiver" ? "caregiver" : "self",
+            last_screening: item.last_screening || undefined,
+            elder_mode: item.elder_mode ?? true,
+            base_difficulty: item.base_difficulty ?? 2,
+            created_at: item.created_at || new Date().toISOString(),
+          };
+        });
         setPatients(merged);
         void cacheSet("patients", merged);
         window.localStorage.setItem(PATIENTS_STORE_KEY, JSON.stringify(merged));
@@ -227,28 +273,40 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
 
   const registerPatient = useCallback(
     async (data: Omit<Patient, "id" | "created_at">): Promise<Patient> => {
+      const primaryFam = data.family_members?.[0];
+      const caregiverName = data.caregiver_name || primaryFam?.name || "";
+      const caregiverPhone = data.caregiver_phone || primaryFam?.phone || "";
+      const caregiverPhoto = data.caregiver_photo || primaryFam?.photo || "";
+
+      const normalizedData = {
+        ...data,
+        caregiver_name: caregiverName,
+        caregiver_phone: caregiverPhone,
+        caregiver_photo: caregiverPhoto,
+      };
+
       // Attempt Supabase insert first (it generates the UUID server-side)
       try {
         const { data: row, error } = await supabase
           .from("patients")
           .insert({
             caregiver_id: session?.user?.id ?? "",
-            name: data.name,
-            age: data.age,
-            sex: data.sex,
-            phone: data.phone,
-            language: data.language,
-            region: data.region,
-            district: data.district,
-            caregiver_name: data.caregiver_name ?? "",
-            caregiver_phone: data.caregiver_phone ?? "",
-            clinical_notes: data.clinical_notes ?? "",
-            patient_photo: data.patient_photo ?? "",
-            caregiver_photo: data.caregiver_photo ?? "",
-            role: data.role,
-            elder_mode: data.elder_mode,
-            base_difficulty: data.base_difficulty,
-            last_screening: (data.last_screening as any) ?? null,
+            name: normalizedData.name,
+            age: normalizedData.age,
+            sex: normalizedData.sex,
+            phone: normalizedData.phone,
+            language: normalizedData.language,
+            region: normalizedData.region,
+            district: normalizedData.district,
+            caregiver_name: normalizedData.caregiver_name,
+            caregiver_phone: normalizedData.caregiver_phone,
+            clinical_notes: normalizedData.clinical_notes ?? "",
+            patient_photo: normalizedData.patient_photo ?? "",
+            caregiver_photo: normalizedData.caregiver_photo,
+            role: normalizedData.role,
+            elder_mode: normalizedData.elder_mode,
+            base_difficulty: normalizedData.base_difficulty,
+            last_screening: (normalizedData.last_screening as any) ?? null,
           })
           .select()
           .single();
@@ -256,7 +314,7 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
         if (error) throw error;
 
         const newPatient: Patient = {
-          ...data,
+          ...normalizedData,
           id: row.id,
           caregiver_id: row.caregiver_id,
           created_at: row.created_at,
@@ -275,7 +333,7 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
         console.warn("Supabase insert failed, using local fallback:", err);
         const newId = `pat_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
         const newPatient: Patient = {
-          ...data,
+          ...normalizedData,
           id: newId,
           created_at: new Date().toISOString(),
         };
@@ -293,9 +351,17 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
   );
 
   const updatePatient = useCallback(async (id: string, updates: Partial<Patient>) => {
+    let syncedUpdates = { ...updates };
+    if (updates.family_members && updates.family_members.length > 0) {
+      const primaryFam = updates.family_members[0];
+      syncedUpdates.caregiver_name = updates.caregiver_name || primaryFam?.name || "";
+      syncedUpdates.caregiver_phone = updates.caregiver_phone || primaryFam?.phone || "";
+      syncedUpdates.caregiver_photo = updates.caregiver_photo || primaryFam?.photo || "";
+    }
+
     // Optimistic local update
     setPatients((prev) => {
-      const updated = prev.map((p) => (p.id === id ? { ...p, ...updates } : p));
+      const updated = prev.map((p) => (p.id === id ? { ...p, ...syncedUpdates } : p));
       window.localStorage.setItem(PATIENTS_STORE_KEY, JSON.stringify(updated));
       void cacheSet("patients", updated);
       return updated;
@@ -310,7 +376,7 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
         "patient_photo", "caregiver_photo",
       ];
       for (const key of allowed) {
-        if (key in updates) supabaseUpdates[key] = (updates as any)[key];
+        if (key in syncedUpdates) supabaseUpdates[key] = (syncedUpdates as any)[key];
       }
       if (Object.keys(supabaseUpdates).length > 0) {
         await supabase.from("patients").update(supabaseUpdates as any).eq("id", id);
