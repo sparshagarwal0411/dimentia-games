@@ -12,8 +12,6 @@ import {
   HeartHandshake,
   Mic,
   Palette,
-  Pause,
-  Play,
   RotateCcw,
   ShieldCheck,
   Smartphone,
@@ -727,24 +725,6 @@ export function LandingPage({
             <div className="flex items-center gap-3">
               <span className="inline-block h-2.5 w-2.5 rounded-full bg-emerald-500 animate-pulse" />
               <p className="text-xl font-bold tracking-tight sm:text-2xl">Proudly Supported By</p>
-              <button
-                type="button"
-                onClick={() => setIsMarqueePaused(!isMarqueePaused)}
-                className="ml-2 inline-flex items-center gap-1 rounded-full border border-border/60 bg-background/60 px-2.5 py-1 text-[11px] font-semibold text-muted-foreground transition-all hover:bg-background hover:text-foreground shadow-xs"
-                title={isMarqueePaused ? "Resume Auto-scroll" : "Pause Auto-scroll"}
-              >
-                {isMarqueePaused ? (
-                  <>
-                    <Play className="h-3 w-3 fill-current text-emerald-500" />
-                    <span>Play</span>
-                  </>
-                ) : (
-                  <>
-                    <Pause className="h-3 w-3 fill-current text-amber-500" />
-                    <span>Pause</span>
-                  </>
-                )}
-              </button>
             </div>
             <span className="mx-auto mt-2 block h-0.5 w-56 bg-gradient-to-r from-primary via-cyan-400 to-blue-500" />
           </div>
