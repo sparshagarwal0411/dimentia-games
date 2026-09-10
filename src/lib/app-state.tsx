@@ -146,9 +146,6 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
     setActiveId(null);
     window.localStorage.removeItem(ACTIVE_KEY);
     window.localStorage.removeItem(PATIENTS_STORE_KEY);
-    window.localStorage.removeItem("neurotrack.stage");
-    window.localStorage.removeItem("neurotrack.guest_mode");
-    window.localStorage.removeItem("neurotrack.lastScreening");
     await cacheSet("patients", []);
     try {
       await supabase.auth.signOut();

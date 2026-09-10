@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
-import { Link, useNavigate } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import {
   Activity,
   ArrowLeft,
@@ -54,14 +54,8 @@ import { useI18n } from "@/lib/i18n";
 import { speak } from "@/lib/speech";
 
 export function BehavioralPage() {
-  const navigate = useNavigate();
   const { prefs, activePatient } = useApp();
   const { locale } = useI18n();
-
-  const handleGoToDashboard = () => {
-    window.localStorage.setItem("neurotrack.stage", "dashboard");
-    void navigate({ to: "/" });
-  };
 
   const [hasConsent, setHasConsent] = useState(false);
   const [analysis, setAnalysis] = useState<BehavioralAnalysisResult | null>(null);
@@ -205,14 +199,13 @@ export function BehavioralPage() {
       <div className="min-h-screen bg-background text-foreground py-10 px-4 sm:px-6">
         <div className="max-w-4xl mx-auto space-y-6">
           <div className="flex items-center justify-between">
-            <button
-              type="button"
-              onClick={handleGoToDashboard}
+            <Link
+              to="/"
               className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
             >
               <ArrowLeft className="h-4 w-4" />
-              Back to Dashboard
-            </button>
+              Back to Home
+            </Link>
             <Badge variant="outline" className="gap-1.5 py-1 px-3">
               <ShieldCheck className="h-3.5 w-3.5 text-primary" />
               On-Device Telemetry
@@ -237,6 +230,7 @@ export function BehavioralPage() {
             </div>
 
             <CardContent className="p-6 sm:p-8 space-y-8">
+              {/* Privacy First Callout */}
               <div className="rounded-2xl border border-blue-200 bg-blue-50/80 p-5 dark:border-blue-900/50 dark:bg-blue-950/30">
                 <div className="flex items-start gap-3.5">
                   <Info className="h-6 w-6 text-blue-600 dark:text-blue-400 shrink-0 mt-0.5" />
@@ -253,7 +247,9 @@ export function BehavioralPage() {
                 </div>
               </div>
 
+              {/* Two Column Breakdown */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                {/* What We Monitor */}
                 <div className="space-y-4">
                   <h3 className="font-bold text-foreground text-lg flex items-center gap-2">
                     <Activity className="h-5 w-5 text-primary" />
@@ -262,23 +258,12 @@ export function BehavioralPage() {
                   <ul className="space-y-3.5 text-sm text-muted-foreground">
                     <li className="flex items-start gap-3">
                       <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                        <Smartphone className="h-4 w-4" />
+                        <Activity className="h-4 w-4" />
                       </div>
                       <div>
-                        <span className="font-medium text-foreground">Touch & Navigation Cadence</span>
+                        <span className="font-medium text-foreground">Daily Activity & Movement</span>
                         <p className="text-xs mt-0.5">
-                          Tap fluidity and menu navigation pauses, detecting hesitation or tremor patterns.
-                        </p>
-                      </div>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                        <Keyboard className="h-4 w-4" />
-                      </div>
-                      <div>
-                        <span className="font-medium text-foreground">Keystroke Dynamics (Anonymized)</span>
-                        <p className="text-xs mt-0.5">
-                          Inter-key delay variability during search without ever reading text content.
+                          Motion sensor telemetry for walking stability and daytime mobility routines.
                         </p>
                       </div>
                     </li>
@@ -287,26 +272,38 @@ export function BehavioralPage() {
                         <Moon className="h-4 w-4" />
                       </div>
                       <div>
-                        <span className="font-medium text-foreground">Circadian & Night Rhythms</span>
+                        <span className="font-medium text-foreground">Sleep-Wake & Circadian Cycles</span>
                         <p className="text-xs mt-0.5">
-                          App interaction time of day, helping identify late-night restlessness or sundowning.
+                          Screen rest periods and nighttime blue light discipline to detect sleep shifts.
                         </p>
                       </div>
                     </li>
                     <li className="flex items-start gap-3">
                       <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                        <TrendingUp className="h-4 w-4" />
+                        <Keyboard className="h-4 w-4" />
                       </div>
                       <div>
-                        <span className="font-medium text-foreground">Physical Routine & Steps</span>
+                        <span className="font-medium text-foreground">Typing Cadence & Motor Dexterity</span>
                         <p className="text-xs mt-0.5">
-                          Basic daytime activity intervals to track mobility consistency over weeks.
+                          Inter-key timing stability and revision frequency to spot fine motor changes.
+                        </p>
+                      </div>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                        <Users className="h-4 w-4" />
+                      </div>
+                      <div>
+                        <span className="font-medium text-foreground">Engagement Frequency</span>
+                        <p className="text-xs mt-0.5">
+                          App interaction intervals and active cognitive session completion.
                         </p>
                       </div>
                     </li>
                   </ul>
                 </div>
 
+                {/* Privacy Guarantees */}
                 <div className="space-y-4">
                   <h3 className="font-bold text-foreground text-lg flex items-center gap-2">
                     <ShieldCheck className="h-5 w-5 text-emerald-600" />
@@ -353,6 +350,7 @@ export function BehavioralPage() {
                 </div>
               </div>
 
+              {/* Action Buttons */}
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4 border-t border-border">
                 <Button
                   size="lg"
@@ -366,9 +364,9 @@ export function BehavioralPage() {
                   size="lg"
                   variant="outline"
                   className="rounded-full px-6 py-6 text-base w-full sm:w-auto"
-                  onClick={handleGoToDashboard}
+                  asChild
                 >
-                  Maybe Later
+                  <Link to="/">Maybe Later</Link>
                 </Button>
               </div>
             </CardContent>
@@ -388,14 +386,13 @@ export function BehavioralPage() {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-border">
           <div>
             <div className="flex items-center gap-3">
-              <button
-                type="button"
-                onClick={handleGoToDashboard}
+              <Link
+                to="/"
                 className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-border hover:bg-muted text-muted-foreground transition-colors"
-                title="Back to Dashboard"
+                title="Back"
               >
                 <ArrowLeft className="h-4 w-4" />
-              </button>
+              </Link>
               <h1 className="text-2xl sm:text-3xl font-bold font-display">How we monitor?</h1>
             </div>
             <p className="text-sm text-muted-foreground mt-1">

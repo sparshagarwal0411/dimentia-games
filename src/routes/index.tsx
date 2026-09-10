@@ -48,9 +48,8 @@ function Index() {
     if (patientsLoading || authLoading || stageInitialized.current) return;
     stageInitialized.current = true;
     const stored = window.localStorage.getItem(STAGE_KEY);
-    const guestStored = window.localStorage.getItem("neurotrack.guest_mode") === "true";
-    // If user is authenticated or guest mode active, resume their in-progress journey
-    if (session || guestStored) {
+    // If user is authenticated, resume their in-progress journey
+    if (session) {
       if (stored === "onboarding" || stored === "assessment") {
         setStage(stored);
       } else if (stored === "dashboard" || activePatient) {
@@ -64,17 +63,6 @@ function Index() {
     }
     setReady(true);
   }, [patientsLoading, authLoading, session, activePatient]);
-
-  // When session is logged out, ensure user lands back on Landing Page
-  useEffect(() => {
-    if (!authLoading && !patientsLoading && !session) {
-      const guestStored = window.localStorage.getItem("neurotrack.guest_mode") === "true";
-      if (!guestStored && !activePatient) {
-        setStage("landing");
-        window.localStorage.setItem(STAGE_KEY, "landing");
-      }
-    }
-  }, [session, activePatient, authLoading, patientsLoading]);
 
   // After a successful OAuth redirect, proceed to the pending destination
   useEffect(() => {
